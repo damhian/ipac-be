@@ -36,6 +36,7 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::post('auth/logout', LogoutController::class);
     Route::post('approveuser', ApproveUserController::class);
     
+    // Companies Table
     Route::get('companies', [CompaniesController::class, 'index']);
     Route::get('company/{id}', [CompaniesController::class, 'show']);
     Route::post('company', [CompaniesController::class, 'store']);
