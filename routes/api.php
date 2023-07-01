@@ -6,6 +6,7 @@ use App\Http\Controllers\API\Auth\LogoutController;
 use App\Http\Controllers\API\Auth\RegisterController;
 use App\Http\Controllers\API\BannerController;
 use App\Http\Controllers\API\CompaniesController;
+use App\Http\Controllers\API\EventsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -37,6 +38,13 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::post('auth/logout', LogoutController::class);
     Route::post('approveuser', ApproveUserController::class);
     
+    // Banner Table
+    Route::get('banners', [BannerController::class, 'index']);
+    Route::get('banner/{id}', [BannerController::class, 'show']);
+    Route::post('banner', [BannerController::class, 'store']);
+    Route::put('bannerupdate/{id}', [BannerController::class, 'update']);
+    Route::delete('bannerdelete/{id}' ,[BannerController::class, 'delete']);
+
     // Companies Table
     Route::get('companies', [CompaniesController::class, 'index']);
     Route::get('company/{id}', [CompaniesController::class, 'show']);
@@ -44,11 +52,11 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::put('companyupdate/{id}', [CompaniesController::class, 'update']);
     Route::delete('companydelete/{id}', [CompaniesController::class, 'destroy']);
 
-    // Banner Table
-    Route::get('banners', [BannerController::class, 'index']);
-    Route::get('banner/{id}', [BannerController::class, 'show']);
-    Route::post('banner', [BannerController::class, 'store']);
-    Route::put('bannerupdate/{id}', [BannerController::class, 'update']);
-    Route::delete('bannerdelete/{id}' ,[BannerController::class, 'delete']);
+    // Events Table
+    Route::get('events', [EventsController::class, 'index']);
+    Route::get('event/{id}', [EventsController::class, 'show']);
+    Route::post('event', [EventsController::class, 'store']);
+    Route::put('eventupdate/{id}', [EventsController::class, 'update']);
+    Route::delete('eventdelete/{id}', [EventsController::class, 'delete']);
 });
 

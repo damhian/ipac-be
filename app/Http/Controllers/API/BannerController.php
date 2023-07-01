@@ -17,11 +17,11 @@ class BannerController extends Controller
      */
     public function index()
     {
-        //
-        $banners = Banner::all();
+        $banners = new Banner();
+        $result = $banners->getBanner();
 
         return response()->json([
-            'banners' => $banners
+            'banners' => $result
         ], 200);
     }
 
@@ -60,7 +60,7 @@ class BannerController extends Controller
         } catch (\Exception $e) {
             // return json response
             return response()->json([
-                'message' => 'something went wrong!'
+                'message' => 'Something went wrong!'
             ], 500);
         }
     }
@@ -131,7 +131,7 @@ class BannerController extends Controller
             $banner->save();
 
             return response()->json([
-                'message' => 'banner successfully updated'
+                'message' => 'Banner successfully updated'
             ]);
 
         } catch (\Exception $e) {
@@ -168,7 +168,7 @@ class BannerController extends Controller
             $banner->save();
 
             return response()->json([
-                'message' => 'banner successfully deleted'
+                'message' => 'Banner successfully deleted'
             ]);
 
         } catch (\Throwable $th) {

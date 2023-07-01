@@ -5,18 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Banner extends Model
+class Events extends Model
 {
     use HasFactory;
-
-    protected $table = 'banner';
 
     protected $fillable = [
         "id",
         "title",
         "content",
         "short_description",
-        "image",
+        "location_name",
+        "location_lon",
+        "location_lat",
+        "start_at",
+        "end_at",
         "created_by",
         "created_at",
         "updated_at",
@@ -24,12 +26,12 @@ class Banner extends Model
     ];
 
     protected $attributes = [
-        "status" => "active"
+        "status" => "pending"
     ];
 
     protected $hidden = ["created_at", "updated_at"];
 
-    public function getBanner() {
+    public function getEvents(){
         return $this->where('status', '!=', 'deleted')->get();
     }
 }
