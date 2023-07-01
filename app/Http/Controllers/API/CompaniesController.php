@@ -8,7 +8,6 @@ use App\Models\Companies;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage; // php artisan storage:link => here's the link to get the picture url('')."/storage/{$img}"
-use PhpParser\Node\Stmt\Return_;
 
 class CompaniesController extends Controller
 {
@@ -41,7 +40,7 @@ class CompaniesController extends Controller
         try {
             $imagename = Str::random(32).".".$request->image_url->getClientOriginalExtension();
 
-            // Create Companies
+            // Create Company
             Companies::create([
                 'image_url' => $imagename,
                 'name' => $request->name,

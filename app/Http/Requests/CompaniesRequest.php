@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class CompaniesRequest extends FormRequest
 {
@@ -11,7 +12,13 @@ class CompaniesRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // return false;
+        
+        // if (Auth::user()->role == "admin") {
+        //     return true;
+        // } else {
+        //     return false;
+        // }
+        
         return true;
     }
 

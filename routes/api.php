@@ -4,6 +4,7 @@ use App\Http\Controllers\API\ApproveUserController;
 use App\Http\Controllers\API\Auth\LoginController;
 use App\Http\Controllers\API\Auth\LogoutController;
 use App\Http\Controllers\API\Auth\RegisterController;
+use App\Http\Controllers\API\BannerController;
 use App\Http\Controllers\API\CompaniesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -42,5 +43,12 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::post('company', [CompaniesController::class, 'store']);
     Route::put('companyupdate/{id}', [CompaniesController::class, 'update']);
     Route::delete('companydelete/{id}', [CompaniesController::class, 'destroy']);
+
+    // Banner Table
+    Route::get('banners', [BannerController::class, 'index']);
+    Route::get('banner/{id}', [BannerController::class, 'show']);
+    Route::post('banner', [BannerController::class, 'store']);
+    Route::put('bannerupdate/{id}', [BannerController::class, 'update']);
+    Route::delete('bannerdelete/{id}' ,[BannerController::class, 'delete']);
 });
 
