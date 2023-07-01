@@ -3,24 +3,24 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\EventRequest;
-use App\Models\Events;
+use App\Http\Requests\JobfairRequest;
+use App\Models\Jobfair;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class EventsController extends Controller
+class JobfairController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $events = new Events();
-        $result = $events->getEvents();
+        $jobfairs = new Jobfair();
+        $result = $jobfairs->getJobfairs();
 
         return response()->json([
-            'events' => $result
-        ], 200);
+            'jobfairs' => $result
+        ]);
     }
 
     /**
@@ -34,11 +34,11 @@ class EventsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(EventRequest $request)
+    public function store(JobfairRequest $request)
     {
         try {
-            // Create Event
-            Events::create([
+            // Create Jobfair
+            Jobfair::create([
                 "title" => $request->title,
                 "content" => $request->content,
                 "short_description" => $request->short_description,
@@ -51,9 +51,9 @@ class EventsController extends Controller
             ]);
 
             return response()->json([
-                'message' => 'Event succesfully created'
+                'message' => 'Jobfair succesfully created'
             ], 200);
-            
+
         } catch (\Throwable $th) {
             // return json response
             return response()->json([
@@ -68,17 +68,17 @@ class EventsController extends Controller
      */
     public function show($id)
     {
-        // Get Event data by id
-        $event = Events::find($id);
+        // Get Jobfair data by id
+        $jobfair = Jobfair::find($id);
 
-        if (!$event)
+        if(!$jobfair)
             return response()->json([
-                'message' => 'Event not found!'
+                'message' => 'Jobfair not found!'
             ], 404);
 
         // Return response success
         return response()->json([
-            'Event' => $event
+            'Jobfair' => $jobfair
         ], 200);
     }
 
@@ -96,28 +96,28 @@ class EventsController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            // Find event
-            $event = Events::find($id);
+            // Find Jobfair
+            $jobfair = Jobfair::find($id);
 
-            if(!$event)
+            if(!$jobfair)
                 return response()->json([
-                    'message' => 'Event not found!'
+                    'message' => 'Jobfair not found!'
                 ]);
-            
-            $event->title = $request->title;
-            $event->content = $request->content;
-            $event->short_description = $request->short_description;
-            $event->location_name = $request->location_name;
-            $event->location_lon = $request->location_lon;
-            $event->location_lat = $request->location_lat;
-            $event->start_at = $request->start_at;
-            $event->end_at = $request->end_at;
-            $event->status = $request->status;
 
-            $event->save();
+            $jobfair->title = $request->title;
+            $jobfair->content = $request->content;
+            $jobfair->short_description = $request->short_description;
+            $jobfair->location_name = $request->location_name;
+            $jobfair->location_lon = $request->location_lon;
+            $jobfair->location_lat = $request->location_lat;
+            $jobfair->start_at = $request->start_at;
+            $jobfair->end_at = $request->end_at;
+            $jobfair->status = $request->status;
+
+            $jobfair->save();
 
             return response()->json([
-                'message' => 'Event successfully updated'
+                'message' => 'Jobfair successfully updated'
             ]);
 
         } catch (\Throwable $th) {
@@ -136,19 +136,19 @@ class EventsController extends Controller
     {
         try {
             // Find event to delete
-            $event = Events::find($id);
+            $jobfair = Jobfair::find($id);
 
-            if(!$event)
+            if(!$jobfair)
                 return response()->json([
-                    'message' => 'Event not found!'
+                    'message' => 'Jobfair not found!'
                 ]);
             
-            $event->status = 'deleted';
+            $jobfair->status = 'deleted';
 
-            $event->save();
+            $jobfair->save();
             
             return response()->json([
-                'message' => 'Event successfully deleted'
+                'message' => 'Jobfair successfully deleted'
             ]);
             
         } catch (\Throwable $th) {

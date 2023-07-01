@@ -7,6 +7,7 @@ use App\Http\Controllers\API\Auth\RegisterController;
 use App\Http\Controllers\API\BannerController;
 use App\Http\Controllers\API\CompaniesController;
 use App\Http\Controllers\API\EventsController;
+use App\Http\Controllers\API\JobfairController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -59,6 +60,11 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::put('eventupdate/{id}', [EventsController::class, 'update']);
     Route::delete('eventdelete/{id}', [EventsController::class, 'delete']);
 
-    
+    // Jobfair Table
+    Route::get('jobfairs', [JobfairController::class, 'index']);
+    Route::get('jobfair/{id}', [JobfairController::class, 'show']);
+    Route::post('jobfair', [JobfairController::class, 'store']);
+    Route::put('jobfairupdate/{id}', [JobfairController::class, 'update']);
+    Route::delete('jobfairdelete/{id}', [JobfairController::class, 'delete']);
 });
 
