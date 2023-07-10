@@ -39,15 +39,20 @@ class JobfairController extends Controller
         try {
             // Create Jobfair
             Jobfair::create([
-                "title" => $request->title,
-                "content" => $request->content,
-                "short_description" => $request->short_description,
-                "location_name" => $request->location_name,
-                "location_lon" => $request->location_lon,
-                "location_lat" => $request->location_lat,
-                "start_at" => $request->start_at,
-                "end_at" => $request->end_at,
-                "created_by" => Auth::id()
+                'title' => $request->title,
+                'content' => $request->content,
+                'short_description' => $request->short_description,
+                'region' => $request->region,
+                'company' => $request->company,
+                'jobtype' => $request->jobtype,
+                'jobtitle' => $request->jobtitle,
+                'jobtype' => $request->jobtype,
+                'location_name' => $request->location_name,
+                'location_lon' => $request->location_lon,
+                'location_lat' => $request->location_lat,
+                'start_at' => $request->start_at,
+                'end_at' => $request->end_at,
+                'created_by' => Auth::id()
             ]);
 
             return response()->json([
@@ -93,7 +98,7 @@ class JobfairController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(JobfairRequest $request, string $id)
     {
         try {
             // Find Jobfair
@@ -107,6 +112,11 @@ class JobfairController extends Controller
             $jobfair->title = $request->title;
             $jobfair->content = $request->content;
             $jobfair->short_description = $request->short_description;
+            $jobfair->region = $request->region;
+            $jobfair->company = $request->company;
+            $jobfair->jobtype = $request->jobtype;
+            $jobfair->jobtitle = $request->jobtitle;
+            $jobfair->jobtype = $request->jobtype;
             $jobfair->location_name = $request->location_name;
             $jobfair->location_lon = $request->location_lon;
             $jobfair->location_lat = $request->location_lat;

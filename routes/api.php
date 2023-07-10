@@ -8,6 +8,8 @@ use App\Http\Controllers\API\BannerController;
 use App\Http\Controllers\API\CompaniesController;
 use App\Http\Controllers\API\EventsController;
 use App\Http\Controllers\API\JobfairController;
+use App\Http\Controllers\API\StoreController;
+use App\Http\Controllers\API\UserexperiencesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -38,6 +40,10 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
 
     Route::post('auth/logout', LogoutController::class);
     Route::post('approveuser', ApproveUserController::class);
+
+    // User Experiences Table
+    Route::get('userexp', [UserexperiencesController::class, 'index']);
+    Route::get('userexp/{id}', [UserexperiencesController::class, 'show']);
     
     // Banner Table
     Route::get('banners', [BannerController::class, 'index']);
@@ -66,5 +72,12 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::post('jobfair', [JobfairController::class, 'store']);
     Route::put('jobfairupdate/{id}', [JobfairController::class, 'update']);
     Route::delete('jobfairdelete/{id}', [JobfairController::class, 'delete']);
+
+    // Store Table
+    Route::get('stores', [StoreController::class, 'index']);
+    Route::get('store/{id}', [StoreController::class, 'show']);
+    Route::post('store', [StoreController::class, 'store']);
+    Route::put('storeupdate/{id}', [StoreController::class, 'update']);
+    Route::delete('storedelete/{id}', [StoreController::class, 'delete']);
 });
 

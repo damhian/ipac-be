@@ -39,15 +39,15 @@ class EventsController extends Controller
         try {
             // Create Event
             Events::create([
-                "title" => $request->title,
-                "content" => $request->content,
+                "title"             => $request->title,
+                "content"           => $request->content,
                 "short_description" => $request->short_description,
-                "location_name" => $request->location_name,
-                "location_lon" => $request->location_lon,
-                "location_lat" => $request->location_lat,
-                "start_at" => $request->start_at,
-                "end_at" => $request->end_at,
-                "created_by" => Auth::id()
+                "location_name"     => $request->location_name,
+                "location_lon"      => $request->location_lon,
+                "location_lat"      => $request->location_lat,
+                "start_at"          => $request->start_at,
+                "end_at"            => $request->end_at,
+                "created_by"        => Auth::id()
             ]);
 
             return response()->json([
@@ -93,7 +93,7 @@ class EventsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(EventRequest $request, string $id)
     {
         try {
             // Find event

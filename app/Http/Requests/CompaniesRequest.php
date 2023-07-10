@@ -56,6 +56,9 @@ class CompaniesRequest extends FormRequest
             ];
         } else {
             return [
+                'image_url.required' => 'image is required!',
+                'image.mimes' => 'the images must be in these format: jpeg,png,jpg,svg',
+                'image.max' => 'the maximum capacity of the image can upload is 2MB',
                 'name.required' => 'name is required!',
                 'about.required' => 'about is required!'
             ];

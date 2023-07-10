@@ -96,7 +96,7 @@ class BannerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(BannerRequest $request, string $id)
     {
         try {
             // Find banner

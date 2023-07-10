@@ -13,6 +13,10 @@ class CreateJobfairTable extends Migration
             $table->string('title', 50);
             $table->text('content');
             $table->string('short_description', 255);
+            $table->string('region', 255);
+            $table->string('company', 255);
+            $table->enum('jobtype', ['Harian', 'Magang', 'Waktu Penuh', 'Paruh Waktu', 'Kontrak']);
+            $table->string('jobtitle', 255);
             $table->string('location_name', 50);
             $table->double('location_lon');
             $table->double('location_lat');
