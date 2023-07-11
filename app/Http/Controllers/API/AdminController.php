@@ -163,15 +163,11 @@ class AdminController extends Controller
          }
  
         // Return a response indicating the status change was successful
-        return response()->json(['message' => 'Status updated successfully.']);
+        return response()->json([
+            'message' => 'Status updated successfully.'
+        ]);
     }
-
-    public function showUser($id) {
-        $user = User::findOrFail($id);
-
-        return response()->json($user);
-    }
-
+    
     /**
      * Remove the specified resource from storage.
      */

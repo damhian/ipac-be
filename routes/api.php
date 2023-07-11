@@ -42,13 +42,11 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
 
     // Approval for every table
     Route::prefix('admin')->group(function(){
-        Route::resource('/user', AdminController::class)->except(['show']);
-        Route::get('/user/{id}', [AdminController::class, 'showUser']);
-
-        Route::resource('/banner', AdminController::class)->except(['show']);
-        Route::resource('/events', AdminController::class)->except(['show']);
-        Route::resource('/jobfair', AdminController::class)->except(['show']);
-        Route::resource('/store', AdminController::class)->except(['show']);
+        Route::resource('/user', AdminController::class);
+        Route::resource('/banner', AdminController::class);
+        Route::resource('/events', AdminController::class);
+        Route::resource('/jobfair', AdminController::class);
+        Route::resource('/store', AdminController::class);
     });
 
     // User Experiences Table
