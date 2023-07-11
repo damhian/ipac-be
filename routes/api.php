@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\API\ApproveUserController;
 use App\Http\Controllers\API\Auth\LoginController;
 use App\Http\Controllers\API\Auth\LogoutController;
 use App\Http\Controllers\API\Auth\RegisterController;
+use App\Http\Controllers\API\AdminController;
 use App\Http\Controllers\API\BannerController;
 use App\Http\Controllers\API\CompaniesController;
 use App\Http\Controllers\API\EventsController;
@@ -39,7 +39,17 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     });
 
     Route::post('auth/logout', LogoutController::class);
-    Route::post('approveuser', ApproveUserController::class);
+
+    // Approval for every table
+    Route::prefix('admin')->group(function(){
+        Route::resource('/user', AdminController::class)->except(['show']);
+        Route::get('/user/{id}', [AdminController::class, 'showUser']);
+
+        Route::resource('/banner', AdminController::class)->except(['show']);
+        Route::resource('/events', AdminController::class)->except(['show']);
+        Route::resource('/jobfair', AdminController::class)->except(['show']);
+        Route::resource('/store', AdminController::class)->except(['show']);
+    });
 
     // User Experiences Table
     Route::get('userexp', [UserexperiencesController::class, 'index']);

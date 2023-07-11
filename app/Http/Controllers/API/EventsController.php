@@ -13,6 +13,12 @@ class EventsController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+    public function __construct()
+    {
+        $this->middleware('admin')->only('updateStatus');
+    }
+
     public function index()
     {
         $events = new Events();
@@ -112,7 +118,6 @@ class EventsController extends Controller
             $event->location_lat = $request->location_lat;
             $event->start_at = $request->start_at;
             $event->end_at = $request->end_at;
-            $event->status = $request->status;
 
             $event->save();
 

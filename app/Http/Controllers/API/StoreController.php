@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreRequest;
 use App\Models\Store;
 use App\Models\Storemedia;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -15,6 +14,12 @@ class StoreController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+    public function __construct()
+    {
+        $this->middleware('admin')->only('updateStatus');
+    }
+
     public function index()
     {
         $stores = Store::with('storeMedia')
@@ -129,7 +134,6 @@ class StoreController extends Controller
             $store->content = $request->content;
             $store->short_description = $request->short_description;
             $store->price = $request->price;
-            $store->status = $request->status;
             
             // Update Media
             if ($request->hasFile('images')) {

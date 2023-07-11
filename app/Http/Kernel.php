@@ -64,5 +64,8 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        
+        // custom middleware for checking the admin only than can change the status on every table
+        'admin' => \App\Http\Middleware\AdminMiddleware::class,
     ];
 }

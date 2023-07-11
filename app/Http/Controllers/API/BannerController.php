@@ -15,6 +15,12 @@ class BannerController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+    public function __construct()
+    {
+        $this->middleware('admin')->only('updateStatus');
+    }
+
     public function index()
     {
         $banners = new Banner();
@@ -110,7 +116,6 @@ class BannerController extends Controller
             $banner->title = $request->title;
             $banner->content = $request->content;
             $banner->short_description = $request->short_description;
-            $banner->status = $request->status;
 
             if($request->image) {
                 // Public storage

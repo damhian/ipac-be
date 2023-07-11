@@ -13,6 +13,12 @@ class JobfairController extends Controller
     /**
      * Display a listing of the resource.
      */
+    
+    public function __construct()
+    {
+        $this->middleware('admin')->only('updateStatus');
+    }
+
     public function index()
     {
         $jobfairs = new Jobfair();
@@ -122,7 +128,6 @@ class JobfairController extends Controller
             $jobfair->location_lat = $request->location_lat;
             $jobfair->start_at = $request->start_at;
             $jobfair->end_at = $request->end_at;
-            $jobfair->status = $request->status;
 
             $jobfair->save();
 
