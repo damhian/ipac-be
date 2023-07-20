@@ -12,7 +12,8 @@ class CreateUserGalleryTable extends Migration
             $table->id();
             $table->unsignedBigInteger('alumni_id');
             $table->string('image_url', 255);
-            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('created_at');
+            $table->timestamp('updated_at')->useCurrent();
             
             $table->foreign('alumni_id')->references('id')->on('users');
         });

@@ -179,7 +179,7 @@ class StoreController extends Controller
             if(!$store)
                 return response()->json([
                     'message' => 'Store not found!'
-                ]);
+                ], 404);
 
             // Delete Store Media
             $store->storeMedia()->delete();
@@ -189,7 +189,7 @@ class StoreController extends Controller
             
             return response()->json([
                 'message' => 'Store successfully deleted'
-            ]);
+            ], 200);
             
         } catch (\Throwable $th) {
              // return json response

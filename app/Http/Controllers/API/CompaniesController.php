@@ -174,4 +174,14 @@ class CompaniesController extends Controller
         ], 200);
 
     }
+
+    public function search(Request $request) {
+        $searchTerm = $request->query('name');
+
+        $companies = Companies::where('name', 'LIKE', "%{$searchTerm}%")->get();
+
+        return response()->json([
+            'companies' => $companies
+        ]);
+    }
 }

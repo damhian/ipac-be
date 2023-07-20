@@ -74,7 +74,7 @@ class JobfairRequest extends FormRequest
                 'location_lat.numeric' => 'the format must be in number!',
                 'start_at.required' => 'start datetime is required!',
                 'start_at.date' => 'the start date must be a valid date with this format: Y-m-d!',
-                'end_at' => 'end datetime is required!',
+                'end_at.required' => 'end datetime is required!',
                 'end_at.date' => 'the end date must be a valid date with this format: Y-m-d!',
                 'end_at.after_or_equal' => 'the end date must be greater than or equal to the start date!'
             ];
@@ -95,7 +95,7 @@ class JobfairRequest extends FormRequest
                 'location_lat.numeric' => 'the format must be in number!',
                 'start_at.required' => 'start datetime is required!',
                 'start_at.date' => 'the start date must be a valid date with this format: Y-m-d!',
-                'end_at' => 'end datetime is required!',
+                'end_at.required' => 'end datetime is required!',
                 'end_at.date' => 'the end date must be a valid date with this format: Y-m-d!',
                 'end_at.after_or_equal' => 'the end date must be greater than or equal to the start date!'
             ];

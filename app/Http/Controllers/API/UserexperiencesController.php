@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserexperienceRequest;
 use App\Models\Userexperiences;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserexperiencesController extends Controller
 {
@@ -31,9 +34,32 @@ class UserexperiencesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(UserexperienceRequest $request)
     {
-        //
+        try {
+            // Create User Experience
+            Userexperiences::create([
+                'alumni_id' => Auth::id(),
+                'company_id' => $request->company_id,
+                'position' => $request->position,
+                'start_at' => $request->start_at,
+                'end_at' => $request->end_at,
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'User experience successfully created'
+            ], 200);
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            return response()->json([
+                'message' => 'something went wrong!',
+                'error' => $th
+            ], 500);
+        }
     }
 
     /**
@@ -41,7 +67,18 @@ class UserexperiencesController extends Controller
      */
     public function show(string $id)
     {
-        //
+        // Get experiences data by id
+        $userexp = Userexperiences::find($id);
+
+        if(!$userexp)
+            return response()->json([
+                'message' => 'User experience for current id not found!'
+            ], 404);
+        
+        // Return response success
+        return response()->json([
+            'Store' => $userexp
+        ], 200);
     }
 
     /**
@@ -55,9 +92,41 @@ class UserexperiencesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UserexperienceRequest $request, string $id)
     {
-        //
+        try {
+            //Find user experiences by id user
+            $userexp = Userexperiences::find($id);
+            
+            if(!$userexp)
+                return response()->json([
+                    'message' => 'User experience related to this user not found!'
+                ], 404);
+            
+            if($userexp->alumni_id != Auth::id())
+                return response()->json([
+                    'message' => 'Unauthorized!'
+                ], 401);
+            
+            $userexp->position = $request->position;
+            $userexp->company_id = $request->company_id;
+            $userexp->start_at = $request->start_at;
+            $userexp->end_at = $request->end_at;
+
+            $userexp->save();
+    
+            return response()->json([
+                'message' => 'User Experience updated successfully',
+                'user_experience' => $userexp
+            ], 200);
+
+        } catch (\Throwable $th) {
+             // return json response
+             return response()->json([
+                'message' => 'something went wrong!',
+                'error message' => $th
+            ], 500);
+        }
     }
 
     /**
