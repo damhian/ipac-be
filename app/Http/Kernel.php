@@ -65,7 +65,10 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         
-        // custom middleware for checking the admin only than can change the status on every table
+        // Custom middleware for checking the admin only than can change the status on every table
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
+
+        // Check user has profile before they can made any changes on the systems
+        'profile.completed' => \App\Http\Middleware\EnsureProfileCompleted::class,
     ];
 }
