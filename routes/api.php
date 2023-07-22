@@ -9,7 +9,11 @@ use App\Http\Controllers\API\CompaniesController;
 use App\Http\Controllers\API\EventsController;
 use App\Http\Controllers\API\JobfairController;
 use App\Http\Controllers\API\StoreController;
+use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\UserexperiencesController;
+use App\Http\Controllers\API\UserprofilesController;
+use App\Http\Controllers\API\UserstoryController;
+use App\Models\Userexperiences;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -39,6 +43,9 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     });
 
     Route::post('auth/logout', LogoutController::class);
+    
+    // Get data user
+    Route::get('user/{id}', [UserController::class, 'show']);
 
     // Approval for every table
     Route::prefix('admin')->group(function(){
@@ -49,9 +56,22 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
         Route::resource('/store', AdminController::class);
     });
 
+    // User Profile Table
+    Route::get('userprofile/{id}', [UserprofilesController::class, 'show']);
+    Route::post('userprofile', [UserprofilesController::class, 'store']);
+    Route::put('userprofileupdate/{id}', [UserprofilesController::class, 'update']);
+
+    // User Story Table
+    Route::get('userstory/{id}', [UserstoryController::class, 'show']);
+    Route::post('userstory', [UserstoryController::class, 'store']);
+    Route::put('userstoryupdate/{id}', [UserstoryController::class, 'update']);
+    Route::delete('userstorydelete/{id}', [UserstoryController::class, 'destroy']);
+
     // User Experiences Table
     Route::get('userexp', [UserexperiencesController::class, 'index']);
     Route::get('userexp/{id}', [UserexperiencesController::class, 'show']);
+    Route::post('userexp', [UserexperiencesController::class, 'store']);
+    Route::put('userexpupdate/{id}', [UserexperiencesController::class, 'update']);
     
     // Banner Table
     Route::get('banners', [BannerController::class, 'index']);
@@ -63,6 +83,7 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     // Companies Table
     Route::get('companies', [CompaniesController::class, 'index']);
     Route::get('company/{id}', [CompaniesController::class, 'show']);
+    Route::get('companies/search', [CompaniesController::class, 'search']);
     Route::post('company', [CompaniesController::class, 'store']);
     Route::put('companyupdate/{id}', [CompaniesController::class, 'update']);
     Route::delete('companydelete/{id}', [CompaniesController::class, 'destroy']);
