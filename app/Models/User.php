@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -63,5 +64,17 @@ class User extends Authenticatable
 
     public function isApproved(){
         return $this->status === 'approved';
+    }
+
+    public function userExperience():HasOne {
+        return $this->hasOne(Userexperiences::class, 'alumni_id');
+    }
+
+    public function userProfiles():HasOne {
+        return $this->hasOne(Userprofiles::class, 'alumni_id');
+    }
+
+    public function userGallery():HasOne {
+        return $this->hasOne(Usergallery::class, 'alumni_id');
     }
 }
