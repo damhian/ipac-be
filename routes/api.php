@@ -9,11 +9,11 @@ use App\Http\Controllers\API\CompaniesController;
 use App\Http\Controllers\API\EventsController;
 use App\Http\Controllers\API\JobfairController;
 use App\Http\Controllers\API\StoreController;
+use App\Http\Controllers\API\StrukturorganisasiController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\UserexperiencesController;
 use App\Http\Controllers\API\UserprofilesController;
 use App\Http\Controllers\API\UserstoryController;
-use App\Models\Userexperiences;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -44,9 +44,17 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
 
     Route::post('auth/logout', LogoutController::class);
     
-    // Get data user
+    // Get data user by id
     Route::get('user/{id}', [UserController::class, 'show']);
+    
+    // Get data user by token
+    Route::get('userbytoken', [UserController::class, 'showbytoken']);
 
+    Route::middleware('admin')->group(function() {
+        Route::get('alluserdata', [UserController::class, 'index']);
+        Route::post('userbytahunlulus', [UserController::class, 'showUserbyTahunLulus']);
+    });
+    
     // Approval for every table
     Route::prefix('admin')->group(function(){
         Route::resource('/user', AdminController::class);
@@ -56,22 +64,35 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
         Route::resource('/store', AdminController::class);
     });
 
+    // Check user profile
+    Route::middleware('profile.completed')->group(function(){
+        // User Story Table
+        Route::get('userstory/{id}', [UserstoryController::class, 'show']);
+        Route::post('userstory', [UserstoryController::class, 'store']);
+        Route::put('userstoryupdate/{id}', [UserstoryController::class, 'update']);
+        Route::delete('userstorydelete/{id}', [UserstoryController::class, 'destroy']);
+        
+        // User Experiences Table
+        Route::get('userexp', [UserexperiencesController::class, 'index']);
+        Route::get('userexp/{id}', [UserexperiencesController::class, 'show']);
+        Route::post('userexp', [UserexperiencesController::class, 'store']);
+        Route::put('userexpupdate/{id}', [UserexperiencesController::class, 'update']);
+
+
+    });
+
+    // Struktur Organisasi Table
+    Route::get('strukturorganisasi', [StrukturorganisasiController::class, 'index']);
+    Route::get('strukturorganisasi/{id}', [StrukturorganisasiController::class, 'show']);
+    Route::get('strukturorganisasi/search', [StrukturorganisasiController::class, 'search']);
+    Route::post('strukturorganisasi', [StrukturorganisasiController::class, 'store']);
+    Route::put('strukturorganisasiupdate/{id}', [StrukturorganisasiController::class, 'update']);
+    Route::delete('strukturorganisasidel/{id}', [StrukturorganisasiController::class, 'destroy']);
+
     // User Profile Table
     Route::get('userprofile/{id}', [UserprofilesController::class, 'show']);
     Route::post('userprofile', [UserprofilesController::class, 'store']);
     Route::put('userprofileupdate/{id}', [UserprofilesController::class, 'update']);
-
-    // User Story Table
-    Route::get('userstory/{id}', [UserstoryController::class, 'show']);
-    Route::post('userstory', [UserstoryController::class, 'store']);
-    Route::put('userstoryupdate/{id}', [UserstoryController::class, 'update']);
-    Route::delete('userstorydelete/{id}', [UserstoryController::class, 'destroy']);
-
-    // User Experiences Table
-    Route::get('userexp', [UserexperiencesController::class, 'index']);
-    Route::get('userexp/{id}', [UserexperiencesController::class, 'show']);
-    Route::post('userexp', [UserexperiencesController::class, 'store']);
-    Route::put('userexpupdate/{id}', [UserexperiencesController::class, 'update']);
     
     // Banner Table
     Route::get('banners', [BannerController::class, 'index']);

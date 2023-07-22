@@ -23,9 +23,7 @@ class Store extends Model
         'status'
     ];
 
-    protected $attributes = [
-        'status' => 'pending'
-    ];
+    protected $attributes = ['status' => 'pending'];
 
     protected $hidden = ['created_at', 'updated_at'];
 

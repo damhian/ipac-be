@@ -156,7 +156,7 @@ class UserprofilesController extends Controller
 
         //Update image
         if($request->hasFile('image')){
-            // Delete the old file if it exists
+            // Delete the old file if exist
             if ($userProfiles->userGallery) {
                 Storage::disk('public')->delete($userProfiles->userGallery->image_url);
             }
@@ -178,11 +178,14 @@ class UserprofilesController extends Controller
 
         $userProfiles->save();
 
+        DB::commit();
+
         return response()->json([
             'message' => 'User profile successfully updated'
         ], 200);
 
        } catch (\Throwable $th) {
+        DB::rollBack();
          // return json response
          return response()->json([
             'message' => 'something went wrong!',

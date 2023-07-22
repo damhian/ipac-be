@@ -12,7 +12,7 @@ class CreateStrukturOrganisasiTable extends Migration
             $table->id();
             $table->string('nama', 60);
             $table->string('jabatan', 125);
-            $table->string('image_url', 60);
+            $table->string('image_url', 255);
             $table->unsignedBigInteger('created_by');
             $table->dateTime('created_at');
             $table->timestamp('updated_at')->useCurrent();
