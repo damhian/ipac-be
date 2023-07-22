@@ -154,11 +154,14 @@ class StoreController extends Controller
 
             $store->save();
 
+            DB::commit();
+
             return response()->json([
                 'message' => 'Store successfully updated'
             ]);
 
         } catch (\Throwable $th) {
+            DB::rollBack();
              // return json response
              return response()->json([
                 'message' => 'something went wrong!',
@@ -186,12 +189,15 @@ class StoreController extends Controller
             
             $store->status = 'deleted';
             $store->save();
+
+            DB::commit();
             
             return response()->json([
                 'message' => 'Store successfully deleted'
             ], 200);
             
         } catch (\Throwable $th) {
+            DB::rollBack();
              // return json response
              return response()->json([
                 'message' => 'something went wrong!',

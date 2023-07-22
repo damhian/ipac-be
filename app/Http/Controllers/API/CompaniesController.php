@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CompaniesRequest;
 use App\Models\Companies;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage; // php artisan storage:link => here's the link to get the picture url('')."/storage/{$img}"
 
@@ -50,11 +51,14 @@ class CompaniesController extends Controller
             // Save Image in Storage folder
             Storage::disk('public')->put($imagename, file_get_contents($request->image_url));
 
+            DB::commit();
+
             return response()->json([
                 'message' => 'Company Successfully created'
             ], 200);
 
         } catch (\Exception $e) {
+            DB::rollBack();
             // return json response
             return response()->json([
                 'message' => 'something went wrong!'
