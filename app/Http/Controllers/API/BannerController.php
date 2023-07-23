@@ -62,6 +62,8 @@ class BannerController extends Controller
                 "created_by" => Auth::id(),
             ]);
 
+            // dd($request);
+
             DB::commit();
 
             return response()->json([
@@ -72,7 +74,8 @@ class BannerController extends Controller
             DB::rollBack();
             // return json response
             return response()->json([
-                'message' => 'Something went wrong!'
+                'message' => 'Something went wrong!',
+                'error' => $e
             ], 500);
         }
     }

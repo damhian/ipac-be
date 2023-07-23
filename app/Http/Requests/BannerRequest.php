@@ -41,7 +41,7 @@ class BannerRequest extends FormRequest
 
     public function messages()
     {
-        return [
+         return [
             "title" => "title is required!",
             "content" => "content is required!",
             "short_description" => "short description is required!",
