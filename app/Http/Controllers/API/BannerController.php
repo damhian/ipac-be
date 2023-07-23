@@ -48,8 +48,8 @@ class BannerController extends Controller
         try {
 
             // Check file and store image in storage folder under banner folder
-            if ($request->hasFile('file_url')) {
-                $file = $request->file('file_url');
+            if ($request->hasFile('file')) {
+                $file = $request->file('file');
                 $path  = $file->store('banner', 'public');
             }
             
@@ -126,14 +126,14 @@ class BannerController extends Controller
             $banner->content = $request->content;
             $banner->short_description = $request->short_description;
             
-            if($request->file_url) {
+            if($request->file) {
                 // Delete old image if exist
                 if($banner->file_url)
                     Storage::disk('public')->delete($banner->file_url);
                 
-                $file          = $request->image;
-                $path           = $file->store('banner', 'public');
-                $banner->image  = $path;
+                $file               = $request->file;
+                $path               = $file->store('banner', 'public');
+                $banner->file_url   = $path;
             }
 
             $banner->save();
