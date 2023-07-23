@@ -12,13 +12,7 @@ class BannerRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        if (Auth::user()->role == "admin") {
-            return true;
-        } else {
-            return false;
-        }
-
-        // return true;
+        return true;
     }
 
     /**
@@ -33,38 +27,27 @@ class BannerRequest extends FormRequest
                 "title" => "required|string|max:50",
                 "content" => "required|string",
                 "short_description" => "required|string|max:255",
-                "image" => "required|image|mimes:jpeg,png,jpg,svg|max:2048"
+                "file_url" => "required|file|mimetypes:image/jpeg,image/png,image/jpg,image/svg,video/mp4,video/quicktime|max:20480" // 20MB limit for file
             ];
         } else {
             return [
                 "title" => "required|string|max:50",
                 "content" => "required|string",
                 "short_description" => "required|string|max:255",
-                "image" => "required|image|mimes:jpeg,png,jpg,svg|max:2048"
+                "file_url" => "required|file|mimetypes:image/jpeg,image/png,image/jpg,image/svg,video/mp4,video/quicktime|max:20480" // 20MB limit for file
             ];
         }
     }
 
     public function messages()
     {
-        if (request()->isMethod('post')) {
-            return [
-                "title" => "title is required!",
-                "content" => "content is required!",
-                "short_description" => "short description is required!",
-                "image" => "image is required!",
-                "image.mimes" => "the images must be in these format: jpeg,png,jpg,svg",
-                "image.max" => "the maximum capacity of the image can upload is 2MB"
-            ];
-        } else {
-            return [
-                "title" => "title is required!",
-                "content" => "content is required!",
-                "short_description" => "short description is required!",
-                "image" => "image is required!",
-                "image.mimes" => "the images must be in these format: jpeg,png,jpg,svg",
-                "image.max" => "the maximum capacity of the image can upload is 2MB"
-            ];
-        }
+        return [
+            "title" => "title is required!",
+            "content" => "content is required!",
+            "short_description" => "short description is required!",
+            "file_url" => "file is required!",
+            "file_url.mimetypes" => "the file must be in these format: jpeg, png, jpg, svg, mp4, quicktime",
+            "file_url.max" => "the maximum capacity of the file can upload is 20MB"
+        ];
     }
 }

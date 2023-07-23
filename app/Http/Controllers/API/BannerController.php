@@ -7,6 +7,7 @@ use App\Http\Requests\BannerRequest;
 use App\Models\Banner;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
@@ -45,25 +46,30 @@ class BannerController extends Controller
     public function store(BannerRequest $request)
     {
         try {
-            $imagename = Str::random(32).".".$request->image->getClientOriginalExtension();
+
+            // Check file and store image in storage folder under banner folder
+            if ($request->hasFile('file_url')) {
+                $file = $request->file('file_url');
+                $path  = $file->store('banner', 'public');
+            }
             
             // Create Banner
             Banner::create([
                 "title" => $request->title,
                 "content" => $request->content,
                 "short_description" => $request->short_description,
-                "image" => $imagename,
+                "file_url" => $path,
                 "created_by" => Auth::id(),
             ]);
 
-            // Save Image in Storage folder
-            Storage::disk('public')->put($imagename, file_get_contents($request->image));
+            DB::commit();
 
             return response()->json([
                 'message' => 'Company Successfully created'
             ], 200);
 
         } catch (\Exception $e) {
+            DB::rollBack();
             // return json response
             return response()->json([
                 'message' => 'Something went wrong!'
@@ -116,30 +122,27 @@ class BannerController extends Controller
             $banner->title = $request->title;
             $banner->content = $request->content;
             $banner->short_description = $request->short_description;
-
-            if($request->image) {
-                // Public storage
-                $storage = Storage::disk('public');
-
-                // Old image delete
-                if($storage->exists($banner->image))
-                    $storage->delete($banner->image);
+            
+            if($request->file_url) {
+                // Delete old image if exist
+                if($banner->file_url)
+                    Storage::disk('public')->delete($banner->file_url);
                 
-                // Image name
-                $imagename = Str::random(32).".".$request->image->getClientOriginalExtension();
-                $banner->image = $imagename;
-
-                // Save image in public folder
-                $storage->put($imagename, file_get_contents($request->image));
+                $file          = $request->image;
+                $path           = $file->store('banner', 'public');
+                $banner->image  = $path;
             }
 
             $banner->save();
+
+            DB::commit();
 
             return response()->json([
                 'message' => 'Banner successfully updated'
             ]);
 
         } catch (\Exception $e) {
+            DB::rollBack();
             // Return Json response
             return response()->json([
                 'message' => 'Something went wrong!'
@@ -165,8 +168,8 @@ class BannerController extends Controller
             $storage = Storage::disk('public');
 
             // Old image delete
-            if($storage->exists($banner->image))
-                $storage->delete($banner->image);
+            if($storage->exists($banner->file_url))
+                $storage->delete($banner->file_url);
         
             $banner->status = 'deleted';
 

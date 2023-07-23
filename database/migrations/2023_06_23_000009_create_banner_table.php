@@ -13,6 +13,7 @@ class CreateBannerTable extends Migration
             $table->string('title', 50);
             $table->text('content')->nullable();
             $table->string('short_description', 255);
+            $table->string('file_url', 255)->nullable();
             $table->unsignedBigInteger('created_by');
             $table->dateTime('created_at');
             $table->timestamp('updated_at')->useCurrent();
