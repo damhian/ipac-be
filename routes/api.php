@@ -53,6 +53,22 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::middleware('admin')->group(function() {
         Route::get('alluserdata', [UserController::class, 'index']);
         Route::post('userbytahunlulus', [UserController::class, 'showUserbyTahunLulus']);
+
+        // Banner Table
+        Route::get('banners', [BannerController::class, 'index']);
+        Route::get('banner/{id}', [BannerController::class, 'show']);
+        Route::post('banner', [BannerController::class, 'store']);
+        Route::put('bannerupdate/{id}', [BannerController::class, 'update']);
+        Route::delete('bannerdelete/{id}' ,[BannerController::class, 'delete']);
+
+        // Struktur Organisasi Table
+        Route::get('strukturorganisasi', [StrukturorganisasiController::class, 'index']);
+        Route::get('strukturorganisasi/{id}', [StrukturorganisasiController::class, 'show']);
+        Route::get('strukturorganisasi/search', [StrukturorganisasiController::class, 'search']);
+        Route::post('strukturorganisasi', [StrukturorganisasiController::class, 'store']);
+        Route::put('strukturorganisasiupdate/{id}', [StrukturorganisasiController::class, 'update']);
+        Route::delete('strukturorganisasidel/{id}', [StrukturorganisasiController::class, 'destroy']);
+
     });
     
     // Approval for every table
@@ -78,28 +94,32 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
         Route::post('userexp', [UserexperiencesController::class, 'store']);
         Route::put('userexpupdate/{id}', [UserexperiencesController::class, 'update']);
 
+        // Store Table
+        Route::get('stores', [StoreController::class, 'index']);
+        Route::get('store/{id}', [StoreController::class, 'show']);
+        Route::post('store', [StoreController::class, 'store']);
+        Route::put('storeupdate/{id}', [StoreController::class, 'update']);
+        Route::delete('storedelete/{id}', [StoreController::class, 'delete']);
 
+        // Jobfair Table
+        Route::get('jobfairs', [JobfairController::class, 'index']);
+        Route::get('jobfair/{id}', [JobfairController::class, 'show']);
+        Route::post('jobfair', [JobfairController::class, 'store']);
+        Route::put('jobfairupdate/{id}', [JobfairController::class, 'update']);
+        Route::delete('jobfairdelete/{id}', [JobfairController::class, 'delete']);
+
+        // Events Table
+        Route::get('events', [EventsController::class, 'index']);
+        Route::get('event/{id}', [EventsController::class, 'show']);
+        Route::post('event', [EventsController::class, 'store']);
+        Route::put('eventupdate/{id}', [EventsController::class, 'update']);
+        Route::delete('eventdelete/{id}', [EventsController::class, 'delete']);
     });
-
-    // Struktur Organisasi Table
-    Route::get('strukturorganisasi', [StrukturorganisasiController::class, 'index']);
-    Route::get('strukturorganisasi/{id}', [StrukturorganisasiController::class, 'show']);
-    Route::get('strukturorganisasi/search', [StrukturorganisasiController::class, 'search']);
-    Route::post('strukturorganisasi', [StrukturorganisasiController::class, 'store']);
-    Route::put('strukturorganisasiupdate/{id}', [StrukturorganisasiController::class, 'update']);
-    Route::delete('strukturorganisasidel/{id}', [StrukturorganisasiController::class, 'destroy']);
 
     // User Profile Table
     Route::get('userprofile/{id}', [UserprofilesController::class, 'show']);
     Route::post('userprofile', [UserprofilesController::class, 'store']);
     Route::put('userprofileupdate/{id}', [UserprofilesController::class, 'update']);
-    
-    // Banner Table
-    Route::get('banners', [BannerController::class, 'index']);
-    Route::get('banner/{id}', [BannerController::class, 'show']);
-    Route::post('banner', [BannerController::class, 'store']);
-    Route::put('bannerupdate/{id}', [BannerController::class, 'update']);
-    Route::delete('bannerdelete/{id}' ,[BannerController::class, 'delete']);
 
     // Companies Table
     Route::get('companies', [CompaniesController::class, 'index']);
@@ -109,25 +129,5 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::put('companyupdate/{id}', [CompaniesController::class, 'update']);
     Route::delete('companydelete/{id}', [CompaniesController::class, 'destroy']);
 
-    // Events Table
-    Route::get('events', [EventsController::class, 'index']);
-    Route::get('event/{id}', [EventsController::class, 'show']);
-    Route::post('event', [EventsController::class, 'store']);
-    Route::put('eventupdate/{id}', [EventsController::class, 'update']);
-    Route::delete('eventdelete/{id}', [EventsController::class, 'delete']);
-
-    // Jobfair Table
-    Route::get('jobfairs', [JobfairController::class, 'index']);
-    Route::get('jobfair/{id}', [JobfairController::class, 'show']);
-    Route::post('jobfair', [JobfairController::class, 'store']);
-    Route::put('jobfairupdate/{id}', [JobfairController::class, 'update']);
-    Route::delete('jobfairdelete/{id}', [JobfairController::class, 'delete']);
-
-    // Store Table
-    Route::get('stores', [StoreController::class, 'index']);
-    Route::get('store/{id}', [StoreController::class, 'show']);
-    Route::post('store', [StoreController::class, 'store']);
-    Route::put('storeupdate/{id}', [StoreController::class, 'update']);
-    Route::delete('storedelete/{id}', [StoreController::class, 'delete']);
 });
 
