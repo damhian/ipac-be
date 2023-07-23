@@ -39,17 +39,18 @@ class CompaniesController extends Controller
     public function store(CompaniesRequest $request)
     {
         try {
-            $imagename = Str::random(32).".".$request->image_url->getClientOriginalExtension();
+             // Check file and store image in storage folder under banner folder
+             if ($request->hasFile('image_url')) {
+                $image = $request->file('image_url');
+                $path  = $image->store('companies', 'public');
+            }
 
             // Create Company
             Companies::create([
-                'image_url' => $imagename,
+                'image_url' => $path,
                 'name' => $request->name,
                 'about' => $request->about
             ]);
-
-            // Save Image in Storage folder
-            Storage::disk('public')->put($imagename, file_get_contents($request->image_url));
 
             DB::commit();
 
@@ -115,30 +116,26 @@ class CompaniesController extends Controller
             $companies->about = $request->about;
 
             if ($request->image_url) {
-                // Public Storage
-                $storage = Storage::disk('public');
+                // Delete old image if exists
+                if($companies->image_url)
+                    $storage = Storage::disk('public')->delete($companies->image_url);
 
-                // Old image delete
-                if ($storage->exists($companies->image_url)) {
-                    $storage->delete($companies->image_url);
-                }
-
-                // Image name
-                $imagename = Str::random(32).".".$request->image_url->getClientOriginalExtension();
-                $companies->image_url = $imagename;
-
-                // Save image in public folder
-                $storage->put($imagename, file_get_contents($request->image_url));
+                $image                  = $request->image_url;
+                $path                   = $image->store('companies', 'public');
+                $companies->image_url   = $path;
             }
 
             // Update Company
             $companies->save();
+            
+            DB::commit();
 
             return response()->json([
                 'message' => 'Company successfully updated'
             ]);
 
         } catch (\Exception $e) {
+            DB::rollBack();
             // Return Json response
             return response()->json([
                 'message' => 'Something went wrong!'
