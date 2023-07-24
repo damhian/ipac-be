@@ -47,9 +47,12 @@ Route::get('event/{id}', [EventsController::class, 'show']);
 Route::get('jobfairs', [JobfairController::class, 'index']);
 Route::get('jobfair/{id}', [JobfairController::class, 'show']);
 
+// Store Table
+Route::get('stores', [StoreController::class, 'index']);
+Route::get('store/{id}', [StoreController::class, 'show']);
+
 // User Story Table
 Route::get('userstory/{id}', [UserstoryController::class, 'show']);
- 
  
 // Protected Routes
 Route::group(['middleware' => ['auth:sanctum']], function() {
@@ -104,8 +107,6 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
         Route::put('userexpupdate/{id}', [UserexperiencesController::class, 'update']);
 
         // Store Table
-        Route::get('stores', [StoreController::class, 'index']);
-        Route::get('store/{id}', [StoreController::class, 'show']);
         Route::post('store', [StoreController::class, 'store']);
         Route::put('storeupdate/{id}', [StoreController::class, 'update']);
         Route::delete('storedelete/{id}', [StoreController::class, 'delete']);
@@ -124,7 +125,6 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
         Route::post('userstory', [UserstoryController::class, 'store']);
         Route::put('userstoryupdate/{id}', [UserstoryController::class, 'update']);
         Route::delete('userstorydelete/{id}', [UserstoryController::class, 'destroy']);
-
     });
 
     // User Profile Table
