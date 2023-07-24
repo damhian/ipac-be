@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -76,5 +77,9 @@ class User extends Authenticatable
 
     public function userGallery():HasOne {
         return $this->hasOne(Usergallery::class, 'alumni_id');
+    }
+
+    public function userEvents():HasMany{
+        return $this->hasMany(Events::class, 'created_by');
     }
 }

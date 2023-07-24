@@ -75,7 +75,7 @@ class EventsController extends Controller
     public function show($id)
     {
         // Get Event data by id
-        $event = Events::find($id);
+        $event = Events::with('user', 'user.userProfiles')->find($id);
 
         if (!$event)
             return response()->json([
@@ -87,6 +87,31 @@ class EventsController extends Controller
             'Event' => $event
         ], 200);
     }
+
+    public function showByStartDate(Request $request)
+{
+    try {
+        // Get all events and sort them by start_at date
+        $events = Events::orderBy('start_at', 'asc')->get();
+
+        // Format the start_at date to Y-m-d format for each event
+        foreach ($events as $event) {
+            $event->start_at = date('Y-m-d', strtotime($event->start_at));
+        }
+
+        return response()->json([
+            'events' => $events
+        ], 200);
+
+    } catch (\Throwable $th) {
+        // return json response
+        return response()->json([
+            'message' => 'Something went wrong!',
+            'error message' => $th
+        ], 500);
+    }
+}
+
 
     /**
      * Show the form for editing the specified resource.

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Events extends Model
 {
@@ -32,6 +33,14 @@ class Events extends Model
     protected $hidden = ["created_at", "updated_at"];
 
     public function getEvents(){
-        return $this->where('status', '!=', 'deleted')->get();
+        return $this->where('status', '!=', 'deleted')
+        ->with('user', 'user.userProfiles')
+        ->get();
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+    
 }
