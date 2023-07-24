@@ -35,12 +35,12 @@ use Illuminate\Support\Facades\Route;
 Route::post('auth/register', RegisterController::class);
 Route::post('auth/login', LoginController::class);
 
-// Events Table
-Route::get('events', [EventsController::class, 'index']);
-Route::get('event/{id}', [EventsController::class, 'show']);
-Route::post('event', [EventsController::class, 'store']);
-Route::put('eventupdate/{id}', [EventsController::class, 'update']);
-Route::delete('eventdelete/{id}', [EventsController::class, 'delete']);
+ // Banner Table
+ Route::get('banners', [BannerController::class, 'index']);
+ Route::get('banner/{id}', [BannerController::class, 'show']);
+ Route::post('banner', [BannerController::class, 'store']);
+ Route::put('bannerupdate/{id}', [BannerController::class, 'update']);
+ Route::delete('bannerdelete/{id}' ,[BannerController::class, 'delete']);
 
 // Protected Routes
 Route::group(['middleware' => ['auth:sanctum']], function() {
@@ -60,13 +60,6 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::middleware('admin')->group(function() {
         Route::get('alluserdata', [UserController::class, 'index']);
         Route::post('userbytahunlulus', [UserController::class, 'showUserbyTahunLulus']);
-
-        // Banner Table
-        Route::get('banners', [BannerController::class, 'index']);
-        Route::get('banner/{id}', [BannerController::class, 'show']);
-        Route::post('banner', [BannerController::class, 'store']);
-        Route::put('bannerupdate/{id}', [BannerController::class, 'update']);
-        Route::delete('bannerdelete/{id}' ,[BannerController::class, 'delete']);
 
         // Struktur Organisasi Table
         Route::get('strukturorganisasi', [StrukturorganisasiController::class, 'index']);
@@ -115,6 +108,12 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
         Route::put('jobfairupdate/{id}', [JobfairController::class, 'update']);
         Route::delete('jobfairdelete/{id}', [JobfairController::class, 'delete']);
 
+        // Events Table
+        Route::get('events', [EventsController::class, 'index']);
+        Route::get('event/{id}', [EventsController::class, 'show']);
+        Route::post('event', [EventsController::class, 'store']);
+        Route::put('eventupdate/{id}', [EventsController::class, 'update']);
+        Route::delete('eventdelete/{id}', [EventsController::class, 'delete']);
     });
 
     // User Profile Table
