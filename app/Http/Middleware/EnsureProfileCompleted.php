@@ -19,10 +19,10 @@ class EnsureProfileCompleted
         if (Auth::check()) {
             $user = Auth::user();
 
-            if ($user->role === 'admin') {
-                // Allow admin users to access the route without profile completion check
-                return $next($request);
-            }
+            // Allow admin users to access the route without profile completion check
+            // if ($user->role === 'admin') {
+            //     return $next($request);
+            // }
 
             if (!$user->userProfiles) {
                 return response()->json([
