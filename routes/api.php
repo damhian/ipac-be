@@ -35,16 +35,20 @@ use Illuminate\Support\Facades\Route;
 Route::post('auth/register', RegisterController::class);
 Route::post('auth/login', LoginController::class);
 
- // Banner Table
- Route::get('banners', [BannerController::class, 'index']);
- Route::get('banner/{id}', [BannerController::class, 'show']);
+// Banner Table
+Route::get('banners', [BannerController::class, 'index']);
+Route::get('banner/{id}', [BannerController::class, 'show']);
 
- // Events Table
- Route::get('events', [EventsController::class, 'index']);
- Route::get('event/{id}', [EventsController::class, 'show']);
+// Events Table
+Route::get('events', [EventsController::class, 'index']);
+Route::get('event/{id}', [EventsController::class, 'show']);
 
- // User Story Table
- Route::get('userstory/{id}', [UserstoryController::class, 'show']);
+//  Jobfair table
+Route::get('jobfairs', [JobfairController::class, 'index']);
+Route::get('jobfair/{id}', [JobfairController::class, 'show']);
+
+// User Story Table
+Route::get('userstory/{id}', [UserstoryController::class, 'show']);
  
  
 // Protected Routes
@@ -107,8 +111,6 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
         Route::delete('storedelete/{id}', [StoreController::class, 'delete']);
 
         // Jobfair Table
-        Route::get('jobfairs', [JobfairController::class, 'index']);
-        Route::get('jobfair/{id}', [JobfairController::class, 'show']);
         Route::post('jobfair', [JobfairController::class, 'store']);
         Route::put('jobfairupdate/{id}', [JobfairController::class, 'update']);
         Route::delete('jobfairdelete/{id}', [JobfairController::class, 'delete']);
