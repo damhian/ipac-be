@@ -28,6 +28,6 @@ class Store extends Model
     protected $hidden = ['created_at', 'updated_at'];
 
     public function storeMedia(){
-        return $this->hasMany(StoreMedia::class);
+        return $this->hasMany(Storemedia::class);
     }
 }
