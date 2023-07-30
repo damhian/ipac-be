@@ -53,4 +53,9 @@ class UserProfiles extends Model
     {
         return $this->hasOne(Usergallery::class, 'alumni_id', 'alumni_id');
     }
+
+    public function userIdcard(): HasOne
+    {
+        return $this->hasOne(Idcard::class, 'alumni_id', 'alumni_id');
+    }
 }

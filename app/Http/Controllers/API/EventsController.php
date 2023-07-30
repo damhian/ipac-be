@@ -7,6 +7,8 @@ use App\Http\Requests\EventRequest;
 use App\Models\Events;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class EventsController extends Controller
 {
@@ -19,13 +21,21 @@ class EventsController extends Controller
         $this->middleware('admin')->only('updateStatus');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $events = new Events();
-        $result = $events->getEvents();
+        // Get all events and sort them by start_at date
+        $events = Events::with(['user', 'user.userProfiles'])
+        ->where('status', '!=', 'deleted')
+        ->orderBy('start_at', $request->sort_by ? $request->sort_by : 'asc')
+        ->get();
+
+        if(!$events)
+            return response()->json([
+                'message' => 'event not found!'
+            ]);
 
         return response()->json([
-            'events' => $result
+            'events' => $events
         ], 200);
     }
 
@@ -43,10 +53,17 @@ class EventsController extends Controller
     public function store(EventRequest $request)
     {
         try {
+             // Check file and store image in storage folder under banner folder
+             if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $path  = $image->store('event_images', 'public');
+            }
+
             // Create Event
             Events::create([
                 "title"             => $request->title,
                 "content"           => $request->content,
+                "image"             => $path,
                 "short_description" => $request->short_description,
                 "location_name"     => $request->location_name,
                 "location_lon"      => $request->location_lon,
@@ -56,11 +73,14 @@ class EventsController extends Controller
                 "created_by"        => Auth::id()
             ]);
 
+            DB::commit();
+
             return response()->json([
                 'message' => 'Event succesfully created'
             ], 200);
             
         } catch (\Throwable $th) {
+            DB::rollBack();
             // return json response
             return response()->json([
                 'message' => 'something went wrong!',
@@ -88,31 +108,6 @@ class EventsController extends Controller
         ], 200);
     }
 
-    public function showByStartDate(Request $request)
-{
-    try {
-        // Get all events and sort them by start_at date
-        $events = Events::orderBy('start_at', 'asc')->get();
-
-        // Format the start_at date to Y-m-d format for each event
-        foreach ($events as $event) {
-            $event->start_at = date('Y-m-d', strtotime($event->start_at));
-        }
-
-        return response()->json([
-            'events' => $events
-        ], 200);
-
-    } catch (\Throwable $th) {
-        // return json response
-        return response()->json([
-            'message' => 'Something went wrong!',
-            'error message' => $th
-        ], 500);
-    }
-}
-
-
     /**
      * Show the form for editing the specified resource.
      */
@@ -135,6 +130,15 @@ class EventsController extends Controller
                     'message' => 'Event not found!'
                 ]);
             
+            if($request->image){
+                if($event->image)
+                    Storage::disk('public')->delete($event->image);
+
+                $image        = $request->image;
+                $path         = $image->store('event_images', 'public');
+                $event->image = $path;
+            }
+            
             $event->title = $request->title;
             $event->content = $request->content;
             $event->short_description = $request->short_description;
@@ -146,11 +150,14 @@ class EventsController extends Controller
 
             $event->save();
 
+            DB::commit();
+
             return response()->json([
                 'message' => 'Event successfully updated'
             ]);
 
         } catch (\Throwable $th) {
+            DB::rollBack();
              // return json response
              return response()->json([
                 'message' => 'something went wrong!',
@@ -172,16 +179,23 @@ class EventsController extends Controller
                 return response()->json([
                     'message' => 'Event not found!'
                 ]);
+
+            // Check and delete image if exists
+            if($event->image)
+                Storage::disk('public')->delete($event->image);
             
             $event->status = 'deleted';
 
             $event->save();
+
+            DB::commit();
             
             return response()->json([
                 'message' => 'Event successfully deleted'
             ]);
             
         } catch (\Throwable $th) {
+            DB::rollBack();
              // return json response
              return response()->json([
                 'message' => 'something went wrong!',
@@ -189,4 +203,5 @@ class EventsController extends Controller
             ], 500);
         }
     }
+
 }

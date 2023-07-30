@@ -11,6 +11,9 @@ class CreateIdCardsTable extends Migration
         Schema::create('id_cards', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('alumni_id');
+            $table->string('nomor_anggota', 255);
+            $table->string('first_name', 255);
+            $table->string('last_name', 255);
             $table->string('image_url', 255);
             $table->dateTime('created_at');
             $table->timestamp('updated_at')->useCurrent();

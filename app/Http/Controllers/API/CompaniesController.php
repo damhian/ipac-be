@@ -110,15 +110,13 @@ class CompaniesController extends Controller
                 ], 404);
             }
 
-            // echo "request : $request->name";
-            // echo "description : $request->about";
             $companies->name = $request->name;
             $companies->about = $request->about;
 
             if ($request->image_url) {
                 // Delete old image if exists
                 if($companies->image_url)
-                    $storage = Storage::disk('public')->delete($companies->image_url);
+                    Storage::disk('public')->delete($companies->image_url);
 
                 $image                  = $request->image_url;
                 $path                   = $image->store('companies', 'public');
@@ -158,13 +156,9 @@ class CompaniesController extends Controller
             ], 404);
         }
 
-        //Public storage
-        $storage = Storage::disk('public');
-
-        // Check public storage for image
-        if ($storage->exists($companies->image_url)) {
-            $storage->delete($companies->image_url);
-        }
+        // Check and delete image if exists
+        if($companies->image_url)  
+            Storage::disk('public')->delete($companies->image_url);
 
         // Delete company
         $companies->delete();
@@ -177,9 +171,10 @@ class CompaniesController extends Controller
     }
 
     public function search(Request $request) {
-        $searchTerm = $request->query('name');
-
-        $companies = Companies::where('name', 'LIKE', "%{$searchTerm}%")->get();
+        
+        $searchTerm = $request->name;
+        
+        $companies = Companies::where('name', 'like', "%{$searchTerm}%")->get();
 
         return response()->json([
             'companies' => $companies

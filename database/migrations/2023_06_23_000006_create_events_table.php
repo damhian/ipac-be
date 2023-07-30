@@ -12,6 +12,7 @@ class CreateEventsTable extends Migration
             $table->id();
             $table->string('title', 50);
             $table->text('content');
+            $table->string('image', 255)->nullable();
             $table->string('short_description', 255);
             $table->string('location_name', 50);
             $table->double('location_lon');

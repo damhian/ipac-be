@@ -174,4 +174,33 @@ class JobfairController extends Controller
             ], 500);
         }
     }
+
+    public function search(Request $request)
+    {
+        // dd($request);
+        try {
+            // Get the search query from the request parameters
+            $searchQuery = $request->search;
+
+            // Search for jobfairs based on the username or jobfair title
+            $jobfairs = Jobfair::with('user')
+            ->where('title', 'like', '%' . $searchQuery . '%')
+            ->orWhereHas('user', function ($query) use ($searchQuery) {
+                $query->where('username', 'like', '%' . $searchQuery . '%');
+            })
+            ->get();
+
+            return response()->json([
+                'jobfairs' => $jobfairs
+            ], 200);
+
+        } catch (\Throwable $th) {
+            // return json response
+            return response()->json([
+                'message' => 'Something went wrong!',
+                'error message' => $th
+            ], 500);
+        }
+    }
+
 }

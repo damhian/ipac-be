@@ -42,4 +42,8 @@ class Jobfair extends Model
         return $this->where('status', '!=', 'deleted')->get();
     }
 
+    public function user() {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
 }

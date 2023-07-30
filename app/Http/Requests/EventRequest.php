@@ -26,6 +26,7 @@ class EventRequest extends FormRequest
             return [
                 "title" => "required|string|max:50",
                 "content" => "required|string",
+                "image" => "required|image|mimes:mimes:jpeg,png,jpg,svg|max:2048",
                 "short_description" => "required|string|max:255",
                 "location_name" => "required|string|max:50",
                 "location_lon" => "required|numeric",
@@ -37,6 +38,7 @@ class EventRequest extends FormRequest
             return [
                 "title"=> "required|string|max:50",
                 "content"=> "required|string",
+                "image" => "required|image|mimes:mimes:jpeg,png,jpg,svg|max:2048",
                 "short_description"=> "required|string|max:255",
                 "location_name"=> "required|string|max:50",
                 "location_lon"=> "required|numeric",
@@ -53,6 +55,9 @@ class EventRequest extends FormRequest
             return [
                 "title" => "title is required!",
                 "content" => "content is required!",
+                "image" => "image is required!",
+                'image.mimes' => 'the images must be in these format: jpeg,png,jpg,svg',
+                'image.max' => 'the maximum capacity of the image can upload is 2MB',
                 "short_description" => "short description is required!",
                 "location_name" => "location name is required!",
                 "location_lon.required" => "location longitude is required!",
@@ -69,6 +74,9 @@ class EventRequest extends FormRequest
             return [
                 "title" => "title is required!",
                 "content" => "content is required!",
+                "image" => "image is required!",
+                'image.mimes' => 'the images must be in these format: jpeg,png,jpg,svg',
+                'image.max' => 'the maximum capacity of the image can upload is 2MB',
                 "short_description" => "short description is required!",
                 "location_name" => "location name is required!",
                 "location_lon.required" => "location longitude is required!",

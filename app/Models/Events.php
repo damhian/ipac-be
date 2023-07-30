@@ -14,6 +14,7 @@ class Events extends Model
         "id",
         "title",
         "content",
+        "image",
         "short_description",
         "location_name",
         "location_lon",
@@ -31,12 +32,6 @@ class Events extends Model
     ];
 
     protected $hidden = ["created_at", "updated_at"];
-
-    public function getEvents(){
-        return $this->where('status', '!=', 'deleted')
-        ->with('user', 'user.userProfiles')
-        ->get();
-    }
 
     public function user()
     {

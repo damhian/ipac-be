@@ -58,16 +58,15 @@ class BannerController extends Controller
                 "title" => $request->title,
                 "content" => $request->content,
                 "short_description" => $request->short_description,
+                "tipe" => $request->tipe,
                 "file_url" => $path,
                 "created_by" => Auth::id(),
             ]);
 
-            // dd($request);
-
             DB::commit();
 
             return response()->json([
-                'message' => 'Company Successfully created'
+                'message' => 'Banner Successfully created'
             ], 200);
 
         } catch (\Exception $e) {
@@ -125,6 +124,7 @@ class BannerController extends Controller
             $banner->title = $request->title;
             $banner->content = $request->content;
             $banner->short_description = $request->short_description;
+            $banner->tipe = $request->tipe;
             
             if($request->file) {
                 // Delete old image if exist
@@ -178,11 +178,14 @@ class BannerController extends Controller
 
             $banner->save();
 
+            DB::commit();
+
             return response()->json([
                 'message' => 'Banner successfully deleted'
             ]);
 
         } catch (\Throwable $th) {
+            DB::rollBack();
             // Return Json response
             return response()->json([
                 'message' => 'Something went wrong!'

@@ -17,6 +17,7 @@ class Banner extends Model
         "content",
         "short_description",
         "file_url",
+        "tipe",
         "created_by",
         "created_at",
         "updated_at",

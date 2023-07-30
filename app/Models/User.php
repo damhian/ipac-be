@@ -46,6 +46,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'created_at',
+        'updated_at'
     ];
 
 
@@ -74,12 +76,20 @@ class User extends Authenticatable
     public function userProfiles():HasOne {
         return $this->hasOne(Userprofiles::class, 'alumni_id');
     }
+    
+    public function userIdcards():HasOne {
+        return $this->hasOne(Idcard::class, 'alumni_id');
+    }
 
     public function userGallery():HasOne {
         return $this->hasOne(Usergallery::class, 'alumni_id');
     }
 
-    public function userEvents():HasMany{
+    public function userEvents():HasMany {
         return $this->hasMany(Events::class, 'created_by');
+    }
+
+    public function userJobfair():HasMany {
+        return $this->hasMany(Jobfair::class, 'created_by');
     }
 }
