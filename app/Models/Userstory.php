@@ -22,7 +22,8 @@ class Userstory extends Model
 
     protected $hidden =['created_at', 'updated_at'];
 
-    public function user(): BelongsTo{
-        return $this->belongsTo(User::class);
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'alumni_id');
     }
 }
