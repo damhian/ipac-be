@@ -7,6 +7,7 @@ use App\Http\Controllers\API\AdminController;
 use App\Http\Controllers\API\BannerController;
 use App\Http\Controllers\API\CompaniesController;
 use App\Http\Controllers\API\EventsController;
+use App\Http\Controllers\API\ImageuploaderController;
 use App\Http\Controllers\API\JobfairController;
 use App\Http\Controllers\API\StoreController;
 use App\Http\Controllers\API\StrukturorganisasiController;
@@ -46,13 +47,23 @@ Route::get('event/{id}', [EventsController::class, 'show']);
 //  Jobfair table
 Route::get('jobfairs', [JobfairController::class, 'index']);
 Route::get('jobfair/{id}', [JobfairController::class, 'show']);
+Route::post('jobfairs/search', [JobfairController::class, 'search']);
 
 // Store Table
 Route::get('stores', [StoreController::class, 'index']);
 Route::get('store/{id}', [StoreController::class, 'show']);
 
 // User Story Table
+Route::get('userstory', [UserstoryController::class, 'index']);
 Route::get('userstory/{id}', [UserstoryController::class, 'show']);
+
+// User Profiles and Idcards
+Route::get('userprofile/{id}', [UserprofilesController::class, 'show']);
+
+// Struktur Organisasi
+Route::get('strukturorganisasi', [StrukturorganisasiController::class, 'index']);
+
+Route::post('userbytahunlulus', [UserController::class, 'showUserbyTahunLulus']);
  
 // Protected Routes
 Route::group(['middleware' => ['auth:sanctum']], function() {
@@ -70,11 +81,12 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::get('userbytoken', [UserController::class, 'showbytoken']);
 
     Route::middleware('admin')->group(function() {
+        // Table User
         Route::get('alluserdata', [UserController::class, 'index']);
-        Route::post('userbytahunlulus', [UserController::class, 'showUserbyTahunLulus']);
+        Route::post('createuser', [UserController::class, 'store']);
+        Route::put('updateuser/{id}', [UserController::class, 'update']);
 
         // Struktur Organisasi Table
-        Route::get('strukturorganisasi', [StrukturorganisasiController::class, 'index']);
         Route::get('strukturorganisasi/{id}', [StrukturorganisasiController::class, 'show']);
         Route::get('strukturorganisasi/search', [StrukturorganisasiController::class, 'search']);
         Route::post('strukturorganisasi', [StrukturorganisasiController::class, 'store']);
@@ -92,21 +104,19 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
         Route::resource('/store', AdminController::class);
     });
 
-    // Banner Table
-    Route::post('banner', [BannerController::class, 'store']);
-    Route::put('bannerupdate/{id}', [BannerController::class, 'update']);
-    Route::delete('bannerdelete/{id}' ,[BannerController::class, 'delete']);
-
     // Check user profile
     Route::middleware('profile.completed')->group(function(){
         
         // User Experiences Table
         Route::get('userexp', [UserexperiencesController::class, 'index']);
+        Route::get('userexpbytoken', [UserexperiencesController::class, 'showByToken']);
         Route::get('userexp/{id}', [UserexperiencesController::class, 'show']);
         Route::post('userexp', [UserexperiencesController::class, 'store']);
         Route::put('userexpupdate/{id}', [UserexperiencesController::class, 'update']);
 
         // Store Table
+        Route::get('storebytoken', [StoreController::class, 'showByToken']);
+        Route::get('storebyuserid/{id}', [StoreController::class, 'showByUserId']);
         Route::post('store', [StoreController::class, 'store']);
         Route::put('storeupdate/{id}', [StoreController::class, 'update']);
         Route::delete('storedelete/{id}', [StoreController::class, 'delete']);
@@ -122,23 +132,32 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
         Route::delete('eventdelete/{id}', [EventsController::class, 'delete']);
        
         // User Story Table
+        Route::get('userstorybytoken', [UserstoryController::class, 'showByToken']);
+        Route::get('userstorybyuserid/{id}', [UserstoryController::class, 'showByUserId']);
         Route::post('userstory', [UserstoryController::class, 'store']);
         Route::put('userstoryupdate/{id}', [UserstoryController::class, 'update']);
         Route::delete('userstorydelete/{id}', [UserstoryController::class, 'destroy']);
     });
 
-    // User Profile Table
-    Route::get('userprofile/{id}', [UserprofilesController::class, 'show']);
-    Route::post('userprofile', [UserprofilesController::class, 'store']);
-    Route::put('userprofileupdate/{id}', [UserprofilesController::class, 'update']);
+    // Image Uploader 
+    Route::post('imageupload', [ImageuploaderController::class, 'store']);
 
-    // Companies Table
-    Route::get('companies', [CompaniesController::class, 'index']);
-    Route::get('company/{id}', [CompaniesController::class, 'show']);
-    Route::get('companies/search', [CompaniesController::class, 'search']);
-    Route::post('company', [CompaniesController::class, 'store']);
-    Route::put('companyupdate/{id}', [CompaniesController::class, 'update']);
-    Route::delete('companydelete/{id}', [CompaniesController::class, 'destroy']);
+    // Banner Table
+    Route::post('banner', [BannerController::class, 'store']);
+    Route::put('bannerupdate/{id}', [BannerController::class, 'update']);
+    Route::delete('bannerdelete/{id}' ,[BannerController::class, 'delete']);
 
+     // User Profile Table
+     Route::post('userprofile', [UserprofilesController::class, 'store']);
+     Route::put('userprofileupdate/{id}', [UserprofilesController::class, 'update']);
+ 
+     // Companies Table
+     Route::get('companies', [CompaniesController::class, 'index']);
+     Route::get('company/{id}', [CompaniesController::class, 'show']);
+     Route::get('companybytoken', [CompaniesController::class, 'showByToken']);
+     Route::post('companies/search', [CompaniesController::class, 'search']);
+     Route::post('company', [CompaniesController::class, 'store']);
+     Route::put('companyupdate/{id}', [CompaniesController::class, 'update']);
+     Route::delete('companydelete/{id}', [CompaniesController::class, 'destroy']);
 });
 
