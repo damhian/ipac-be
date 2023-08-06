@@ -30,4 +30,9 @@ class Store extends Model
     public function storeMedia(){
         return $this->hasMany(Storemedia::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
 }
