@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
-use function PHPUnit\Framework\returnSelf;
-
 class StrukturorganisasiController extends Controller
 {
     /**
@@ -113,7 +111,6 @@ class StrukturorganisasiController extends Controller
 
             $strorgdata->nama       = $request->nama;
             $strorgdata->jabatan    = $request->jabatan;
-            // $strorgdata->image_url  = 
 
             if($request->hasFile('image')){
                 // Delete old file if exist
