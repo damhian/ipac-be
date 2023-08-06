@@ -16,7 +16,11 @@ class UserstoryController extends Controller
      */
     public function index()
     {
-        //
+        $userstory = Userstory::with(['user.userProfiles'])->get();
+
+        return response()->json([
+            'User story' => $userstory
+        ], 200);
     }
 
     /**
@@ -68,6 +72,46 @@ class UserstoryController extends Controller
 
         return response()->json([
             'message' => $userstory
+        ], 200);
+    }
+
+    public function showByToken()
+    {
+        // Get the authenticated user's token
+        $user = Auth::user();
+
+        // Find the store associated with the token
+        $userstory = Userstory::with(['user.userProfiles'])->where('alumni_id', $user->id)->get();
+
+        if (!$userstory) {
+            return response()->json([
+                'message' => 'Userstory not found!'
+            ], 404);
+        }
+
+        // Return response success
+        return response()->json([
+            'User story' => $userstory
+        ], 200);
+    }
+
+    public function showByUserId(string $id)
+    {
+        // Get the authenticated user's
+        // $user = Auth::user();
+        
+        // Find the user story associated with the user id from their login
+        $userstory = Userstory::with(['user.userProfiles'])->where('alumni_id', $id)->get();
+
+        if (!$userstory) {
+            return response()->json([
+                'message' => 'userstory not found!'
+            ], 404);
+        }
+
+        // Return response success
+        return response()->json([
+            'User story' => $userstory
         ], 200);
     }
 
