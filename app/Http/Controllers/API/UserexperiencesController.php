@@ -16,7 +16,7 @@ class UserexperiencesController extends Controller
      */
     public function index()
     {
-        $userexp = Userexperiences::all();
+        $userexp = Userexperiences::with(['user.userProfiles'])->get();
 
         return response()->json([
             'User_experiences' => $userexp
@@ -78,6 +78,26 @@ class UserexperiencesController extends Controller
         // Return response success
         return response()->json([
             'Store' => $userexp
+        ], 200);
+    }
+
+    public function showByToken()
+    {
+        // Get the authenticated user's token
+        $user = Auth::user();
+        
+        // Find the store associated with the token
+        $userexperience = Userexperiences::with(['user.userProfiles'])->where('alumni_id', $user->id)->get();
+
+        if (!$userexperience) {
+            return response()->json([
+                'message' => 'User experience not found!'
+            ], 404);
+        }
+
+        // Return response success
+        return response()->json([
+            'user experience' => $userexperience
         ], 200);
     }
 
