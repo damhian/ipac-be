@@ -163,12 +163,32 @@ class UserprofilesController extends Controller
      */
     public function show($id)
     {        
-        $userProfiles = Userprofiles::with('userGallery', 'userIdcard')->where('alumni_id' ,$id)->first();
+        $userProfiles = Userprofiles::with('userGallery', 'userIdcard')->where('alumni_id', $id)->first();
 
         if(!$userProfiles)
             return response()->json([
                 'message' => 'user profiles not found!'
             ], 404);
+
+        // Return response success
+        return response()->json([
+            'User Profiles' => $userProfiles
+        ], 200);
+    }
+
+    public function showByToken()
+    {
+        // Get the authenticated user's token
+        $user = Auth::user();
+                
+        // Find the store associated with the token
+        $userProfiles = Userprofiles::with('userGallery', 'userIdcard')->where('alumni_id', $user->id)->first();
+
+        if (!$userProfiles) {
+            return response()->json([
+                'message' => 'Store not found!'
+            ], 404);
+        }
 
         // Return response success
         return response()->json([

@@ -148,6 +148,7 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::delete('bannerdelete/{id}' ,[BannerController::class, 'delete']);
 
      // User Profile Table
+     Route::get('userprofilebytoken', [UserprofilesController::class, 'showByToken']);
      Route::post('userprofile', [UserprofilesController::class, 'store']);
      Route::put('userprofileupdate/{id}', [UserprofilesController::class, 'update']);
  
