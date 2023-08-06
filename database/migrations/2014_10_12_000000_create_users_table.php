@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('email', 60);
             $table->string('username', 30);
             $table->string('password', 100);
-            $table->enum('role', ['admin', 'alumni']);
+            $table->enum('role', ['superadmin','admin','alumni']);
             $table->enum('status', ['pending', 'approved', 'denied', 'deleted']);
             $table->timestamps();
         });
