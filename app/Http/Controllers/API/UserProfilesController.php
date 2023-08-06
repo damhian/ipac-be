@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UserProfileRequest;
+use App\Http\Requests\UserprofileRequest;
 use App\Models\Idcard;
 use App\Traits\HttpResponses;
 use App\Models\Userprofiles;
@@ -36,7 +36,7 @@ class UserprofilesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(UserProfileRequest $request)
+    public function store(UserprofileRequest $request)
     {
         try {
 
@@ -187,7 +187,7 @@ class UserprofilesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserProfileRequest $request, string $id)
+    public function update(UserprofileRequest $request, string $id)
     {
        try {
         //Find user profile by alumni_id as user id
