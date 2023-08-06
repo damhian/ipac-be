@@ -25,7 +25,8 @@ class Userexperiences extends Model
 
     protected $hidden = ['created_at', 'updated_at'];
 
-    public function user(): BelongsTo {
+    public function user() 
+    {
         return $this->belongsTo(User::class, 'alumni_id');
     }
 }
