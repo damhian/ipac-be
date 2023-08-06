@@ -22,7 +22,7 @@ class StoreController extends Controller
 
     public function index()
     {
-        $stores = Store::with('storeMedia')
+        $stores = Store::with(['storeMedia', 'user.userProfiles'])
                         ->where('status', '!=', 'deleted')
                         ->get();
 
@@ -102,6 +102,46 @@ class StoreController extends Controller
                 'message' => 'store not found!'
             ], 404);
         
+        // Return response success
+        return response()->json([
+            'Store' => $store
+        ], 200);
+    }
+
+    public function showByToken()
+    {
+        // Get the authenticated user's token
+        $user = Auth::user();
+        
+        // Find the store associated with the token
+        $store = Store::with('storeMedia')->where('created_by', $user->id)->get();
+
+        if (!$store) {
+            return response()->json([
+                'message' => 'Store not found!'
+            ], 404);
+        }
+
+        // Return response success
+        return response()->json([
+            'Store' => $store
+        ], 200);
+    }
+
+    public function showByUserId(string $id)
+    {
+        // Get the authenticated user's
+        // $user = Auth::user();
+        
+        // Find the store associated with the user id from their login
+        $store = Store::with('storeMedia')->where('created_by', $id)->get();
+
+        if (!$store) {
+            return response()->json([
+                'message' => 'Store not found!'
+            ], 404);
+        }
+
         // Return response success
         return response()->json([
             'Store' => $store
