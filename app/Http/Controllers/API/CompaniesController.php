@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CompaniesRequest;
 use App\Models\Companies;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage; // php artisan storage:link => here's the link to get the picture url('')."/storage/{$img}"
@@ -18,7 +19,7 @@ class CompaniesController extends Controller
     public function index()
     {
         // All Companies
-        $companies = Companies::all();
+        $companies = Companies::with(['user.userProfiles'])->all();
 
         return response()->json([
             'companies' => $companies
@@ -84,6 +85,26 @@ class CompaniesController extends Controller
         // Return Response Success
         return response()->json([
             'companies' => $companies
+        ], 200);
+    }
+
+    public function showByToken()
+    {
+        // Get the authenticated user's token
+        $user = Auth::user();
+        
+        // Find the store associated with the token
+        $companies = Companies::where('created_by', $user->id)->get();
+
+        if (!$companies) {
+            return response()->json([
+                'message' => 'Companies not found!'
+            ], 404);
+        }
+
+        // Return response success
+        return response()->json([
+            'Companies' => $companies
         ], 200);
     }
 
