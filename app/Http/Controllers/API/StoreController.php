@@ -27,7 +27,7 @@ class StoreController extends Controller
                         ->get();
 
         return response()->json([
-            'store' => $stores
+            'stores' => $stores
         ], 200);
     }
 
@@ -124,7 +124,7 @@ class StoreController extends Controller
 
         // Return response success
         return response()->json([
-            'Store' => $store
+            'stores' => $store
         ], 200);
     }
 
@@ -144,7 +144,7 @@ class StoreController extends Controller
 
         // Return response success
         return response()->json([
-            'Store' => $store
+            'stores' => $store
         ], 200);
     }
 
