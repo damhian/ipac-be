@@ -53,7 +53,8 @@ class UserstoryController extends Controller
             DB::rollBack();
 
             return response()->json([
-                'message' => 'something went wrong!' 
+                'message' => 'something went wrong!' ,
+                'error' => $th
             ], 500);
         }
     }
@@ -129,8 +130,8 @@ class UserstoryController extends Controller
     public function update(UserstoryRequest $request, string $id)
     {
         try {
-            //Find user story by alumni_id as user id
-            $userstory = Userstory::where('alumni_id', $id)->first();
+            //Find user story by id
+            $userstory = Userstory::find($id);
 
             if(!$userstory)
                 return response()->json([
@@ -154,7 +155,6 @@ class UserstoryController extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => 'something went wrong!',
-                'error message' => $th
             ], 500);
         }
     }
@@ -181,7 +181,6 @@ class UserstoryController extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => 'something went wrong!',
-                'error message' => $th
             ], 500);
         }
     }
