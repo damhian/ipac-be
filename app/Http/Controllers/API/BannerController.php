@@ -46,11 +46,22 @@ class BannerController extends Controller
     public function store(BannerRequest $request)
     {
         try {
-
+            
             // Check file and store image in storage folder under banner folder
             if ($request->hasFile('file')) {
                 $file = $request->file('file');
                 $path  = $file->store('banner', 'public');
+            }
+
+            // check the api run on local or hosted on the web
+            $host = $request->getHost();
+
+            if ($host === 'localhost' || $host === '127.0.0.1') {
+                // Running on localhost
+                $fileUrl = asset('storage/' . $path);
+            } else {
+                // Running on the web server
+                $fileUrl = asset('public/storage/' . $path);
             }
             
             // Create Banner
@@ -59,7 +70,7 @@ class BannerController extends Controller
                 "content" => $request->content,
                 "short_description" => $request->short_description,
                 "tipe" => $request->tipe,
-                "file_url" => $path,
+                "file_url" => $fileUrl,
                 "created_by" => Auth::id(),
             ]);
 
@@ -130,10 +141,23 @@ class BannerController extends Controller
                 // Delete old image if exist
                 if($banner->file_url)
                     Storage::disk('public')->delete($banner->file_url);
+                    
                 
                 $file               = $request->file;
                 $path               = $file->store('banner', 'public');
-                $banner->file_url   = $path;
+
+                // check the api run on local or hosted on the web
+                $host = $request->getHost();
+
+                if ($host === 'localhost' || $host === '127.0.0.1') {
+                    // Running on localhost
+                    $fileUrl = asset('storage/' . $path);
+                } else {
+                    // Running on the web server
+                    $fileUrl = asset('public/storage/' . $path);
+                }
+
+                $banner->file_url   = $fileUrl;
             }
 
             $banner->save();
