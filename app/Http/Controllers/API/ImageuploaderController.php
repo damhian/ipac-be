@@ -32,13 +32,19 @@ class ImageuploaderController extends Controller
     {
        if ($request->image) {
             $file = $request->image;
-            $fileName = uniqid() . '.' . $file->getClientOriginalExtension();
+            $path = $file->store('img_media', 'public');
 
-             // Store the file in the storage/app/public directory (using the 'public' disk)
-            Storage::disk('public')->put($fileName, file_get_contents($file));
+            // check the api run on local or hosted on the web
+            $host = $request->getHost();
+
+            if ($host === 'localhost' || $host === '127.0.0.1') {
+                // Running on localhost
+                $fileUrl = asset('storage/' . $path);
+            } else {
+                // Running on the web server
+                $fileUrl = asset('public/storage/' . $path);
+            }
             
-            // Return a response with the file URL so the client can access it
-            $fileUrl = asset('storage/' . $fileName);
        }else{
 
             $fileUrl = $request->image_url;
