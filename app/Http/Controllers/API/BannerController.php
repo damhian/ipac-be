@@ -53,16 +53,16 @@ class BannerController extends Controller
                 $path  = $file->store('banner', 'public');
             }
 
-            // check the api run on local or hosted on the web
-            $host = $request->getHost();
+            // // check the api run on local or hosted on the web
+            // $host = $request->getHost();
 
-            if ($host === 'localhost' || $host === '127.0.0.1') {
-                // Running on localhost
-                $fileUrl = asset('storage/' . $path);
-            } else {
-                // Running on the web server
-                $fileUrl = asset('public/storage/' . $path);
-            }
+            // if ($host === 'localhost' || $host === '127.0.0.1') {
+            //     // Running on localhost
+            //     $fileUrl = asset('storage/' . $path);
+            // } else {
+            //     // Running on the web server
+            //     $fileUrl = asset('public/storage/' . $path);
+            // }
             
             // Create Banner
             Banner::create([
@@ -70,7 +70,7 @@ class BannerController extends Controller
                 "content" => $request->content,
                 "short_description" => $request->short_description,
                 "tipe" => $request->tipe,
-                "file_url" => $fileUrl,
+                "file_url" => $path,
                 "created_by" => Auth::id(),
             ]);
 
@@ -146,18 +146,18 @@ class BannerController extends Controller
                 $file               = $request->file;
                 $path               = $file->store('banner', 'public');
 
-                // check the api run on local or hosted on the web
-                $host = $request->getHost();
+                // // check the api run on local or hosted on the web
+                // $host = $request->getHost();
 
-                if ($host === 'localhost' || $host === '127.0.0.1') {
-                    // Running on localhost
-                    $fileUrl = asset('storage/' . $path);
-                } else {
-                    // Running on the web server
-                    $fileUrl = asset('public/storage/' . $path);
-                }
+                // if ($host === 'localhost' || $host === '127.0.0.1') {
+                //     // Running on localhost
+                //     $fileUrl = asset('storage/' . $path);
+                // } else {
+                //     // Running on the web server
+                //     $fileUrl = asset('public/storage/' . $path);
+                // }
 
-                $banner->file_url   = $fileUrl;
+                $banner->file_url   = $path;
             }
 
             $banner->save();
