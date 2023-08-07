@@ -91,7 +91,7 @@ class UserprofilesController extends Controller
                 $userIdcards->nomor_anggota = $userProfiles->nomor_anggota;
                 $userIdcards->first_name    = $userProfiles->first_name;
                 $userIdcards->last_name     = $userProfiles->last_name;
-                $userIdcards->image_url     = $path;
+                $userIdcards->image_url     = $userProfiles->userGallery;
 
                 DB::commit();
 
@@ -128,17 +128,18 @@ class UserprofilesController extends Controller
                     $image = $request->file('image');
                     $path = $image->store('user_gallery', 'public');
                     $userGallery->image_url = $path;
-                }
-
+                }   
 
                 Idcard::create([
                     'alumni_id'         => $userProfileData->alumni_id,
                     'nomor_anggota'     => $userProfileData->nomor_anggota,
                     'first_name'        => $userProfileData->first_name,
                     'last_name'         => $userProfileData->last_name,
-                    'image_url'         => $path,
+                    'image_url'         => $userGallery->image_url,
                 ]);
 
+
+                $userProfileData->save();
                 
                 $userGallery->save();
                 
