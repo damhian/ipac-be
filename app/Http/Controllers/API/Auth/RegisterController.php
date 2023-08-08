@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use Ramsey\Uuid\Rfc4122\UuidV4 as Rfc4122UuidV4;
 
 class RegisterController extends Controller
 {
@@ -16,11 +16,22 @@ class RegisterController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $this->validate($request, [
-            'username' => ['required', 'string', 'max:255'],
-            'email' => [ 'required', 'string', 'email', 'max:255', Rule::unique(User::class),],
-            'password' => ['required','min:8'],
+        // Validate the input
+        $validator = Validator::make($request->all(), [
+            'username' => ['required', 'string', 'max:255', Rule::unique('users')],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')],
+            'password' => ['required', 'min:8'],
+        ], [
+            'email.unique' => 'Email is already used!',
+            'username.unique' => 'Username is already used!',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation error',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
 
         $user = User::create([
             'username' => $request->username,
