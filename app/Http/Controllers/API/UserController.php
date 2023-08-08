@@ -180,17 +180,24 @@ class UserController extends Controller
             $currentUserId = Auth::id();
 
             // Check if the user being updated is the same as the currently authenticated user
-            if ($user->id === $currentUserId) {
-                return response()->json([
-                    'message' => 'You are not allowed to update your own data!'
-                ], 403);
+            if (($user->id === $currentUserId)) {
+                // If 'role' field is being updated, return an error message
+                if ($request->has('role')) {
+                    return response()->json([
+                        'message' => 'You are not allowed to update your own role!'
+                    ], 403);
+                }
             }
 
             // Update the user data
             $user->username = $request->username;
             $user->email = $request->email;
-            $user->role = $request->role;
             // $user->status = $request->status;
+            
+            // Update the role if provided
+            if ($request->has('role')) {
+                $user->role = $request->role;
+            }
     
             // Update the password if provided
             if ($request->has('password')) {
