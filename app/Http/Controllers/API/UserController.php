@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -13,13 +14,17 @@ class UserController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-         // Fetch all users with their related data
-         $users = User::with('userExperience', 'userProfiles', 'userGallery')->get();
-         
-         return response()->json([
-             'users' => $users
-         ], 200);
+    {   
+        $currentUserId = Auth::id();
+
+        // Fetch all users with their related data
+        $users = User::where('id', '!=', $currentUserId)
+        ->with('userExperience', 'userProfiles', 'userGallery')
+        ->get();
+        
+        return response()->json([
+            'users' => $users
+        ], 200);
     }
 
     /**
@@ -149,11 +154,17 @@ class UserController extends Controller
     {
         try {
             $request->validate([
-                'username' => 'required|unique:users,username,' . $id,
-                'email' => 'required|email|unique:users,email,' . $id,
-                'password' => 'sometimes|min:6', // Only validate if 'password' is provided in the request
+                'username' => [
+                    'required',
+                    Rule::unique('users')->ignore($id),
+                ],
+                'email' => [
+                    'required',
+                    'email',
+                    Rule::unique('users')->ignore($id),
+                ],
+                'password' => 'sometimes|min:6',
                 'role' => 'in:admin,alumni',
-                // 'status' => 'in:approved,pending',
             ]);
     
             // Find the user by ID
@@ -164,7 +175,17 @@ class UserController extends Controller
                     'message' => 'User not found'
                 ], 404);
             }
-    
+
+            // Get the ID of the currently authenticated user
+            $currentUserId = Auth::id();
+
+            // Check if the user being updated is the same as the currently authenticated user
+            if ($user->id === $currentUserId) {
+                return response()->json([
+                    'message' => 'You are not allowed to update your own data!'
+                ], 403);
+            }
+
             // Update the user data
             $user->username = $request->username;
             $user->email = $request->email;
