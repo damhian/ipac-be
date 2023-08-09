@@ -26,7 +26,7 @@ class EventRequest extends FormRequest
             return [
                 "title" => "required|string|max:50",
                 "content" => "required|string",
-                "image" => "required|image|mimes:mimes:jpeg,png,jpg,svg|max:2048",
+                "image" => "image|mimes:mimes:jpeg,png,jpg,svg|max:2048",
                 "short_description" => "required|string|max:255",
                 "location_name" => "required|string|max:50",
                 "location_lon" => "required|numeric",
@@ -38,7 +38,7 @@ class EventRequest extends FormRequest
             return [
                 "title"=> "required|string|max:50",
                 "content"=> "required|string",
-                "image" => "required|image|mimes:mimes:jpeg,png,jpg,svg|max:2048",
+                "image" => "image|mimes:mimes:jpeg,png,jpg,svg|max:2048",
                 "short_description"=> "required|string|max:255",
                 "location_name"=> "required|string|max:50",
                 "location_lon"=> "required|numeric",

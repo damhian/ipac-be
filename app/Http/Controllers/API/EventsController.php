@@ -53,6 +53,9 @@ class EventsController extends Controller
     public function store(EventRequest $request)
     {
         try {
+
+            $path = null;
+
              // Check file and store image in storage folder under banner folder
              if ($request->hasFile('image')) {
                 $image = $request->file('image');
@@ -130,7 +133,7 @@ class EventsController extends Controller
                     'message' => 'Event not found!'
                 ]);
             
-            if($request->image){
+            if($request->hasFile('image')){
                 if($event->image)
                     Storage::disk('public')->delete($event->image);
 
