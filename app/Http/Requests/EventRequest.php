@@ -55,7 +55,6 @@ class EventRequest extends FormRequest
             return [
                 "title" => "title is required!",
                 "content" => "content is required!",
-                "image" => "image is required!",
                 'image.mimes' => 'the images must be in these format: jpeg,png,jpg,svg',
                 'image.max' => 'the maximum capacity of the image can upload is 2MB',
                 "short_description" => "short description is required!",
