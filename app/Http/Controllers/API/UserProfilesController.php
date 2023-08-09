@@ -245,6 +245,8 @@ class UserprofilesController extends Controller
         $userProfiles->phone_number_code = $request->phone_number_code;
         $userProfiles->gender            = $request->gender;
 
+        $path = null;
+
         //Update image
         if($request->hasFile('image')){
             // Delete the old file if exist
@@ -255,14 +257,13 @@ class UserprofilesController extends Controller
             $userGallery = $userProfiles->userGallery ?? new UserGallery();
             $userGallery->alumni_id = $userProfiles->alumni_id;
             
-            if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                $path = $image->store('user_gallery', 'public');
-                $userGallery->image_url = $path;
+            // save user Gallery
+            $image = $request->file('image');
+            $path = $image->store('user_gallery', 'public');
+            $userGallery->image_url = $path;
 
-                $userGallery->delete();
-                $userGallery->save();
-            }
+            $userGallery->delete();
+            $userGallery->save();
 
             $userProfiles->save();
         }
