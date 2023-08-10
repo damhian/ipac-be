@@ -22,13 +22,18 @@ class BannerController extends Controller
         $this->middleware('admin')->only('updateStatus');
     }
 
-    public function index()
-    {
-        $banners = new Banner();
-        $result = $banners->getBanner();
+    public function index(Request $request)
+    {   
+        $query = Banner::query();
+
+        if ($request->has('type')) {
+            $query->where('type', $request->type);
+        }
+
+        $banners = $query->get();
 
         return response()->json([
-            'banners' => $result
+            'banners' => $banners
         ], 200);
     }
 
