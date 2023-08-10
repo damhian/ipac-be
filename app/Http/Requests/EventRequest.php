@@ -22,31 +22,27 @@ class EventRequest extends FormRequest
      */
     public function rules(): array
     {
-       if (request()->isMethod('post')) {
-            return [
-                "title" => "required|string|max:50",
-                "content" => "required|string",
-                "image" => "image|mimes:mimes:jpeg,png,jpg,svg|max:2048",
-                "short_description" => "required|string|max:255",
-                "location_name" => "required|string|max:50",
-                "location_lon" => "required|numeric",
-                "location_lat" => "required|numeric",
-                "start_at" => "required|date|date_format:Y-m-d",
-                "end_at" => "required|date|after_or_equal:start_at|date_format:Y-m-d",
-            ];
-        } else {
-            return [
-                "title"=> "required|string|max:50",
-                "content"=> "required|string",
-                "image" => "image|mimes:mimes:jpeg,png,jpg,svg|max:2048",
-                "short_description"=> "required|string|max:255",
-                "location_name"=> "required|string|max:50",
-                "location_lon"=> "required|numeric",
-                "location_lat"=> "required|numeric",
-                "start_at"=> "required|date|date_format:Y-m-d",
-                "end_at"=> "required|date|after_or_equal:start_at|date_format:Y-m-d",
-            ];
+
+        $rules = [
+            "title" => "required|string|max:50",
+            "content" => "required|string",
+            "image" => "image|mimes:jpeg,png,jpg,svg|max:2048",
+            "short_description" => "required|string|max:255",
+            "location_name" => "required|string|max:50",
+            "location_lon" => "required|numeric",
+            "location_lat" => "required|numeric",
+            "type" => "required|in:event,news",
+            "start_at" => "date|date_format:Y-m-d", 
+            "end_at" => "date|after_or_equal:start_at|date_format:Y-m-d", 
+        ];
+
+        if ($this->input('type') !== 'news') {
+            $rules['start_at'] .= '|required';
+            $rules['end_at'] .= '|required';
         }
+
+        return $rules;
+        
     }
 
     public function messages()
@@ -63,9 +59,8 @@ class EventRequest extends FormRequest
                 "location_lon.numeric" => "the format must be in number!",
                 "location_lat.required" => "location latitude is required!",
                 "location_lat.numeric" => "the format must be in number!",
-                "start_at.required" => "start datetime is required!",
+                "start_at" => "start datetime is required!",
                 "start_at.date" => "the start date must be a valid date with this format: Y-m-d!",
-                "end_at" => "end datetime is required!",
                 "end_at.date" => "the end date must be a valid date with this format: Y-m-d!",
                 "end_at.after_or_equal" => "the end date must be greater than or equal to the start date!"
             ];
@@ -82,9 +77,7 @@ class EventRequest extends FormRequest
                 "location_lon.numeric" => "the format must be in number!",
                 "location_lat.required" => "location latitude is required!",
                 "location_lat.numeric" => "the format must be in number!",
-                "start_at.required" => "start datetime is required!",
                 "start_at.date" => "the start date must be a valid date with this format: Y-m-d!",
-                "end_at" => "end datetime is required!",
                 "end_at.date" => "the end date must be a valid date with this format: Y-m-d!",
                 "end_at.after_or_equal" => "the end date must be greater than or equal to the start date!"
             ];

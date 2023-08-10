@@ -19,6 +19,7 @@ class CreateEventsTable extends Migration
             $table->double('location_lat');
             $table->dateTime('start_at');
             $table->dateTime('end_at');
+            $table->enum('type', ['event', 'news']);
             $table->unsignedBigInteger('created_by');
             $table->dateTime('created_at');
             $table->timestamp('updated_at')->useCurrent();

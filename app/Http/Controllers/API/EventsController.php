@@ -24,10 +24,16 @@ class EventsController extends Controller
     public function index(Request $request)
     {
         // Get all events and sort them by start_at date
-        $events = Events::with(['user', 'user.userProfiles'])
+        $query = Events::with(['user', 'user.userProfiles'])
         ->where('status', '!=', 'deleted')
-        ->orderBy('start_at', $request->sort_by ? $request->sort_by : 'asc')
-        ->get();
+        ->orderBy('start_at', $request->sort_by ? $request->sort_by : 'asc');
+
+        // Check if type filter is provided
+        if ($request->has('type')) {
+            $query->where('type', $request->type);
+        }
+
+        $events = $query->get();
 
         if(!$events)
             return response()->json([
@@ -73,6 +79,7 @@ class EventsController extends Controller
                 "location_lat"      => $request->location_lat,
                 "start_at"          => $request->start_at,
                 "end_at"            => $request->end_at,
+                "type"              => $request->type,
                 "created_by"        => Auth::id()
             ]);
 
@@ -108,6 +115,35 @@ class EventsController extends Controller
         // Return response success
         return response()->json([
             'Event' => $event
+        ], 200);
+    }
+
+    public function showByToken(Request $request)
+    {   
+        // Get the currently authenticated user
+        $user = Auth::user();
+        
+        // Define the base query
+        $query = Events::with(['user', 'user.userProfiles'])
+            ->where('status', '!=', 'deleted')
+            ->orderBy('start_at', $request->sort_by ? $request->sort_by : 'asc');
+        
+        // If the user is an admin, fetch all events
+        if ($user->isAdmin()) {
+            $events = $query->get();
+        } else {
+            // If the user is not an admin, fetch events based on their user ID
+            $events = $query->where('created_by', $user->id)->get();
+        }
+
+        if ($events->isEmpty()) {
+            return response()->json([
+                'message' => 'No events found!'
+            ]);
+        }
+
+        return response()->json([
+            'events' => $events
         ], 200);
     }
 
@@ -150,6 +186,7 @@ class EventsController extends Controller
             $event->location_lat = $request->location_lat;
             $event->start_at = $request->start_at;
             $event->end_at = $request->end_at;
+            $event->type = $request->type;
 
             $event->save();
 

@@ -21,6 +21,7 @@ class Events extends Model
         "location_lat",
         "start_at",
         "end_at",
+        "type",
         "created_by",
         "created_at",
         "updated_at",
