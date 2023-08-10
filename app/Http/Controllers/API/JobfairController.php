@@ -21,11 +21,12 @@ class JobfairController extends Controller
 
     public function index()
     {
-        $jobfairs = new Jobfair();
-        $result = $jobfairs->getJobfairs();
+        $jobfairs = Jobfair::with(['user.userProfiles'])
+        ->where('status', '!=', 'deleted')
+        ->get();
 
         return response()->json([
-            'jobfairs' => $result
+            'jobfairs' => $jobfairs
         ]);
     }
 
@@ -90,6 +91,28 @@ class JobfairController extends Controller
         // Return response success
         return response()->json([
             'Jobfair' => $jobfair
+        ], 200);
+    }
+
+    public function showByToken()
+    {
+        // Get the authenticated user's token
+        $user = Auth::user();
+
+        // Find the store associated with the token
+        $jobfair = Jobfair::with(['user.userProfiles'])
+        ->where('created_by', $user->id)
+        ->get();
+
+        if (!$jobfair) {
+            return response()->json([
+                'message' => 'Store not found!'
+            ], 404);
+        }
+
+        // Return response success
+        return response()->json([
+            'jobfair' => $jobfair
         ], 200);
     }
 
