@@ -122,12 +122,14 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
         Route::delete('storedelete/{id}', [StoreController::class, 'delete']);
 
         // Jobfair Table
+        Route::get('jobfairbyuser', [JobfairController::class, 'showByToken']);
         Route::post('jobfair', [JobfairController::class, 'store']);
         Route::put('jobfairupdate/{id}', [JobfairController::class, 'update']);
         Route::delete('jobfairdelete/{id}', [JobfairController::class, 'delete']);
         
         // Event Table
         Route::post('event', [EventsController::class, 'store']);
+        Route::get('eventsbyuser', [EventsController::class, 'showByToken']);
         Route::put('eventupdate/{id}', [EventsController::class, 'update']);
         Route::delete('eventdelete/{id}', [EventsController::class, 'delete']);
        
