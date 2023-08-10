@@ -53,7 +53,7 @@ class BannerController extends Controller
                 $path  = $file->store('banner', 'public');
             }
 
-            // // check the api run on local or hosted on the web
+            // check the api run on local or hosted on the web
             // $host = $request->getHost();
 
             // if ($host === 'localhost' || $host === '127.0.0.1') {
@@ -69,7 +69,7 @@ class BannerController extends Controller
                 "title" => $request->title,
                 "content" => $request->content,
                 "short_description" => $request->short_description,
-                "tipe" => $request->tipe,
+                "type" => $request->tipe,
                 "file_url" => $path,
                 "created_by" => Auth::id(),
             ]);
@@ -135,7 +135,7 @@ class BannerController extends Controller
             $banner->title = $request->title;
             $banner->content = $request->content;
             $banner->short_description = $request->short_description;
-            $banner->tipe = $request->tipe;
+            $banner->type = $request->tipe;
             
             if($request->file) {
                 // Delete old image if exist
