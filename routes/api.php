@@ -64,6 +64,7 @@ Route::get('userprofile/{id}', [UserprofilesController::class, 'show']);
 Route::get('strukturorganisasi', [StrukturorganisasiController::class, 'index']);
 
 Route::post('userbytahunlulus', [UserController::class, 'showUserbyTahunLulus']);
+Route::post('userlulusperthreeyears', [UserController::class, 'countUserbyTahunLulus']);
  
 // Protected Routes
 Route::group(['middleware' => ['auth:sanctum']], function() {
@@ -108,21 +109,16 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::middleware('profile.completed')->group(function(){
         
         // User Experiences Table
-        Route::get('userexp', [UserexperiencesController::class, 'index']);
-        Route::get('userexpbytoken', [UserexperiencesController::class, 'showByToken']);
         Route::get('userexp/{id}', [UserexperiencesController::class, 'show']);
         Route::post('userexp', [UserexperiencesController::class, 'store']);
         Route::put('userexpupdate/{id}', [UserexperiencesController::class, 'update']);
 
         // Store Table
-        Route::get('storebytoken', [StoreController::class, 'showByToken']);
-        Route::get('storebyuserid/{id}', [StoreController::class, 'showByUserId']);
         Route::post('store', [StoreController::class, 'store']);
         Route::put('storeupdate/{id}', [StoreController::class, 'update']);
         Route::delete('storedelete/{id}', [StoreController::class, 'delete']);
 
         // Jobfair Table
-        Route::get('jobfairbyuser', [JobfairController::class, 'showByToken']);
         Route::post('jobfair', [JobfairController::class, 'store']);
         Route::put('jobfairupdate/{id}', [JobfairController::class, 'update']);
         Route::delete('jobfairdelete/{id}', [JobfairController::class, 'delete']);
@@ -134,12 +130,26 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
         Route::delete('eventdelete/{id}', [EventsController::class, 'delete']);
        
         // User Story Table
-        Route::get('userstorybytoken', [UserstoryController::class, 'showByToken']);
-        Route::get('userstorybyuserid/{id}', [UserstoryController::class, 'showByUserId']);
+        
         Route::post('userstory', [UserstoryController::class, 'store']);
         Route::put('userstoryupdate/{id}', [UserstoryController::class, 'update']);
         Route::delete('userstorydelete/{id}', [UserstoryController::class, 'destroy']);
     });
+
+    // User Experiences Table
+    Route::get('userexp', [UserexperiencesController::class, 'index']);
+    Route::get('userexpbytoken', [UserexperiencesController::class, 'showByToken']);
+
+    // Store Table
+    Route::get('storebytoken', [StoreController::class, 'showByToken']);
+    Route::get('storebyuserid/{id}', [StoreController::class, 'showByUserId']);
+
+    // Jobfair
+    Route::get('jobfairbyuser', [JobfairController::class, 'showByToken']);
+
+    // User Story Table
+    Route::get('userstorybytoken', [UserstoryController::class, 'showByToken']);
+    Route::get('userstorybyuserid/{id}', [UserstoryController::class, 'showByUserId']);
 
     // Image Uploader 
     Route::post('imageupload', [ImageuploaderController::class, 'store']);
