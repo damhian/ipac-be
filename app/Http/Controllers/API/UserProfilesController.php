@@ -7,7 +7,7 @@ use App\Http\Requests\UserprofileRequest;
 use App\Models\Idcard;
 use App\Traits\HttpResponses;
 use App\Models\Userprofiles;
-use App\Models\UserGallery;
+use App\Models\Usergallery;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -70,35 +70,46 @@ class UserprofilesController extends Controller
                         Storage::disk('public')->delete($userProfiles->userGallery->image_url);
                     }
 
-                    $userGallery = $userProfiles->userGallery ?? new UserGallery();
+                    $userGallery = $userProfiles->userGallery ?? new Usergallery();
                     $userGallery->alumni_id = $userProfiles->alumni_id;
                     
-                    if ($request->hasFile('image')) {
-                        $image = $request->file('image');
-                        $path = $image->store('user_gallery', 'public');
-                        $userGallery->image_url = $path;
+                    $image = $request->file('image');
+                    $path = $image->store('user_gallery', 'public');
+                    $userGallery->image_url = $path;
 
-                        $userGallery->delete();
-                        $userGallery->save();
-                    }
+                    $userGallery->delete();
+
+                    $userGallery->save();
 
                     $userProfiles->save();
                 }
 
                 $userIdcards = Idcard::where('alumni_id', Auth::id())->first();
 
-                $userIdcards->alumni_id     = $userProfiles->alumni_id;
-                $userIdcards->nomor_anggota = $userProfiles->nomor_anggota;
-                $userIdcards->first_name    = $userProfiles->first_name;
-                $userIdcards->last_name     = $userProfiles->last_name;
-                $userIdcards->image_url     = $userProfiles->userGallery;
+                if (!$userIdcards) {
+                    Idcard::create([
+                        'alumni_id'         => $userProfiles->alumni_id,
+                        'nomor_anggota'     => $userProfiles->nomor_anggota,
+                        'first_name'        => $userProfiles->first_name,
+                        'last_name'         => $userProfiles->last_name,
+                        'image_url'         => $userGallery->image_url,
+                    ]);
+                } else {
+                    $userIdcards->alumni_id     = $userProfiles->alumni_id;
+                    $userIdcards->nomor_anggota = $userProfiles->nomor_anggota;
+                    $userIdcards->first_name    = $userProfiles->first_name;
+                    $userIdcards->last_name     = $userProfiles->last_name;
+                    $userIdcards->image_url     = $userProfiles->userGallery;
+                }
+
+                $userProfiles->save();
 
                 DB::commit();
 
             } else {
                 
                 // Create User Profile
-                $userProfileData        = UserProfiles::create([
+                $userProfileData        = Userprofiles::create([
                     'alumni_id'         => Auth::id(),
                     'nomor_anggota'     => $this->generateNomorAnggota($request->tahun_lulus),
                     'profile_image_id'  => Auth::id(),
@@ -120,7 +131,7 @@ class UserprofilesController extends Controller
                 ]);
 
                 // Create User Gallery
-                $userGallery = new UserGallery();
+                $userGallery = new Usergallery();
                 $userGallery->alumni_id = $userProfileData->alumni_id;
 
                 // Handle file upload
@@ -187,8 +198,9 @@ class UserprofilesController extends Controller
 
         if (!$userProfiles) {
             return response()->json([
-                'message' => 'Store not found!'
-            ], 404);
+                'User Profile' => $userProfiles,
+                'message'      => 'User profile not found!'
+            ], 200);
         }
 
         // Return response success
@@ -254,7 +266,7 @@ class UserprofilesController extends Controller
                 Storage::disk('public')->delete($userProfiles->userGallery->image_url);
             }
 
-            $userGallery = $userProfiles->userGallery ?? new UserGallery();
+            $userGallery = $userProfiles->userGallery ?? new Usergallery();
             $userGallery->alumni_id = $userProfiles->alumni_id;
             
             // save user Gallery
