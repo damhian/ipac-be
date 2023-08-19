@@ -22,20 +22,13 @@ class JobfairController extends Controller
     public function index()
     {
         $jobfairs = Jobfair::with(['user.userProfiles'])
+        ->where('status', '=', 'approved')
         ->where('status', '!=', 'deleted')
         ->get();
 
         return response()->json([
             'jobfairs' => $jobfairs
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -99,10 +92,14 @@ class JobfairController extends Controller
         // Get the authenticated user's token
         $user = Auth::user();
 
-        // Find the store associated with the token
-        $jobfair = Jobfair::with(['user.userProfiles'])
-        ->where('created_by', $user->id)
-        ->get();
+        if ($user->isAdmin()) {
+            $query = Jobfair::with(['user.userProfiles']);
+        } else {
+            $query = Jobfair::with(['user.userProfiles'])
+                    ->where('created_by', $user->id);
+        }
+
+        $jobfair = $query->get();
 
         if (!$jobfair) {
             return response()->json([
@@ -114,14 +111,6 @@ class JobfairController extends Controller
         return response()->json([
             'jobfair' => $jobfair
         ], 200);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
     }
 
     /**
