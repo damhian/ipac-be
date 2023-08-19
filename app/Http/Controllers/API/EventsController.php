@@ -25,6 +25,7 @@ class EventsController extends Controller
     {
         // Get all events and sort them by start_at date
         $query = Events::with(['user', 'user.userProfiles'])
+        ->where('status', '=', 'approved')
         ->where('status', '!=', 'deleted')
         ->orderBy('start_at', $request->sort_by ? $request->sort_by : 'asc');
 
@@ -43,14 +44,6 @@ class EventsController extends Controller
         return response()->json([
             'events' => $events
         ], 200);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -145,14 +138,6 @@ class EventsController extends Controller
         return response()->json([
             'events' => $events
         ], 200);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
     }
 
     /**
