@@ -8,7 +8,6 @@ use App\Models\Companies;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage; // php artisan storage:link => here's the link to get the picture url('')."/storage/{$img}"
 
 class CompaniesController extends Controller
@@ -19,7 +18,7 @@ class CompaniesController extends Controller
     public function index()
     {
         // All Companies
-        $companies = Companies::with(['user.userProfiles'])->all();
+        $companies = Companies::with(['user.userProfiles'])->get();
 
         return response()->json([
             'companies' => $companies
@@ -40,17 +39,13 @@ class CompaniesController extends Controller
     public function store(CompaniesRequest $request)
     {
         try {
-             // Check file and store image in storage folder under banner folder
-             if ($request->hasFile('image_url')) {
-                $image = $request->file('image_url');
-                $path  = $image->store('companies', 'public');
-            }
-
+            
             // Create Company
             Companies::create([
-                'image_url' => $path,
+                // 'image_url' => $path,
                 'name' => $request->name,
-                'about' => $request->about
+                'about' => $request->about,
+                'created_by' => Auth::id()
             ]);
 
             DB::commit();
@@ -134,16 +129,6 @@ class CompaniesController extends Controller
             $companies->name = $request->name;
             $companies->about = $request->about;
 
-            if ($request->image_url) {
-                // Delete old image if exists
-                if($companies->image_url)
-                    Storage::disk('public')->delete($companies->image_url);
-
-                $image                  = $request->image_url;
-                $path                   = $image->store('companies', 'public');
-                $companies->image_url   = $path;
-            }
-
             // Update Company
             $companies->save();
             
@@ -177,9 +162,9 @@ class CompaniesController extends Controller
             ], 404);
         }
 
-        // Check and delete image if exists
-        if($companies->image_url)  
-            Storage::disk('public')->delete($companies->image_url);
+        // // Check and delete image if exists
+        // if($companies->image_url)  
+        //     Storage::disk('public')->delete($companies->image_url);
 
         // Delete company
         $companies->delete();

@@ -11,7 +11,6 @@ class Companies extends Model
 
     protected $fillable = [
         "id",
-        "image_url",
         "name",
         "about",
         "created_by",

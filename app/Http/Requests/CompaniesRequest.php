@@ -31,13 +31,11 @@ class CompaniesRequest extends FormRequest
     {
         if (request()->isMethod('post')) {
             return [
-                'image_url' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048',
                 'name' => 'required|string|max:50',
                 'about' => 'required|string'
             ];
         } else {
             return [
-                'image_url' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048',
                 'name' => 'required|string|max:50',
                 'about' => 'required|string'
             ];
@@ -48,17 +46,11 @@ class CompaniesRequest extends FormRequest
     {
         if (request()->isMethod('post')) {
             return [
-                'image_url.required' => 'image is required!',
-                'image.mimes' => 'the images must be in these format: jpeg,png,jpg,svg',
-                'image.max' => 'the maximum capacity of the image can upload is 2MB',
                 'name.required' => 'name is required!',
                 'about.required' => 'about is required!'
             ];
         } else {
             return [
-                'image_url.required' => 'image is required!',
-                'image.mimes' => 'the images must be in these format: jpeg,png,jpg,svg',
-                'image.max' => 'the maximum capacity of the image can upload is 2MB',
                 'name.required' => 'name is required!',
                 'about.required' => 'about is required!'
             ];
