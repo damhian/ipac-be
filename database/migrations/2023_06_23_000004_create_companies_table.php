@@ -10,8 +10,7 @@ class CreateCompaniesTable extends Migration
     {
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
-            $table->string('image_url', 255)->nullable();
-            $table->string('name', 50);
+            $table->string('name', 255);
             $table->text('about')->nullable();
             $table->unsignedBigInteger('created_by');
             $table->dateTime('created_at');
