@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Rules\UniqueSuperadmin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -45,8 +46,8 @@ class UserController extends Controller
                 'username' => 'required|unique:users',
                 'email' => 'required|email|unique:users',
                 'password' => 'required|min:6',
-                'role' => 'in:superadmin,admin,alumni', // Assuming 'role' can be either 'admin' or 'alumni'
-                // 'status' => 'in:approved,pending', // Assuming 'status' can be either 'approved' or 'pending'
+                'role' => 'in:superadmin,admin,alumni', 
+                new UniqueSuperadmin, // Apply the custom rule for UniqueSuperadmin
             ]);
     
             // Create the new user
