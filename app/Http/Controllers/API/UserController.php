@@ -139,6 +139,21 @@ class UserController extends Controller
         return $query->count();
     }
 
+    public function countUserbyTahunLulus(Request $request)
+    {
+        $startYear = $request->input('tahun_lulus', date('Y'));
+        $userCounts = [];
+
+        for ($i = $startYear; $i >= $startYear - 3; $i--) {
+            $userCount = $this->countUsersWithTahunLulus($i, $i - 1);
+            $userCounts[$i] = $userCount;
+        }
+
+        return response()->json([
+            'UserCounts' => $userCounts
+        ]);
+    }
+
     /**
      * Show the form for editing the specified resource.
      */
