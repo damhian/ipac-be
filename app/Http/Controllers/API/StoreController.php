@@ -118,7 +118,7 @@ class StoreController extends Controller
 
         if (!$store) {
             return response()->json([
-                'message' => 'Store not found!'
+                'message' => 'User profile not found!'
             ], 404);
         }
 
