@@ -80,7 +80,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $user = User::with('userExperience', 'userProfiles', 'userGallery')->find($id);
+        $user = User::with('userExperience', 'userProfiles', 'userGallery', 'userIdcards')->find($id);
 
         if (!$user) {
             return response()->json([
