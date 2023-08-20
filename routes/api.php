@@ -158,6 +158,7 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
 
     // Banner Table
     Route::post('banner', [BannerController::class, 'store']);
+    Route::get('bannerbytoken', [BannerController::class, 'showByToken']);
     Route::put('bannerupdate/{id}', [BannerController::class, 'update']);
     Route::delete('bannerdelete/{id}' ,[BannerController::class, 'delete']);
 
