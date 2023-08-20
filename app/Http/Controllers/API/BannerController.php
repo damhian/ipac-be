@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Mockery\Undefined;
 
 class BannerController extends Controller
 {
@@ -23,6 +24,7 @@ class BannerController extends Controller
 
     public function index(Request $request)
     {   
+        // dd('test');
         $query = Banner::where('status', '!=', 'deleted');
 
         if ($request->has('type')) {
@@ -68,11 +70,12 @@ class BannerController extends Controller
             //     $fileUrl = asset('public/storage/' . $path);
             // }
             
+            
             // Create Banner
             Banner::create([
-                "title" => $request->title,
-                "content" => $request->content,
-                "short_description" => $request->short_description,
+                "title" => $request->title == null || empty($request->title) ? '' : $request->title,
+                "content" => $request->content == null || empty($request->content) ? '' : $request->content,
+                "short_description" => $request->short_description == null || empty($request->short_description) ? '' : $request->short_description,
                 "type" => $request->tipe,
                 "file_url" => $path,
                 "created_by" => Auth::id(),
@@ -114,12 +117,26 @@ class BannerController extends Controller
         ], 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function showByToken()
     {
-        //
+        $user = Auth::user();
+        
+        if ($user->isAdmin()) {
+            $banner = Banner::all();
+        } else {
+            $banner = Banner::where('created_by', $user->id)->get();
+        }
+
+        if($banner->isEmpty()){
+            return response()->json([
+                'message' => 'No banner found!'
+            ]);
+        }
+
+        return response()->json([
+            'banner' => $banner
+        ]);
+
     }
 
     /**
@@ -136,9 +153,9 @@ class BannerController extends Controller
                     'message' => 'Banner not found!'
                 ], 404);
             
-            $banner->title = $request->title;
-            $banner->content = $request->content;
-            $banner->short_description = $request->short_description;
+            $banner->title = $request->title == null || empty($request->title) ? '' : $request->title;
+            $banner->content = $request->content == null || empty($request->content) ? '' : $request->content;
+            $banner->short_description = $request->short_description == null || empty($request->short_description) ? '' : $request->short_description;
             $banner->type = $request->tipe;
             
             if($request->file) {

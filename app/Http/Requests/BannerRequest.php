@@ -24,17 +24,11 @@ class BannerRequest extends FormRequest
     {
         if (request()->isMethod('post')) {
             return [
-                "title" => "required|string|max:50",
-                "content" => "required|string",
-                "short_description" => "required|string|max:255", 
                 "tipe" => "required|in:home,profile,store,about", 
                 "file" => "required|file|mimetypes:image/jpeg,image/png,image/jpg,image/svg,video/mp4,video/quicktime|max:20480" // 20MB limit for file
             ];
         } else {
             return [
-                "title" => "required|string|max:50",
-                "content" => "required|string",
-                "short_description" => "required|string|max:255",
                 "tipe" => "required|in:home,profile,store,about",
                 "file" => "required|file|mimetypes:image/jpeg,image/png,image/jpg,image/svg,video/mp4,video/quicktime|max:20480" // 20MB limit for file
             ];
@@ -44,9 +38,6 @@ class BannerRequest extends FormRequest
     public function messages()
     {
          return [
-            "title" => "title is required!",
-            "content" => "content is required!",
-            "short_description" => "short description is required!",
             "tipe" => "type is required!",
             "tipe.in" => "invalid input. please input one of this string option : home,profile,store,about",
             "file" => "file is required!",
