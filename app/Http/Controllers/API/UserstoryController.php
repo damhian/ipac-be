@@ -64,7 +64,7 @@ class UserstoryController extends Controller
      */
     public function show(string $id)
     {
-        $userstory = Userstory::where('alumni_id', $id)->first();
+        $userstory = Userstory::where('id', $id)->first();
 
             if(!$userstory)
                 return response()->json([
