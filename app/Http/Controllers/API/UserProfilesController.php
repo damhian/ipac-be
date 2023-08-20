@@ -159,7 +159,7 @@ class UserprofilesController extends Controller
      */
     public function show($id)
     {        
-        $userProfiles = Userprofiles::with('userGallery', 'userIdcard')->where('alumni_id', $id)->first();
+        $userProfiles = Userprofiles::with('userExperience', 'userGallery', 'userIdcards')->where('alumni_id', $id)->first();
 
         if(!$userProfiles)
             return response()->json([
@@ -178,7 +178,7 @@ class UserprofilesController extends Controller
         $user = Auth::user();
                 
         // Find the store associated with the token
-        $userProfiles = Userprofiles::with('userGallery', 'userIdcard')->where('alumni_id', $user->id)->first();
+        $userProfiles = Userprofiles::with('userExperience', 'userGallery', 'userIdcards')->where('alumni_id', $user->id)->first();
 
         if (!$userProfiles) {
             return response()->json([

@@ -49,12 +49,17 @@ class UserProfiles extends Model
     /**
      * Get the user gallery associated with the user profile.
      */
+    
+    public function userExperience():HasOne {
+        return $this->hasOne(Userexperiences::class, 'alumni_id', 'alumni_id');
+    }
+        
     public function userGallery(): HasOne
     {
         return $this->hasOne(Usergallery::class, 'alumni_id', 'alumni_id');
     }
 
-    public function userIdcard(): HasOne
+    public function userIdcards(): HasOne
     {
         return $this->hasOne(Idcard::class, 'alumni_id', 'alumni_id');
     }
