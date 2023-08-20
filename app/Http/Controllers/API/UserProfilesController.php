@@ -18,22 +18,6 @@ class UserprofilesController extends Controller
     use HttpResponses;
 
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(UserprofileRequest $request)
@@ -63,6 +47,8 @@ class UserprofilesController extends Controller
                 $userProfiles->phone_number_code = $request->phone_number_code;
                 $userProfiles->gender            = $request->gender;
 
+                $userGallery = $userProfiles->userGallery ?? new Usergallery();
+
                 //Update image
                 if($request->hasFile('image')){
                     // Delete the old file if exist
@@ -70,7 +56,6 @@ class UserprofilesController extends Controller
                         Storage::disk('public')->delete($userProfiles->userGallery->image_url);
                     }
 
-                    $userGallery = $userProfiles->userGallery ?? new Usergallery();
                     $userGallery->alumni_id = $userProfiles->alumni_id;
                     
                     $image = $request->file('image');
@@ -149,7 +134,6 @@ class UserprofilesController extends Controller
                     'image_url'         => $userGallery->image_url,
                 ]);
 
-
                 $userProfileData->save();
                 
                 $userGallery->save();
@@ -207,14 +191,6 @@ class UserprofilesController extends Controller
         return response()->json([
             'User Profiles' => $userProfiles
         ], 200);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
     }
 
     /**
@@ -307,14 +283,6 @@ class UserprofilesController extends Controller
             'error message' => $th
         ], 500);
        }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 
     private function generateNomorAnggota($tahunLulus)
