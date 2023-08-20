@@ -10,10 +10,10 @@ class CreateBannerTable extends Migration
     {
         Schema::create('banner', function (Blueprint $table) {
             $table->id();
-            $table->string('title', 50);
+            $table->string('title', 50)->nullable();
             $table->text('content')->nullable();
-            $table->string('short_description', 255);
-            $table->string('file_url', 255)->nullable();
+            $table->string('short_description', 255)->nullable();
+            $table->string('file_url', 255);
             $table->enum('type', ['home', 'profile', 'store', 'about']);
             $table->unsignedBigInteger('created_by');
             $table->dateTime('created_at');
