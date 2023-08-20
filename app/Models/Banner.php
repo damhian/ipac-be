@@ -30,7 +30,4 @@ class Banner extends Model
 
     protected $hidden = ["created_at", "updated_at"];
 
-    public function getBanner() {
-        return $this->where('status', '!=', 'deleted')->get();
-    }
 }

@@ -23,7 +23,7 @@ class BannerController extends Controller
 
     public function index(Request $request)
     {   
-        $query = Banner::query();
+        $query = Banner::where('status', '!=', 'deleted');
 
         if ($request->has('type')) {
             $query->where('type', $request->type);
