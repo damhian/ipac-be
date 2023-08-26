@@ -22,7 +22,7 @@ class UserProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'license_number' => 'required|integer',
+            'license_number' => 'required|integer|max:12',
             'first_name' => 'required|string|max:50',
             'last_name' => 'required|string|max:50',
             "image" => "image|mimes:mimes:jpeg,png,jpg,svg|max:5120",
@@ -51,6 +51,7 @@ class UserProfileRequest extends FormRequest
         return [
             'license_number.required' => 'The license number field is required.',
             'license_number.integer' => 'The license number must be an integer.',
+            'license_number.max' => 'maximum number input for license_number cannot exceed 12 digit!',
             'first_name.required' => 'The first name field is required.',
             'first_name.max' => 'The first name may not be greater than :max characters.',
             'last_name.required' => 'The last name field is required.',

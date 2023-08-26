@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Usergallery;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class UserProfiles extends Model
@@ -50,8 +51,8 @@ class UserProfiles extends Model
      * Get the user gallery associated with the user profile.
      */
     
-    public function userExperience():HasOne {
-        return $this->hasOne(Userexperiences::class, 'alumni_id', 'alumni_id');
+    public function userExperiences():HasMany {
+        return $this->hasMany(Userexperiences::class, 'alumni_id', 'alumni_id');
     }
         
     public function userGallery(): HasOne
