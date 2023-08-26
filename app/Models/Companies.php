@@ -24,4 +24,9 @@ class Companies extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
+    public function userExperience()
+    {
+        return $this->belongsTo(Userexperiences::class, 'company_id', 'id');
+    }
 }
