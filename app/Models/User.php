@@ -69,8 +69,8 @@ class User extends Authenticatable
         return $this->status === 'approved';
     }
 
-    public function userExperience():HasOne {
-        return $this->hasOne(Userexperiences::class, 'alumni_id');
+    public function userExperience():HasMany {
+        return $this->hasMany(Userexperiences::class, 'alumni_id');
     }
 
     public function userProfiles():HasOne {
