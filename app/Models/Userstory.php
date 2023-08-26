@@ -15,6 +15,8 @@ class Userstory extends Model
     protected $fillable = [
         'id',
         'alumni_id',
+        'title',
+        'image',
         'story',
         'created_at',
         'updated_at'

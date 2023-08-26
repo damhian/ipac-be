@@ -22,11 +22,15 @@ class UserstoryRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
+            'title' => 'max:50',
+            'image' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048',
             'story' => 'required|string'
         ];
 
         if ($this->isMethod('post')) {
             $rules = [
+                'title' => 'max:50',
+                'image' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048',
                 'story' => 'required|string'
             ];
         } else {
@@ -42,6 +46,10 @@ class UserstoryRequest extends FormRequest
     public function messages():array
     {
         return [
+            'title.max' => 'maximal characters for title is 50!',
+            'image.required' => 'image is required!',
+            'image.mimes' => 'the images must be in these format: jpeg,png,jpg,svg',
+            'image.max' => 'the maximum capacity of the image can upload is 2MB',
             'story.required' => 'story is required!'
         ];
     }

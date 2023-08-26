@@ -8,6 +8,7 @@ use App\Models\Userstory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class UserstoryController extends Controller
 {
@@ -37,9 +38,15 @@ class UserstoryController extends Controller
     public function store(UserstoryRequest $request)
     {
         try {
+
+            $image = $request->image == null || empty($request->image) ? '' : $request->image;
+            $path = $image->store('storyimage', 'public');
+
             //Create User Story
             Userstory::create([
                 'alumni_id'     => Auth::id(),
+                'title'         => $request->title == null || empty($request->title) ? '' : $request->title,
+                'image'         => $path,
                 'story'         => $request->story,
             ]);
 
@@ -117,14 +124,6 @@ class UserstoryController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(UserstoryRequest $request, string $id)
@@ -143,8 +142,21 @@ class UserstoryController extends Controller
                     'message' => 'Unauthorized!'
                 ], 401);
 
+            
+
             $userstory->alumni_id   = Auth::id();
+            $userstory->title       = $request->title == null || empty($request->title) ? '' : $request->title;
             $userstory->story       = $request->story;
+
+            if($request->image){
+                if($userstory->image)
+                    Storage::disk('public')->delete('storyimage', 'public');
+
+                $image = $request->image;
+                $path = $image->store('storyimage', 'public');
+
+                $userstory->image = $path;
+            }
 
             $userstory->save();
 
@@ -165,12 +177,19 @@ class UserstoryController extends Controller
     public function destroy(string $id)
     {
         try {
-            $userstory = Userstory::where('alumni_id', $id)->first();
+            $userstory = Userstory::find($id);
 
             if(!$userstory)
                 return response()->json([
                     'message' => 'User story not found!'
                 ], 404);
+
+            // Public storage
+            $storage = Storage::disk('public');
+
+            // Old image delete
+            if($storage->exists($userstory->image))
+                $storage->delete($userstory->image);
             
             $userstory->delete();
             
