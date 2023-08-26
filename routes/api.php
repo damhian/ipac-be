@@ -15,6 +15,7 @@ use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\UserexperiencesController;
 use App\Http\Controllers\API\UserprofilesController;
 use App\Http\Controllers\API\UserstoryController;
+use App\Models\Userexperiences;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -109,9 +110,9 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::middleware('profile.completed')->group(function(){
         
         // User Experiences Table
-        Route::get('userexp/{id}', [UserexperiencesController::class, 'show']);
         Route::post('userexp', [UserexperiencesController::class, 'store']);
         Route::put('userexpupdate/{id}', [UserexperiencesController::class, 'update']);
+        Route::delete('userexpdelete/{id}', [UserexperiencesController::class, 'delete']);
 
         // Store Table
         Route::post('store', [StoreController::class, 'store']);
@@ -137,6 +138,7 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
 
     // User Experiences Table
     Route::get('userexp', [UserexperiencesController::class, 'index']);
+    Route::get('userexp/{id}', [UserexperiencesController::class, 'show']);
     Route::get('userexpbytoken', [UserexperiencesController::class, 'showByToken']);
 
     // Store Table
