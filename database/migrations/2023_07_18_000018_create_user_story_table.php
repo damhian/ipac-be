@@ -11,6 +11,8 @@ class CreateUserStoryTable extends Migration
         Schema::create('user_story', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('alumni_id');
+            $table->string('title', 50)->nullable();
+            $table->string('image', 255);
             $table->text('story');
             $table->dateTime('created_at');
             $table->timestamp('updated_at')->useCurrent();

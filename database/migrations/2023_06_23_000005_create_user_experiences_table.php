@@ -12,11 +12,12 @@ class CreateUserExperiencesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('alumni_id');
             $table->unsignedBigInteger('company_id');
-            $table->string('position', 20);
+            $table->string('position', 255);
             $table->date('start_at');
             $table->date('end_at')->nullable();
             $table->dateTime('created_at');
             $table->timestamp('updated_at')->useCurrent();
+            $table->enum('status', ['active', 'deleted']);
             
             $table->foreign('alumni_id')->references('id')->on('users');
             $table->foreign('company_id')->references('id')->on('companies');
