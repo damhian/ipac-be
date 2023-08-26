@@ -16,19 +16,13 @@ class UserexperiencesController extends Controller
      */
     public function index()
     {
-        $userexp = Userexperiences::with(['user.userProfiles'])->get();
+        $userexp = Userexperiences::with(['company', 'user.userProfiles'])
+        ->where('status', '!=', 'deleted')
+        ->get();
 
         return response()->json([
             'User_experiences' => $userexp
         ], 200);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -87,7 +81,10 @@ class UserexperiencesController extends Controller
         $user = Auth::user();
         
         // Find the store associated with the token
-        $userexperience = Userexperiences::with(['user.userProfiles'])->where('alumni_id', $user->id)->get();
+        $userexperience = Userexperiences::with(['user.userProfiles'])
+                        ->where('status', '!=', 'deleted')
+                        ->where('alumni_id', $user->id)
+                        ->get();
 
         if (!$userexperience) {
             return response()->json([
@@ -99,14 +96,6 @@ class UserexperiencesController extends Controller
         return response()->json([
             'user experience' => $userexperience
         ], 200);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
     }
 
     /**
@@ -152,8 +141,33 @@ class UserexperiencesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function delete(string $id)
     {
-        //
+        try {
+            
+            $userexp = Userexperiences::find($id);
+
+            if(!$userexp)
+                return response()->json([
+                    'message' => 'User experiences not found!'
+                ], 404);
+
+            $userexp->status = 'deleted';
+
+            $userexp->save();
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'User experiences successfully deleted'
+            ]);
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            return response()->json([
+                'message' => 'Something went wrong!'
+            ]);
+        }
     }
 }

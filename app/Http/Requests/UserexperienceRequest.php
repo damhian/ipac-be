@@ -23,7 +23,7 @@ class UserexperienceRequest extends FormRequest
     {
         $rules = [
             'company_id'    => 'required',
-            'position'      => 'required|string|max:20',
+            'position'      => 'required|string|max:255',
             'start_at'      => 'required|date|date_format:Y-m-d',
             'end_at'        => 'required|date|after:start_at|date_format:Y-m-d'
         ];
@@ -36,7 +36,7 @@ class UserexperienceRequest extends FormRequest
         return [
             'company_id'        => 'company is required!',
             'position.required' => 'position is required!',
-            'position.max'      => 'max input is 20 character',
+            'position.max'      => 'max input is 255 character',
             'start_at.required' => 'start datetime is required!',
             'start_at.date'     => 'the start date must be a valid date with this format: Y-m-d!',
             'end_at.required'   => 'end datetime is required!',
