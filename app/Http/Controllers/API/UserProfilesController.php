@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Http\Requests\UserprofileRequest;
 use App\Models\Idcard;
 use App\Traits\HttpResponses;
@@ -10,7 +11,9 @@ use App\Models\Userprofiles;
 use App\Models\Usergallery;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class UserprofilesController extends Controller
 {
@@ -23,7 +26,7 @@ class UserprofilesController extends Controller
     public function store(UserprofileRequest $request)
     {
         try {
-
+            
             $userProfiles = Userprofiles::where('alumni_id', Auth::id())->first();
             // Check user profiles
             if ($userProfiles) {
@@ -42,10 +45,13 @@ class UserprofilesController extends Controller
                 $userProfiles->current_workplace = $request->current_workplace;
                 $userProfiles->birth_place       = $request->birth_place;
                 $userProfiles->date_of_birth     = $request->date_of_birth;
+                $userProfiles->nationality       = $request->nationality;
                 $userProfiles->address           = $request->address;
                 $userProfiles->phone_number      = $request->phone_number;
                 $userProfiles->phone_number_code = $request->phone_number_code;
                 $userProfiles->gender            = $request->gender;
+                $userProfiles->status            = $request->status;
+
 
                 $userGallery = $userProfiles->userGallery ?? new Usergallery();
 
@@ -84,7 +90,9 @@ class UserprofilesController extends Controller
                     $userIdcards->nomor_anggota = $userProfiles->nomor_anggota;
                     $userIdcards->first_name    = $userProfiles->first_name;
                     $userIdcards->last_name     = $userProfiles->last_name;
-                    $userIdcards->image_url     = $userProfiles->userGallery;
+                     if($request->hasFile('image')){
+                         $userIdcards->image_url     = $userProfiles->userGallery;
+                     }
                 }
 
                 $userProfiles->save();
@@ -109,6 +117,7 @@ class UserprofilesController extends Controller
                     'current_workplace' => $request->current_workplace,
                     'birth_place'       => $request->birth_place,
                     'date_of_birth'     => $request->date_of_birth,
+                    'nationality'       => $request->nationality,
                     'address'           => $request->address,
                     'phone_number'      => $request->phone_number,
                     'phone_number_code' => $request->phone_number_code,
@@ -173,7 +182,7 @@ class UserprofilesController extends Controller
     }
 
     public function showByToken()
-    {
+    {   
         // Get the authenticated user's token
         $user = Auth::user();
                 
@@ -200,7 +209,7 @@ class UserprofilesController extends Controller
     {
        try {
         //Find user profile by alumni_id as user id
-        $userProfiles = Userprofiles::with('userGallery', 'userIdcard')->where('alumni_id' ,$id)->first();
+        $userProfiles = Userprofiles::with('userGallery', 'userIdcards')->where('alumni_id' ,$id)->first();
 
         if(!$userProfiles)
             return response()->json([
@@ -228,13 +237,15 @@ class UserprofilesController extends Controller
         $userProfiles->current_workplace = $request->current_workplace;
         $userProfiles->birth_place       = $request->birth_place;
         $userProfiles->date_of_birth     = $request->date_of_birth;
+        $userProfiles->nationality       = $request->nationality;
         $userProfiles->address           = $request->address;
         $userProfiles->phone_number      = $request->phone_number;
         $userProfiles->phone_number_code = $request->phone_number_code;
         $userProfiles->gender            = $request->gender;
+        $userProfiles->status            = $request->status;
 
         $path = null;
-
+        
         //Update image
         if($request->hasFile('image')){
             // Delete the old file if exist
@@ -254,17 +265,30 @@ class UserprofilesController extends Controller
             $userGallery->save();
 
             $userProfiles->save();
-        }
+        } 
 
         //Find user idcards by alumni_id as user id
         $userIdcards = Idcard::where('alumni_id' ,$id)->first();
 
-        $userIdcards->alumni_id     = Auth::id();
-        // $userIdcards->nomor_anggota = $userProfiles->nomor_anggota;
-        $userIdcards->first_name    = $request->first_name;
-        $userIdcards->last_name     = $request->last_name;
-        $userIdcards->image_url     = $path;
-
+        if (!$userIdcards) {
+            Idcard::create([
+                'alumni_id'         => $userProfiles->alumni_id,
+                'nomor_anggota'     => $userProfiles->nomor_anggota,
+                'first_name'        => $userProfiles->first_name,
+                'last_name'         => $userProfiles->last_name,
+                'image_url'         => $userGallery->image_url,
+            ]);
+        } else {
+            $userIdcards->alumni_id     = $userProfiles->alumni_id;
+            $userIdcards->nomor_anggota = $userProfiles->nomor_anggota;
+            $userIdcards->first_name    = $userProfiles->first_name;
+            $userIdcards->last_name     = $userProfiles->last_name;
+            $userIdcards->image_url     = $userProfiles->userGallery;
+            if ($request->hasFile('image')) {
+                $userIdcards->image_url = $userProfiles->userGallery; // Assign the new image URL
+            }
+        }
+    
         $userIdcards->save();
 
         $userProfiles->save();
@@ -283,6 +307,66 @@ class UserprofilesController extends Controller
             'error message' => $th
         ], 500);
        }
+    }
+
+    public function updateUserCredentials(Request $request)
+    {
+        try {
+            $user = Auth::user();
+
+            // Validate the input based on user choices
+            $rules = [
+                'username' => [
+                    'nullable',
+                    Rule::unique('users')->ignore($user->id),
+                ],
+                'email' => [
+                    'nullable',
+                    'email',
+                    Rule::unique('users')->ignore($user->id),
+                ],
+                'old_password' => [
+                    function ($attribute, $value, $fail) use ($user) {
+                        if (!empty($value) && !Hash::check($value, $user->password)) {
+                            $fail('The old password is incorrect.');
+                        }
+                    },
+                ],
+                'password' => 'nullable|min:6|confirmed',
+            ];
+
+             // Conditionally remove password rules if old_password is not provided
+        if (empty($request->input('old_password'))) {
+            unset($rules['password']);
+        }
+
+        $request->validate($rules);
+
+        // Update username and email
+        if($request->username)
+            $user->username = $request->input('username');
+        
+        if($request->email)
+            $user->email = $request->input('email');
+
+        // Update password if provided
+        if ($request->has('password')) {
+            $user->password = Hash::make($request->input('password'));
+        }
+
+        $user->save();
+
+        return response()->json([
+            'message' => 'User credentials updated successfully',
+            'user' => $user
+        ], 200);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => 'Failed to update user credentials',
+                'error' => $th->getMessage()
+            ], 500);
+        }
     }
 
     private function generateNomorAnggota($tahunLulus)

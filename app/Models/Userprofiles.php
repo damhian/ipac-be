@@ -30,13 +30,17 @@ class UserProfiles extends Model
         'current_workplace',
         'birth_place',
         'date_of_birth',
+        'nationality',
         'address',
         'phone_number',
         'phone_number_code',
         'gender',
+        'status',
         'created_at',
         'updated_at',
     ];
+
+    protected $attributes = ['nationality' => 'INDONESIA'];
 
     protected $hidden = ['created_at', 'updated_at'];
 
