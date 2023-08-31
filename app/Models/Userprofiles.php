@@ -35,7 +35,6 @@ class UserProfiles extends Model
         'phone_number',
         'phone_number_code',
         'gender',
-        'status',
         'created_at',
         'updated_at',
     ];
