@@ -14,14 +14,17 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {   
         $currentUserId = Auth::id();
+        
+        // Set the number of items per page, you can adjust this as needed
+        $perPage = $request->input('per_page', 10);
 
         // Fetch all users with their related data
         $users = User::where('id', '!=', $currentUserId)
         ->with('userExperience', 'userProfiles', 'userGallery')
-        ->get();
+        ->paginate($perPage);
         
         return response()->json([
             'users' => $users
