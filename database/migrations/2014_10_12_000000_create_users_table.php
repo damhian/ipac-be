@@ -18,7 +18,9 @@ return new class extends Migration
             $table->string('password', 100);
             $table->enum('role', ['superadmin','admin','alumni']);
             $table->enum('status', ['pending', 'approved', 'denied', 'deleted']);
-            $table->timestamps();
+            $table->enum('current_status', ['HIDUP', 'ALMARHUM', 'GUGUR DALAM TUGAS']);
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent();
         });
     }
 
