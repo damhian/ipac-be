@@ -143,20 +143,33 @@ class AdminController extends Controller
              case 'user':
                 $user = User::find($id);
                 $status = $request->input('status');
+                $currentStatus = $request->input('current_status');
 
                 if(!$user)
                     return response()->json([
                         'message' => 'User not found!'
                     ], 400);
 
-                if (!in_array($status, ['pending', 'approved', 'denied', 'deleted'])) 
-                    return response()->json([
-                        'message' => 'Invalid status value.'
-                    ], 400);
-                
-
-                User::where('id', $id)->update(['status' => $status]);
- 
+                    if ($request->has('status')) {
+                        if (!in_array($status, ['pending', 'approved', 'denied', 'deleted'])) {
+                            return response()->json([
+                                'message' => 'Invalid status value.'
+                            ], 400);
+                        }
+    
+                        User::where('id', $id)->update(['status' => $status]);
+                    }
+    
+                    if ($request->has('current_status')) {
+                        if (!in_array($currentStatus, ['HIDUP', 'ALMARHUM', 'GUGUR DALAM TUGAS'])) {
+                            return response()->json([
+                                'message' => 'Invalid current_status value.'
+                            ], 400);
+                        }
+    
+                        User::where('id', $id)->update(['current_status' => $currentStatus]);
+                    }
+    
                 break;
             default:
                 abort(404);
