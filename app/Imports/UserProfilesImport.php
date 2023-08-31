@@ -20,6 +20,7 @@ class UserProfilesImport implements ToCollection, WithHeadingRow
                 'email' => $email,
                 'username' => $username,
                 'password' => Hash::make($row['password']),
+                'current_status' => $row['status'],
             ];
 
             // Insert user data into the users table
@@ -56,8 +57,7 @@ class UserProfilesImport implements ToCollection, WithHeadingRow
                 'training_program' => $row['training_program'],
                 'license_number' => $license_number,
                 'current_job' => $row['current_job'],
-                'current_workplace' => $row['current_workplace'],
-                'status' => $row['status'],
+                'current_workplace' => $row['current_workplace']
             ];
 
             // Insert user profile data into the user_profiles table

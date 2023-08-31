@@ -50,8 +50,6 @@ class UserprofilesController extends Controller
                 $userProfiles->phone_number      = $request->phone_number;
                 $userProfiles->phone_number_code = $request->phone_number_code;
                 $userProfiles->gender            = $request->gender;
-                $userProfiles->status            = $request->status;
-
 
                 $userGallery = $userProfiles->userGallery ?? new Usergallery();
 
@@ -242,7 +240,6 @@ class UserprofilesController extends Controller
         $userProfiles->phone_number      = $request->phone_number;
         $userProfiles->phone_number_code = $request->phone_number_code;
         $userProfiles->gender            = $request->gender;
-        $userProfiles->status            = $request->status;
 
         $path = null;
         

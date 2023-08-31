@@ -22,14 +22,14 @@ class UserProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'license_number' => 'required|integer|max:12',
+            'license_number' => 'nullable|integer|digits_between:1,12',
             'first_name' => 'required|string|max:50',
             'last_name' => 'nullable|string|max:50',
             "image" => "image|mimes:mimes:jpeg,png,jpg,svg|max:5120",
             'tahun_masuk' => 'required|integer',
-            'tahun_lulus' => 'required|integer',
+            'tahun_lulus' => 'nullable|integer',
             'training_program' => 'nullable|string|max:80',
-            'batch' => 'required|string|max:25',
+            'batch' => 'nullable|string|max:25',
             'current_job' => 'nullable|string|max:191',
             'current_workplace' => 'nullable|string|max:255',
             'birth_place' => 'nullable|string|max:80',
@@ -39,7 +39,6 @@ class UserProfileRequest extends FormRequest
             'phone_number' => 'nullable|string|max:15',
             'phone_number_code' => 'nullable|string|max:4',
             'gender' => 'required|string|max:12',
-            'status' => 'required|in:HIDUP,ALMARHUM,GUGUR DALAM TUGAS'
         ];
     }
 
@@ -51,9 +50,8 @@ class UserProfileRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'license_number.required' => 'The license number field is required!',
             'license_number.integer' => 'The license number must be an integer!',
-            'license_number.max' => 'maximum number input for license_number cannot exceed 12 digit!',
+            'license_number.digits_between' => 'maximum number input for license_number cannot exceed 12 digit!',
             'first_name.required' => 'The first name field is required!',
             'first_name.max' => 'The first name may not be greater than :max characters.',
             'last_name.max' => 'The last name may not be greater than :max characters.',
@@ -61,10 +59,8 @@ class UserProfileRequest extends FormRequest
             'image.max' => 'the maximum capacity of the image can upload is 5MB',
             'tahun_masuk.required' => 'The tahun masuk field is required!',
             'tahun_masuk.integer' => 'The tahun masuk must be an integer!',
-            'tahun_lulus.required' => 'The tahun lulus field is required!',
             'tahun_lulus.integer' => 'The tahun lulus must be an integer!',
             'training_program.max' => 'The training program may not be greater than :max characters!',
-            'batch.required' => 'The batch field is required!',
             'batch.max' => 'The batch may not be greater than :max characters.',
             'current_workplace.max' => 'The current workplace may not be greater than :max characters.',
             'birth_place.max' => 'The birth place may not be greater than :max characters.',
