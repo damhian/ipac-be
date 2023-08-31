@@ -27,6 +27,7 @@ class User extends Authenticatable
         'password',
         'role',
         'status',
+        'current_status',
         'created_at',
         'updated_at'
     ];
@@ -35,8 +36,10 @@ class User extends Authenticatable
      * Default values for attributes
      * @var  array an array with attribute as key and default as value
      */
+
     protected $attributes = [
         'role' => 'alumni',
+        'current_status' => 'HIDUP'
     ];
 
     /**
