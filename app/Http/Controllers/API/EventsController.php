@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EventRequest;
 use App\Models\Events;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -123,11 +124,74 @@ class EventsController extends Controller
         
         // If the user is an admin, fetch all events
         if ($user->isAdmin()) {
-            $events = $query->get();
+            $query = Events::query();
         } else {
             // If the user is not an admin, fetch events based on their user ID
-            $events = $query->where('created_by', $user->id)->get();
+            $query = $query->where('created_by', $user->id)->get();
         }
+
+         // Apply filters
+         if ($request->has('title')) {
+            $query->where('title', 'like', '%' . $request->title . '%');
+        }
+
+        if ($request->has('content')) {
+            $query->where('content', 'like', '%' . $request->content . '%');
+        }
+
+        if ($request->has('shortDesc')) {
+            $query->where('short_description', 'like', '%' . $request->short_description . '%');
+        }
+
+        if ($request->has('locationName')) {
+            $query->where('location_name', 'like', '%' . $request->location_name . '%');
+        }
+
+        if ($request->has('startAt')) {
+            // Convert the date string to a Carbon date object
+            $startDate = Carbon::parse($request->input('startAt'));
+
+            // Use the converted date in the query
+            $query->where('start_at', '=', $startDate);
+        }
+
+        if ($request->has('endAt')) {
+            $endDate = Carbon::parse($request->input('endAt'));
+            $query->where('end_at', '=', $endDate);
+        }
+
+        if ($request->has('type')) {
+            $query->where('type', $request->type);
+        }
+
+        if ($request->has('status')) {
+            // Only add the "status" filter if the "status" input is provided
+            $query->where('status', $request->input('status'));
+        } else {
+            // If "status" input is not provided, exclude banners with status "deleted"   
+            $query->where('status', '=', 'approved')
+            ->where('status', '!=', 'deleted');
+        }
+
+        // Apply sorting
+        if ($request->has('sortBy')) {
+            $sortDirection = $request->input('sortDir', 'asc');
+            $sortBy = $request->input('sortBy');
+
+            // Validate the sort direction to prevent SQL injection
+            $validSortDirections = ['asc', 'desc'];
+
+            if (in_array($sortDirection, $validSortDirections) && in_array($sortBy, ['title', 'content', 'short_description', 'location_name', 'start_at', 'end_at', 'type'])) {
+                $query->orderBy($sortBy, $sortDirection);
+            } else {
+                // Handle invalid sort parameters here (e.g., return an error response)
+                return response()->json([
+                    'message' => 'Invalid sort parameters provided.'
+                ], 400);
+            }
+        }
+
+        $events = $query->get();
 
         if ($events->isEmpty()) {
             return response()->json([
