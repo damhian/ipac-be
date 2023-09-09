@@ -66,7 +66,7 @@ class User extends Authenticatable
     ];
 
     public function isAdmin(){
-        return $this->role === 'admin' || 'superadmin';
+        return ($this->role === 'admin') || ($this->role === 'superadmin');
     }
 
     public function isApproved(){

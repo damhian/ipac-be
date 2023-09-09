@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx\Rels;
 
 class UserstoryController extends Controller
 {
@@ -22,14 +23,6 @@ class UserstoryController extends Controller
         return response()->json([
             'User story' => $userstory
         ], 200);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -83,13 +76,43 @@ class UserstoryController extends Controller
         ], 200);
     }
 
-    public function showByToken()
+    public function showByToken(Request $request)
     {
         // Get the authenticated user's token
         $user = Auth::user();
 
-        // Find the store associated with the token
-        $userstory = Userstory::with(['user.userProfiles'])->where('alumni_id', $user->id)->get();
+        // Find the user story associated with the token
+        $query = Userstory::with(['user.userProfiles'])->where('alumni_id', $user->id);
+
+        // Apply filters
+        if ($request->has('title')) {
+            $query->where('title', 'like', '%' . $request->title . '%');
+        }
+
+        // Apply filters
+        if ($request->has('story')) {
+            $query->where('story', 'like', '%' . $request->story . '%');
+        }
+
+        // Apply sorting
+        if ($request->has('sortBy')) {
+            $sortDirection = $request->input('sortDir', 'asc');
+            $sortBy = $request->input('sortBy');
+
+            // Validate the sort direction to prevent SQL injection
+            $validSortDirections = ['asc', 'desc'];
+
+            if (in_array($sortDirection, $validSortDirections) && in_array($sortBy, ['title', 'story'])) {
+                $query->orderBy($sortBy, $sortDirection);
+            } else {
+                // Handle invalid sort parameters here (e.g., return an error response)
+                return response()->json([
+                    'message' => 'Invalid sort parameters provided.'
+                ], 400);
+            }
+        }
+
+        $userstory = $query->get();
 
         if (!$userstory) {
             return response()->json([

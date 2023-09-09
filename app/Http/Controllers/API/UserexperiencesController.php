@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserexperienceRequest;
 use App\Models\Userexperiences;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -75,16 +76,34 @@ class UserexperiencesController extends Controller
         ], 200);
     }
 
-    public function showByToken()
+    public function showByToken(Request $request)
     {
         // Get the authenticated user's token
         $user = Auth::user();
         
         // Find the store associated with the token
-        $userexperience = Userexperiences::with(['user.userProfiles'])
+        $query = Userexperiences::with(['user.userProfiles'])
                         ->where('status', '!=', 'deleted')
-                        ->where('alumni_id', $user->id)
-                        ->get();
+                        ->where('alumni_id', $user->id);
+                        
+        if ($request->has('position')) {
+            $query->where('position', 'like', '%' . $request->position . '%');
+        }
+
+        if ($request->has('startAt')) {
+            // Convert the date string to a Carbon date object
+            $startDate = Carbon::parse($request->input('startAt'));
+
+            // Use the converted date in the query
+            $query->where('start_at', '=', $startDate);
+        }
+
+        if ($request->has('endAt')) {
+            $endDate = Carbon::parse($request->input('endAt'));
+            $query->where('end_at', '=', $endDate);
+        }
+
+        $userexperience = $query->get();
 
         if (!$userexperience) {
             return response()->json([

@@ -17,14 +17,57 @@ class UserController extends Controller
     public function index(Request $request)
     {   
         $currentUserId = Auth::id();
-        
+
         // Set the number of items per page, you can adjust this as needed
         $perPage = $request->input('per_page', 10);
 
         // Fetch all users with their related data
-        $users = User::where('id', '!=', $currentUserId)
-        ->with('userExperience', 'userProfiles', 'userGallery')
-        ->paginate($perPage);
+        $query = User::query()
+        ->with('userExperience', 'userProfiles', 'userGallery');
+        
+        // Apply filters
+        if ($request->has('first_name')) {
+            $query->whereHas('userProfiles', function ($subquery) use ($request) {
+                $subquery->where('first_name', 'like', '%' . $request->input('first_name') . '%');
+            });
+        }
+
+        if ($request->has('last_name')) {
+            $query->whereHas('userProfiles', function ($subquery) use ($request) {
+                $subquery->where('last_name', 'like', '%' . $request->input('last_name') . '%');
+            });
+        }
+
+        if ($request->has('batch')) {
+            $query->whereHas('userProfiles', function ($subquery) use ($request) {
+                $subquery->where('batch', 'like', '%' . $request->input('batch') . '%');
+            });
+        }
+
+        if ($request->has('status')) {
+            $query->where('status', $request->input('status'));
+        }
+
+         // Apply sorting
+        if ($request->has('sortBy')) {
+
+            $sortDirection = $request->input('sortDir', 'asc');
+            $sortBy = $request->input('sortBy');
+
+            // Validate the sort direction to prevent SQL injection
+            $validSortDirections = ['asc', 'desc'];
+
+            if (in_array($sortDirection, $validSortDirections) && in_array($sortBy, ['first_name', 'last_name', 'tahun_masuk', 'tahun_lulus', 'batch'])) {
+                // Specify the table alias in orderBy
+                $query->join('user_profiles', 'user_profiles.alumni_id', '=', 'users.id')
+                    ->orderBy($sortBy, $sortDirection);
+            } else {
+                $query->orderBy($sortBy, $sortDirection);
+            }
+        }
+
+        // Paginate the results
+        $users = $query->paginate($perPage);
         
         return response()->json([
             'users' => $users
