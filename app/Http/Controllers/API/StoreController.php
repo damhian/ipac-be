@@ -130,17 +130,43 @@ class StoreController extends Controller
         ], 200);
     }
 
-    public function showByToken()
+    public function showByToken(Request $request)
     {
         // Get the authenticated user's token
         $user = Auth::user();
-        
+
         // Find the store associated with the token
         if ($user->isAdmin()) {
             $query = Store::with(['storeMedia', 'user.userProfiles']);
         } else {
             $query = Store::with(['storeMedia', 'user.userProfiles'])
             ->where('created_by', $user->id);
+        }
+
+        // Apply filters
+        if ($request->has('title')) {
+            $query->where('title', 'like', '%' . $request->title . '%');
+        }
+
+        if ($request->has('content')) {
+            $query->where('content', 'like', '%' . $request->content . '%');
+        }
+
+        if ($request->has('shortDescription')) {
+            $query->where('short_description', 'like', '%' . $request->short_description . '%');
+        }
+
+        if ($request->has('price')) {
+            $query->where('price', '=', $request->price);
+        }
+
+        if ($request->has('status')) {
+            // Only add the "status" filter if the "status" input is provided
+            $query->where('status', $request->input('status'));
+        } else {
+            // If "status" input is not provided, exclude banners with status "deleted"   
+            $query->where('status', '=', 'approved')
+            ->where('status', '!=', 'deleted');
         }
 
         $store = $query->get();
