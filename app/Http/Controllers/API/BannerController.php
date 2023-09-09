@@ -24,7 +24,6 @@ class BannerController extends Controller
 
     public function index(Request $request)
     {   
-        // dd('test');
         $query = Banner::where('status', '!=', 'deleted');
 
         if ($request->has('type')) {
@@ -36,14 +35,6 @@ class BannerController extends Controller
         return response()->json([
             'banners' => $banners
         ], 200);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -117,15 +108,60 @@ class BannerController extends Controller
         ], 200);
     }
 
-    public function showByToken()
+    public function showByToken(Request $request)
     {
         $user = Auth::user();
         
         if ($user->isAdmin()) {
-            $banner = Banner::all();
+            $query = Banner::query();
         } else {
-            $banner = Banner::where('created_by', $user->id)->get();
+            $query = Banner::where('created_by', $user->id)->get();
         }
+
+        // Apply filters
+        if ($request->has('title')) {
+            $query->where('title', 'like', '%' . $request->input('title') . '%');
+        }
+
+        if ($request->has('content')) {
+            $query->where('content', 'like', '%' . $request->input('content') . '%');
+        }
+
+        if ($request->has('shortDesc')) {
+            $query->where('short_description', 'like', '%' . $request->input('short_description') . '%');
+        }
+
+        if ($request->has('type')) {
+            $query->where('type', $request->input('type'));
+        }
+
+        if ($request->has('status')) {
+            // Only add the "status" filter if the "status" input is provided
+            $query->where('status', $request->input('status'));
+        } else {
+            // If "status" input is not provided, exclude banners with status "deleted"
+            $query->where('status', '!=', 'deleted');
+        }
+
+        // Apply sorting
+        if ($request->has('sortBy')) {
+            $sortDirection = $request->input('sortDir', 'asc');
+            $sortBy = $request->input('sortBy');
+
+            // Validate the sort direction to prevent SQL injection
+            $validSortDirections = ['asc', 'desc'];
+
+            if (in_array($sortDirection, $validSortDirections) && in_array($sortBy, ['title', 'content', 'short_description', 'type'])) {
+                $query->orderBy($sortBy, $sortDirection);
+            } else {
+                // Handle invalid sort parameters here (e.g., return an error response)
+                return response()->json([
+                    'message' => 'Invalid sort parameters provided.'
+                ], 400);
+            }
+        }
+
+        $banner = $query->get();
 
         if($banner->isEmpty()){
             return response()->json([
