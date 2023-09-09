@@ -168,7 +168,19 @@ class UserController extends Controller
                 ],
                 'password' => 'sometimes|min:6',
                 'role' => 'in:admin,alumni',
+                'current_status' => 'in:HIDUP,ALMARHUM,GUGUR DALAM TUGAS'
             ]);
+
+                
+            // if ($request->has('current_status')) {
+            //     if (!in_array($currentStatus, ['HIDUP', 'ALMARHUM', 'GUGUR DALAM TUGAS'])) {
+            //         return response()->json([
+            //             'message' => 'Invalid current_status value.'
+            //         ], 400);
+            //     }
+
+            //     User::where('id', $id)->update(['current_status' => $currentStatus]);
+            // }
     
             // Find the user by ID
             $user = User::find($id);
@@ -195,7 +207,7 @@ class UserController extends Controller
             // Update the user data
             $user->username = $request->username;
             $user->email = $request->email;
-            // $user->status = $request->status;
+            $user->current_status = $request->current_status;
             
             // Update the role if provided
             if ($request->has('role')) {
