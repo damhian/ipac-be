@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Userprofiles;
 use App\Rules\UniqueSuperadmin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,11 +20,21 @@ class UserController extends Controller
         $currentUserId = Auth::id();
 
         // Set the number of items per page, you can adjust this as needed
-        $perPage = $request->input('per_page', 10);
+        // this feature are still not needed
+        // $perPage = $request->input('per_page', 10);
 
         // Fetch all users with their related data
         $query = User::query()
-        ->with('userExperience', 'userProfiles', 'userGallery');
+        ->with('userExperience', 'userProfiles', 'userGallery')
+        ->select('id', 'email', 'username', 'role', 'status', 'current_status')
+        ->addSelect(['first_name' => Userprofiles::select('first_name')
+            ->whereColumn('alumni_id', 'users.id')
+            ->limit(1)
+        ])
+        ->addSelect(['last_name' => Userprofiles::select('last_name')
+            ->whereColumn('alumni_id', 'users.id')
+            ->limit(1)
+        ]);
         
         // Apply filters
         if ($request->has('first_name')) {
@@ -67,7 +78,9 @@ class UserController extends Controller
         }
 
         // Paginate the results
-        $users = $query->paginate($perPage);
+        // $users = $query->paginate($perPage);
+        
+        $users = $query->get();
         
         return response()->json([
             'users' => $users
