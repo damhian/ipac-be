@@ -22,15 +22,15 @@ class UserProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'license_number' => 'nullable|integer|digits_between:1,12',
+            'license_number' => 'nullable|integer|digits_between:1,18',
             'first_name' => 'required|string|max:50',
             'last_name' => 'nullable|string|max:50',
-            "image" => "image|mimes:mimes:jpeg,png,jpg,svg|max:5120",
+            'image' => 'mimes:jpeg,png,jpg,svg|max:5120',
             'tahun_masuk' => 'required|integer',
             'tahun_lulus' => 'nullable|integer',
             'training_program' => 'nullable|string|max:80',
             'batch' => 'nullable|string|max:25',
-            'current_job' => 'nullable|string|max:191',
+            'current_job' => 'nullable|string|max:255',
             'current_workplace' => 'nullable|string|max:255',
             'birth_place' => 'nullable|string|max:80',
             'nationality' => 'required|string|max:80',
