@@ -204,10 +204,10 @@ class UserprofilesController extends Controller
      * Update the specified resource in storage.
      */
     public function update(UserprofileRequest $request, string $id)
-    {
+    {  
        try {
         //Find user profile by alumni_id as user id
-        $userProfiles = Userprofiles::with('userGallery', 'userIdcards')->where('alumni_id' ,$id)->first();
+        $userProfiles = Userprofiles::with('userGallery', 'userIdcards')->where('alumni_id', $id)->first();
 
         if(!$userProfiles)
             return response()->json([
