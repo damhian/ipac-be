@@ -9,6 +9,10 @@ use App\Http\Controllers\API\CompaniesController;
 use App\Http\Controllers\API\EventsController;
 use App\Http\Controllers\API\ImageuploaderController;
 use App\Http\Controllers\API\JobfairController;
+use App\Http\Controllers\API\MsbatchController;
+use App\Http\Controllers\API\MscurrentjobController;
+use App\Http\Controllers\API\MsstatusController;
+use App\Http\Controllers\API\MstrainingController;
 use App\Http\Controllers\API\StoreController;
 use App\Http\Controllers\API\StrukturorganisasiController;
 use App\Http\Controllers\API\UserController;
@@ -65,6 +69,11 @@ Route::get('strukturorganisasi', [StrukturorganisasiController::class, 'index'])
 
 Route::post('userbytahunlulus', [UserController::class, 'showUserbyTahunLulus']);
 Route::post('userlulusperthreeyears', [UserController::class, 'countUserbyTahunLulus']);
+
+Route::get('msstatus', [MsstatusController::class, 'index']);
+Route::get('msbatch', [MsbatchController::class, 'index']);
+Route::get('mstraining', [MstrainingController::class, 'index']);
+Route::get('mscurrentjob', [MscurrentjobController::class, 'index']);
  
 // Protected Routes
 Route::group(['middleware' => ['auth:sanctum']], function() {
@@ -94,6 +103,37 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
         Route::put('strukturorganisasiupdate/{id}', [StrukturorganisasiController::class, 'update']);
         Route::delete('strukturorganisasidel/{id}', [StrukturorganisasiController::class, 'destroy']);
 
+        // Table Company
+        Route::get('company/{id}', [CompaniesController::class, 'show']);
+        Route::get('companybytoken', [CompaniesController::class, 'showByToken']);
+        Route::post('company', [CompaniesController::class, 'store']);
+        Route::put('companyupdate/{id}', [CompaniesController::class, 'update']);
+        Route::delete('companydelete/{id}', [CompaniesController::class, 'destroy']);
+
+        // Table ms_status
+        Route::get('msstatus/{id}', [MsstatusController::class, 'show']);
+        Route::post('msstatus', [MsstatusController::class, 'store']);
+        Route::put('msstatus/{id}', [MsstatusController::class, 'update']);
+        Route::delete('msstatus/{id}', [MsstatusController::class, 'destroy']);
+        
+        // Table ms_batch
+        Route::get('msbatch/{id}', [MsbatchController::class, 'show']);
+        Route::post('msbatch', [MsbatchController::class, 'store']);
+        Route::put('msbatch/{id}', [MsbatchController::class, 'update']);
+        Route::delete('msbatch/{id}', [MsbatchController::class, 'destroy']);
+        
+        // Table ms_training_program
+        Route::get('mstraining/{id}', [MstrainingController::class, 'show']);
+        Route::post('mstraining', [MstrainingController::class, 'store']);
+        Route::put('mstraining/{id}', [MstrainingController::class, 'update']);
+        Route::delete('mstraining/{id}', [MstrainingController::class, 'destroy']);
+        
+        // Table ms_training_program
+        Route::get('mscurrentjob/{id}', [MscurrentjobController::class, 'show']);
+        Route::post('mscurrentjob', [MscurrentjobController::class, 'store']);
+        Route::put('mscurrentjob/{id}', [MscurrentjobController::class, 'update']);
+        Route::delete('mscurrentjob/{id}', [MscurrentjobController::class, 'destroy']);
+        
     });
     
     // Approval for every table
@@ -171,11 +211,6 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
  
      // Companies Table
      Route::get('companies', [CompaniesController::class, 'index']);
-     Route::get('company/{id}', [CompaniesController::class, 'show']);
-     Route::get('companybytoken', [CompaniesController::class, 'showByToken']);
      Route::post('companies/search', [CompaniesController::class, 'search']);
-     Route::post('company', [CompaniesController::class, 'store']);
-     Route::put('companyupdate/{id}', [CompaniesController::class, 'update']);
-     Route::delete('companydelete/{id}', [CompaniesController::class, 'destroy']);
 });
 
