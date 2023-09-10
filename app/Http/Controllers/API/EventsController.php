@@ -116,7 +116,7 @@ class EventsController extends Controller
     {   
         // Get the currently authenticated user
         $user = Auth::user();
-        
+
         // Define the base query
         $query = Events::with(['user', 'user.userProfiles'])
             ->where('status', '!=', 'deleted')
@@ -124,14 +124,14 @@ class EventsController extends Controller
         
         // If the user is an admin, fetch all events
         if ($user->isAdmin()) {
-            $query = Events::query();
+            $query = Events::with(['user', 'user.userProfiles']);
         } else {
             // If the user is not an admin, fetch events based on their user ID
-            $query = $query->where('created_by', $user->id)->get();
+            $query->where('created_by', $user->id);
         }
 
-         // Apply filters
-         if ($request->has('title')) {
+        // Apply filters
+        if ($request->has('title')) {
             $query->where('title', 'like', '%' . $request->title . '%');
         }
 
@@ -169,8 +169,7 @@ class EventsController extends Controller
             $query->where('status', $request->input('status'));
         } else {
             // If "status" input is not provided, exclude banners with status "deleted"   
-            $query->where('status', '=', 'approved')
-            ->where('status', '!=', 'deleted');
+            $query->where('status', '!=', 'deleted');
         }
 
         // Apply sorting
