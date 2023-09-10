@@ -14,11 +14,30 @@ class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
-            'id' => $this->id,
-            'username' => $this->username,
-            'email' => $this->email,
-            'role'  => $this->role
+
+        $userData = [
+            'id'            => $this->id,
+            'username'      => $this->username,
+            'email'         => $this->email,
+            'role'          => $this->role
         ];
+
+        // Include userProfiles if it's available
+        $userProfiles = $this->userProfiles ?? null;
+
+        if ($userProfiles !== null) {
+            $userData['userProfiles'] = [
+                'alumni_id' => $userProfiles->alumni_id,
+                'first_name' => $userProfiles->first_name,
+                'last_name' => $userProfiles->last_name,
+                'training_program' => $userProfiles->training_program,
+                'batch' => $userProfiles->batch,
+                'tahun_masuk' => $userProfiles->tahun_masuk,
+                'tahun_lulus' => $userProfiles->tahun_lulus,
+                'nomor_anggota' => $userProfiles->nomor_anggota,
+            ];
+        }
+        
+        return $userData;
     }
 }
