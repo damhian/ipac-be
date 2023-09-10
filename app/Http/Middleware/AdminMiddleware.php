@@ -18,7 +18,7 @@ class AdminMiddleware
     {
         // Check if the authenticated user is an administrator
         if (!Auth::user()->isAdmin()) {
-            abort(403, 'Only administrators can perform this action.');
+            abort(403, 'Only administrators and Superadmin can perform this action.');
         }
 
         return $next($request);
