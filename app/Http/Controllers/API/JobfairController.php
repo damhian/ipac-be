@@ -151,8 +151,7 @@ class JobfairController extends Controller
             $query->where('status', $request->input('status'));
         } else {
             // If "status" input is not provided, exclude banners with status "deleted"   
-            $query->where('status', '=', 'approved')
-            ->where('status', '!=', 'deleted');
+            $query->where('status', '!=', 'deleted');
         }
 
         // Apply sorting
