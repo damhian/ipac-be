@@ -14,6 +14,8 @@ class UserProfiles extends Model
 {
     use HasFactory;
 
+    protected $table = 'user_profiles';
+
     protected $fillable = [
         'id',
         'alumni_id',
