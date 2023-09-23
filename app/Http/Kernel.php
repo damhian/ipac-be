@@ -68,6 +68,7 @@ class Kernel extends HttpKernel
         
         // Custom middleware for checking the admin only than can change the status on every table
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
+        'superadmin' => \App\Http\Middleware\SuperadminMiddleware::class,
 
         // Check user has profile before they can made any changes on the systems
         'profile.completed' => \App\Http\Middleware\EnsureProfileCompleted::class,
