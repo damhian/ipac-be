@@ -13,6 +13,7 @@ use App\Http\Controllers\API\MsbatchController;
 use App\Http\Controllers\API\MscurrentjobController;
 use App\Http\Controllers\API\MsstatusController;
 use App\Http\Controllers\API\MstrainingController;
+use App\Http\Controllers\API\MsvisimisiController;
 use App\Http\Controllers\API\StoreController;
 use App\Http\Controllers\API\StrukturorganisasiController;
 use App\Http\Controllers\API\UserController;
@@ -74,6 +75,10 @@ Route::get('msstatus', [MsstatusController::class, 'index']);
 Route::get('msbatch', [MsbatchController::class, 'index']);
 Route::get('mstraining', [MstrainingController::class, 'index']);
 Route::get('mscurrentjob', [MscurrentjobController::class, 'index']);
+
+// Table ms_visi_misi
+Route::get('visimisi', [MsvisimisiController::class, 'visimisi']);
+Route::get('about', [MsvisimisiController::class, 'about']);
  
 // Protected Routes
 Route::group(['middleware' => ['auth:sanctum']], function() {
@@ -93,6 +98,7 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::middleware('admin')->group(function() {
         // Table User
         Route::get('alluserdata', [UserController::class, 'index']);
+        Route::get('export-users', [UserController::class, 'exportFilteredUsersWithProfiles']);
         Route::post('createuser', [UserController::class, 'store']);
         Route::put('updateuser/{id}', [UserController::class, 'update']);
 
@@ -133,7 +139,22 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
         Route::post('mscurrentjob', [MscurrentjobController::class, 'store']);
         Route::put('mscurrentjob/{id}', [MscurrentjobController::class, 'update']);
         Route::delete('mscurrentjob/{id}', [MscurrentjobController::class, 'destroy']);
+
+        // Table ms_visi_misi
+        Route::get('visimisi-about', [MsvisimisiController::class, 'index']);
+        Route::get('visimisi-about/{id}', [MsvisimisiController::class, 'show']);
+        Route::post('visimisi-about', [MsvisimisiController::class, 'store']);
+        Route::put('visimisi-about/{id}', [MsvisimisiController::class, 'update']);
+        Route::delete('visimisi-about/{id}', [MsvisimisiController::class, 'destroy']);
         
+    });
+
+    Route::middleware('superadmin')->group(function() {
+        
+        // Store Table
+        Route::post('store', [StoreController::class, 'store']);
+        Route::put('storeupdate/{id}', [StoreController::class, 'update']);
+        Route::delete('storedelete/{id}', [StoreController::class, 'delete']);
     });
     
     // Approval for every table
@@ -152,11 +173,6 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
         Route::post('userexp', [UserexperiencesController::class, 'store']);
         Route::put('userexpupdate/{id}', [UserexperiencesController::class, 'update']);
         Route::delete('userexpdelete/{id}', [UserexperiencesController::class, 'delete']);
-
-        // Store Table
-        Route::post('store', [StoreController::class, 'store']);
-        Route::put('storeupdate/{id}', [StoreController::class, 'update']);
-        Route::delete('storedelete/{id}', [StoreController::class, 'delete']);
 
         // Jobfair Table
         Route::post('jobfair', [JobfairController::class, 'store']);
