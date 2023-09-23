@@ -59,6 +59,7 @@ class StoreController extends Controller
                 'content'           => $request->content,
                 'short_description' => $request->short_description,
                 'price'             => $request->price,
+                'link'              => $request->link,
                 'created_by'        => Auth::id()
             ]);
 
@@ -250,6 +251,7 @@ class StoreController extends Controller
             $store->content = $request->content;
             $store->short_description = $request->short_description;
             $store->price = $request->price;
+            $store->link = $request->link;
 
             // Delete images that are not present in the new request
             $newImageFileNames = [];

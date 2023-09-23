@@ -27,6 +27,7 @@ class StoreRequest extends FormRequest
             "content" => "required|string",
             "short_description" => "required|string|max:255",
             "price" => "required|numeric",
+            "link" => "nullable"
         ];
 
             if ($this->isMethod('post')) {

@@ -17,6 +17,7 @@ class Store extends Model
         'content',
         'short_description',
         'price',
+        'link',
         'created_by',
         'created_at',
         'updated_at',
