@@ -15,6 +15,7 @@ class Strukturorganisasi extends Model
         'id',
         'nama',
         'jabatan',
+        'level',
         'image_url',
         'created_by',
         'created_at',
