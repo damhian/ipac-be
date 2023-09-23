@@ -21,11 +21,12 @@ class RegisterController extends Controller
         $validator = Validator::make($request->all(), [
             'username' => ['required', 'string', 'max:255', Rule::unique('users')],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')],
-            'password' => ['required', 'min:8'],
+            // 'password' => ['required', 'min:8'],
             'firstName' => ['required', 'string', 'max:50'],
             'lastName' => ['nullable', 'string', 'max:50'],
             'trainingProgram' => ['required', 'string', 'max:80'],
             'batch' => ['required', 'string', 'max:25'],
+            'currentJob' => ['required', 'string', 'max:255'],
             'tahunMasuk' => ['required', 'integer'],
             'tahunLulus' => ['required', 'integer']
         ], [
@@ -36,6 +37,7 @@ class RegisterController extends Controller
             'lastName.max' => 'The last name may not be greater than :max characters.',
             'trainingProgram.max' => 'The training program may not be greater than :max characters!',
             'batch.max' => 'The batch may not be greater than :max characters.',
+            'currentJob.max' => 'The current job may not be greater than :max characters.',
             'tahunMasuk.required' => 'The tahun masuk field is required!',
             'tahunMasuk.integer' => 'The tahun masuk must be an integer!',
             'tahunLulus.required' => 'The tahun lulus field is required!',
@@ -52,7 +54,7 @@ class RegisterController extends Controller
         $user = User::create([
             'username'  => $request->username,
             'email'     => $request->email,
-            'password'  => bcrypt($request->password)
+            'password'  => bcrypt('ipac2023')
         ]);
 
         Userprofiles::create([
@@ -61,6 +63,7 @@ class RegisterController extends Controller
             'last_name'         => $request->lastName,
             'training_program'  => $request->trainingProgram,
             'batch'             => $request->batch,
+            'current_job'       => $request->currentJob,
             'tahun_masuk'       => $request->tahunMasuk,
             'tahun_lulus'       => $request->tahunLulus,
             'nomor_anggota'     => $this->generateNomorAnggota($request->tahun_lulus)
