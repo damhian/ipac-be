@@ -17,19 +17,13 @@ class StrukturorganisasiController extends Controller
      */
     public function index()
     {
-        $strorg = Strukturorganisasi::all();
+        $query = Strukturorganisasi::orderBy('level');
+
+        $strorg = $query->get();
 
         return response()->json([
             'Struktur Organisasi' => $strorg
         ], 200);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -49,6 +43,7 @@ class StrukturorganisasiController extends Controller
             $strorgdata = Strukturorganisasi::create([
                 'nama'          => $request->nama,
                 'jabatan'       => $request->jabatan,
+                'level'         => $request->level,
                 'image_url'     => $path,
                 'created_by'    => Auth::id(),
             ]);
@@ -89,14 +84,6 @@ class StrukturorganisasiController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(StrukturorganisasiRequest $request, string $id)
@@ -111,6 +98,7 @@ class StrukturorganisasiController extends Controller
 
             $strorgdata->nama       = $request->nama;
             $strorgdata->jabatan    = $request->jabatan;
+            $strorgdata->level      = $request->level;
 
             if($request->hasFile('image')){
                 // Delete old file if exist
