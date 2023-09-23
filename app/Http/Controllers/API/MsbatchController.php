@@ -76,7 +76,7 @@ class MsbatchController extends Controller
             if(!$ms_batch)
             return response()->json([
                 'message' => 'Batch not found!'
-            ]);
+            ], 404);
         
             $ms_batch->batch = $request->batch;
 
