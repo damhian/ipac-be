@@ -53,6 +53,7 @@ class EventsController extends Controller
     public function store(EventRequest $request)
     {
         try {
+            // dd($request);
 
             $path = null;
 
@@ -61,6 +62,11 @@ class EventsController extends Controller
                 $image = $request->file('image');
                 $path  = $image->store('event_images', 'public');
             }
+
+            // Format the event_time if needed
+            $eventTime = $this->formatEventTime($request->event_time);
+
+            // dd($eventTime);
 
             // Create Event
             Events::create([
@@ -73,6 +79,7 @@ class EventsController extends Controller
                 "location_lat"      => $request->location_lat,
                 "start_at"          => $request->start_at,
                 "end_at"            => $request->end_at,
+                "event_time"        => $eventTime,
                 "type"              => $request->type,
                 "created_by"        => Auth::id()
             ]);
@@ -225,6 +232,9 @@ class EventsController extends Controller
                 $path         = $image->store('event_images', 'public');
                 $event->image = $path;
             }
+
+            // Format the event_time if needed
+            $eventTime = $this->formatEventTime($request->input('event_time'));
             
             $event->title = $request->title;
             $event->content = $request->content;
@@ -234,6 +244,7 @@ class EventsController extends Controller
             $event->location_lat = $request->location_lat;
             $event->start_at = $request->start_at;
             $event->end_at = $request->end_at;
+            $event->event_time = $eventTime;
             $event->type = $request->type;
 
             $event->save();
@@ -290,6 +301,35 @@ class EventsController extends Controller
                 'error message' => $th
             ], 500);
         }
+    }
+
+    private function formatEventTime($eventTime)
+    {
+       // Split the input by colon
+        $parts = explode(':', $eventTime);
+
+        if (count($parts) === 2) {
+            $hours = intval($parts[0]);
+            $minutes = intval($parts[1]);
+
+            // Check if hours are greater than or equal to 24
+            if ($hours >= 24) {
+                // Reset hours to 0 and adjust minutes
+                $hours = 0;
+            }
+
+            // Ensure hours and minutes are formatted with leading zeros
+            $formattedHours = str_pad($hours, 2, '0', STR_PAD_LEFT);
+            $formattedMinutes = str_pad($minutes, 2, '0', STR_PAD_LEFT);
+
+            // Reconstruct the time in HH:MM format
+            $formattedTime = $formattedHours . ':' . $formattedMinutes;
+
+            return $formattedTime;
+        }
+
+        // If the input doesn't match the expected format, return it as is
+        return $eventTime;
     }
 
 }
