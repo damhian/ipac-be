@@ -24,6 +24,7 @@ class StrukturorganisasiRequest extends FormRequest
         $rules = [
             'nama'      => 'required|string|max:60',
             'jabatan'   => 'required|string|max:125',
+            'level'     => 'required|numeric'
         ];
 
         if ($this->isMethod('post')) {
@@ -32,6 +33,7 @@ class StrukturorganisasiRequest extends FormRequest
             return [
                 'nama'      => 'required|string|max:60',
                 'jabatan'   => 'required|string|max:125',
+                'level'     => 'required|numeric'
             ];
         }
 
@@ -44,6 +46,8 @@ class StrukturorganisasiRequest extends FormRequest
             'nama.required'     => 'nama is required!',
             'nama.max'          => 'nama cannot exceed 60 characters!',
             'jabatan.required'  => 'jabatan is required!',
+            'level.required'    => 'level is required!',
+            'level.numeric'     => 'level must be a number!',
             'jabatan.max'       => 'jabatan cannot exceed 125 characters!',
             'image.required'    => 'image is required!',
             'image.mimes'       => 'the image must be a file of type: jpeg, png, jpg!',
