@@ -143,14 +143,13 @@ class AdminController extends Controller
              case 'user':
                 $user = User::find($id);
                 $status = $request->input('status');
-                $currentStatus = $request->input('current_status');
 
                 if(!$user)
                     return response()->json([
                         'message' => 'User not found!'
                     ], 400);
 
-                    if (!in_array($status, ['pending', 'approved', 'denied', 'deleted'])) {
+                    if (!in_array($status, ['pending', 'approved', 'rejected', 'deleted'])) {
                         return response()->json([
                             'message' => 'Invalid status value.'
                         ], 400);
