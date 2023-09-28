@@ -16,6 +16,9 @@
         </style>
     </head>
 
+    <img src="{{ asset('/images/LogoIPAC-c60f8341-removebg-preview.png') }}" width="155px" height="48px" class="logo" alt="">
+    <!-- <img src="data:image/svg;base64,{{ base64_encode(file_get_contents(public_path('/images/LogoIPAC-c60f8341.svg'))) }}" class="logo" alt=""> -->
+
     <strong>Database Connected: </strong>
     <?php
         try {
@@ -25,7 +28,7 @@
             echo 'None';
         }
 
-        echo url('')."/storage/LQkGQGzx3Um8ghEHpSRhNJ5bVmkwMntz.jpg";
+        // echo url('')."/storage/LQkGQGzx3Um8ghEHpSRhNJ5bVmkwMntz.jpg";
     ?>
 
     <body class="antialiased">
