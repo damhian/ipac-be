@@ -9,6 +9,8 @@ use App\Models\Banner;
 use App\Models\Events;
 use App\Models\Jobfair;
 use App\Models\Store;
+use App\Notifications\UserApprovedNotification;
+use App\Notifications\UserRejectedNotification;
 use Illuminate\Support\Facades\Auth;
 
 use function PHPUnit\Framework\returnSelf;
@@ -156,6 +158,13 @@ class AdminController extends Controller
                     }
 
                     User::where('id', $id)->update(['status' => $status]);
+                    
+                    // Send email notification
+                    if ($status === 'approved') {
+                        $user->notify(new UserApprovedNotification($user));
+                    } elseif ($status === 'rejected') {
+                        $user->notify(new UserRejectedNotification($user));
+                    }
     
                 break;
             default:
