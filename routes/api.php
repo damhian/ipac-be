@@ -4,6 +4,7 @@ use App\Http\Controllers\API\Auth\LoginController;
 use App\Http\Controllers\API\Auth\LogoutController;
 use App\Http\Controllers\API\Auth\RegisterController;
 use App\Http\Controllers\API\AdminController;
+use App\Http\Controllers\API\Auth\ForgotpasswordController;
 use App\Http\Controllers\API\BannerController;
 use App\Http\Controllers\API\CompaniesController;
 use App\Http\Controllers\API\EventsController;
@@ -40,6 +41,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('auth/register', RegisterController::class);
 Route::post('auth/login', LoginController::class);
+Route::post('auth/forgot-password', [ForgotpasswordController::class, 'sendResetLinkEmail'])->name('password.reset');
+Route::post('auth/reset-password', [ForgotpasswordController::class, 'resetPassword']);
 
 // Banner Table
 Route::get('banners', [BannerController::class, 'index']);
