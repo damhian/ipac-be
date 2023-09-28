@@ -23,7 +23,7 @@ class UserController extends Controller
 
         // Set the number of items per page, you can adjust this as needed
         // this feature are still not needed
-        // $perPage = $request->input('per_page', 10);
+        $perPage = $request->input('per_page', 10);
         
         $searchTerm = $request->input('search');
 
@@ -36,6 +36,14 @@ class UserController extends Controller
             ->limit(1)
         ])
         ->addSelect(['last_name' => Userprofiles::select('last_name')
+            ->whereColumn('alumni_id', 'users.id')
+            ->limit(1)
+        ])
+        ->addSelect(['tahun_masuk' => Userprofiles::select('tahun_masuk')
+            ->whereColumn('alumni_id', 'users.id')
+            ->limit(1)
+        ])
+        ->addSelect(['tahun_lulus' => Userprofiles::select('tahun_lulus')
             ->whereColumn('alumni_id', 'users.id')
             ->limit(1)
         ])
@@ -79,6 +87,14 @@ class UserController extends Controller
         }
         
         // Apply filters
+        if ($request->has('email')) {
+            $query->where('email', 'like', '%' . $request->input('email') . '%');
+        }
+
+        if ($request->has('username')) {
+            $query->where('username', 'like', '%' . $request->input('username') . '%');
+        }
+
         if ($request->has('first_name')) {
             $query->whereHas('userProfiles', function ($subquery) use ($request) {
                 $subquery->where('first_name', 'like', '%' . $request->input('first_name') . '%');
@@ -88,6 +104,18 @@ class UserController extends Controller
         if ($request->has('last_name')) {
             $query->whereHas('userProfiles', function ($subquery) use ($request) {
                 $subquery->where('last_name', 'like', '%' . $request->input('last_name') . '%');
+            });
+        }
+
+        if ($request->has('tahun_masuk')) {
+            $query->whereHas('userProfiles', function ($subquery) use ($request) {
+                $subquery->where('tahun_masuk', 'like', '%' . $request->input('tahun_masuk') . '%');
+            });
+        }
+
+        if ($request->has('tahun_lulus')) {
+            $query->whereHas('userProfiles', function ($subquery) use ($request) {
+                $subquery->where('tahun_lulus', 'like', '%' . $request->input('tahun_lulus') . '%');
             });
         }
 
@@ -122,7 +150,11 @@ class UserController extends Controller
         }
 
         if ($request->has('status')) {
-            $query->where('status', $request->input('status'));
+            $query->where('status', 'like', '%'. $request->input('status'). '%');
+        }
+
+        if ($request->has('current_status')) {
+            $query->where('current_status', 'like', '%' . $request->input('current_status') . '%');
         }
 
          // Apply sorting
@@ -143,7 +175,7 @@ class UserController extends Controller
             }
         }
         
-        $users = $query->get();
+        $users = $query->paginate($perPage);
         
         return response()->json([
             'users' => $users
@@ -262,6 +294,14 @@ class UserController extends Controller
             }
 
             // Apply filters
+            if ($request->has('email')) {
+                $query->where('email', 'like', '%' . $request->input('email') . '%');
+            }
+    
+            if ($request->has('username')) {
+                $query->where('username', 'like', '%' . $request->input('username') . '%');
+            }
+            
             if ($request->has('first_name')) {
                 $query->whereHas('userProfiles', function ($subquery) use ($request) {
                     $subquery->where('first_name', 'like', '%' . $request->input('first_name') . '%');
@@ -271,6 +311,18 @@ class UserController extends Controller
             if ($request->has('last_name')) {
                 $query->whereHas('userProfiles', function ($subquery) use ($request) {
                     $subquery->where('last_name', 'like', '%' . $request->input('last_name') . '%');
+                });
+            }
+
+            if ($request->has('tahun_masuk')) {
+                $query->whereHas('userProfiles', function ($subquery) use ($request) {
+                    $subquery->where('tahun_masuk', 'like', '%' . $request->input('tahun_masuk') . '%');
+                });
+            }
+            
+            if ($request->has('tahun_lulus')) {
+                $query->whereHas('userProfiles', function ($subquery) use ($request) {
+                    $subquery->where('tahun_lulus', 'like', '%' . $request->input('tahun_lulus') . '%');
                 });
             }
 
@@ -305,7 +357,11 @@ class UserController extends Controller
             }
 
             if ($request->has('status')) {
-                $query->where('status', $request->input('status'));
+                $query->where('status', 'like', '%' . $request->input('status') . '%');
+            }
+
+            if ($request->has('current_status')) {
+                $query->where('current_status', 'like', '%' . $request->input('current_status') . '%');
             }
 
             $filteredUsers = $query->get();
