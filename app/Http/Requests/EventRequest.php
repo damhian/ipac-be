@@ -32,9 +32,8 @@ class EventRequest extends FormRequest
             "location_lon" => "nullable|numeric",
             "location_lat" => "nullable|numeric",
             "type" => "required|in:event,news",
-            "start_at" => "nullable|date|date_format:Y-m-d", 
-            "end_at" => "nullable|date|after_or_equal:start_at|date_format:Y-m-d",
-            "event_time" => ["nullable"]
+            "start_at" => "nullable|date", 
+            "end_at" => "nullable|date|after_or_equal:start_at",
         ];
 
         if ($this->input('type') !== 'news') {
@@ -59,8 +58,6 @@ class EventRequest extends FormRequest
                 "location_lon.numeric" => "the format must be in number!",
                 "location_lat.numeric" => "the format must be in number!",
                 "start_at" => "start datetime is required!",
-                "start_at.date" => "the start date must be a valid date with this format: Y-m-d!",
-                "end_at.date" => "the end date must be a valid date with this format: Y-m-d!",
                 "end_at.after_or_equal" => "the end date must be greater than or equal to the start date!",
             ];
         } else {
@@ -74,8 +71,6 @@ class EventRequest extends FormRequest
                 "location_name" => "location name is required!",
                 "location_lon.numeric" => "the format must be in number!",
                 "location_lat.numeric" => "the format must be in number!",
-                "start_at.date" => "the start date must be a valid date with this format: Y-m-d!",
-                "end_at.date" => "the end date must be a valid date with this format: Y-m-d!",
                 "end_at.after_or_equal" => "the end date must be greater than or equal to the start date!",
             ];
         }

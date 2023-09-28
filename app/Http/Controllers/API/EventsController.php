@@ -79,7 +79,6 @@ class EventsController extends Controller
                 "location_lat"      => $request->location_lat,
                 "start_at"          => $request->start_at,
                 "end_at"            => $request->end_at,
-                "event_time"        => $eventTime,
                 "type"              => $request->type,
                 "created_by"        => Auth::id()
             ]);
@@ -244,7 +243,6 @@ class EventsController extends Controller
             $event->location_lat = $request->location_lat;
             $event->start_at = $request->start_at;
             $event->end_at = $request->end_at;
-            $event->event_time = $eventTime;
             $event->type = $request->type;
 
             $event->save();
