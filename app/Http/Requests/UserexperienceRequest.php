@@ -25,7 +25,7 @@ class UserexperienceRequest extends FormRequest
             'company_id'    => 'required',
             'position'      => 'required|string|max:255',
             'start_at'      => 'required|date|date_format:Y-m-d',
-            'end_at'        => 'required|date|after:start_at|date_format:Y-m-d'
+            'end_at'        => 'nullable|date|after:start_at|date_format:Y-m-d'
         ];
 
         return $rules;
@@ -39,7 +39,6 @@ class UserexperienceRequest extends FormRequest
             'position.max'      => 'max input is 255 character',
             'start_at.required' => 'start datetime is required!',
             'start_at.date'     => 'the start date must be a valid date with this format: Y-m-d!',
-            'end_at.required'   => 'end datetime is required!',
             'end_at.date'       => 'the start date must be a valid date with this format: Y-m-d!',
             'end_at.after'      => 'the end date must be greater than start date!'
         ];
