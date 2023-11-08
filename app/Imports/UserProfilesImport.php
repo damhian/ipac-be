@@ -2,62 +2,77 @@
 
 namespace App\Imports;
 
+use App\Models\UserProfiles;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Illuminate\Support\Facades\Log;
 
 class UserProfilesImport implements ToCollection, WithHeadingRow
 {
     public function collection(Collection $rows)
-    {
+    {   
+        // Prepare the data for insertion
         foreach ($rows as $row) {
-            $username = $row['username'];
-            $email = $username.'@yopmail.com'; // Assuming username can be used as email
+            // dd($rows);
 
+            // Validate that email and username are not empty
+            if (empty($row['email']) || empty($row['username'])) {
+                // Skip this row and log a message (you can log to Laravel's log system)
+                Log::error('Skipped a row due to missing email or username: ' . json_encode($row));
+                continue; // Skip this row and move to the next one
+            }
+            // Determine the role, status, currentStatus, and other variables with default values
+            $role = $row['role'] ? $row['role'] : 'alumni';
+            $status = 'approved';
+            $currentStatus = $row['current_status'] ? $row['current_status'] : 'HIDUP';
+            $licenseNumber = is_numeric($row['license_number']) ? $row['license_number'] : null;
+            $batch = $row['batch'] ? $row['batch'] : null;
+            $nationality = $row['nationality'] ? $row['nationality'] : 'INDONESIA';
+            $currentJob = $row['current_job'] ? $row['current_job'] : null;
+            $currentWorkplace = $row['current_workplace'] ? $row['current_workplace'] : null;
+            $address = $row['address'] ? $row['address'] : null;
+
+            // Generate nomorAnggota
+            $lastThreeDigit = UserProfiles::where('tahun_lulus', $row['tahun_lulus'])->count() + 1;
+            $lastThreeDigit = str_pad($lastThreeDigit, 3, '0', STR_PAD_LEFT);
+            $nomorAnggota = $row['tahun_lulus'] . $lastThreeDigit;
+
+            // Create user data array
             $userData = [
-                'email' => $email,
-                'username' => $username,
-                'password' => Hash::make($row['password']),
-                'current_status' => $row['status'],
+                'email' => $row['email'],
+                'username' => $row['username'],
+                'password'  => bcrypt('ipac2023'),
+                'role' => $role,
+                'status' => $status,
+                'current_status' => $currentStatus,
             ];
 
             // Insert user data into the users table
             $userId = DB::table('users')->insertGetId($userData);
 
-            // Check if the date format is valid before conversion
-            if (preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $row['date_of_birth'])) {
-                $dobParts = explode('/', $row['date_of_birth']);
-                $date_of_birth = $dobParts[2] . '-' . $dobParts[1] . '-' . $dobParts[0];
-            } else {
-                // Handle invalid date format
-                $date_of_birth = null; // or set a default value
-            }
-
-            // Validate and handle license_number
-            $license_number = is_numeric($row['license_number']) ? $row['license_number'] : null;
-
-            $batch = $row['batch'] ? $row['batch'] : null; 
-
+            // Create user profile data array
             $userProfileData = [
                 'alumni_id' => $userId,
-                'nomor_anggota' => $row['nomor_anggota'],
+                'nomor_anggota' => $nomorAnggota,
+                'license_number' => $licenseNumber,
                 'first_name' => $row['first_name'],
                 'last_name' => $row['last_name'],
-                'batch' =>  $batch,
-                'nationality' => $row['nationality'],
-                'gender' => $row['gender'],
-                'birth_place' => $row['birth_place'],
-                'date_of_birth' => $date_of_birth,
-                'phone_number_code' => $row['phone_number_code'],
-                'phone_number' => $row['phone_number'],
                 'tahun_masuk' => $row['tahun_masuk'],
                 'tahun_lulus' => $row['tahun_lulus'],
                 'training_program' => $row['training_program'],
-                'license_number' => $license_number,
-                'current_job' => $row['current_job'],
-                'current_workplace' => $row['current_workplace']
+                'batch' => $batch,
+                'current_job' => $currentJob,
+                'current_workplace' => $currentWorkplace,
+                'birth_place' => $row['birth_place'],
+                'date_of_birth' => $row['date_of_birth'],
+                'nationality' => $nationality,
+                'address' => $address,
+                'phone_number_code' => $row['phone_number_code'],
+                'phone_number' => $row['phone_number'],
+                'gender' => $row['gender'],
             ];
 
             // Insert user profile data into the user_profiles table
