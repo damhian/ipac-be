@@ -53,7 +53,6 @@ class EventsController extends Controller
     public function store(EventRequest $request)
     {
         try {
-            // dd($request);
 
             $path = null;
 
@@ -64,9 +63,7 @@ class EventsController extends Controller
             }
 
             // Format the event_time if needed
-            $eventTime = $this->formatEventTime($request->event_time);
-
-            // dd($eventTime);
+            // $eventTime = $this->formatEventTime($request->event_time);
 
             // Create Event
             Events::create([
