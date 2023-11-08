@@ -26,7 +26,8 @@ class RegisterController extends Controller
             'lastName' => ['nullable', 'string', 'max:50'],
             'trainingProgram' => ['required', 'string', 'max:80'],
             'batch' => ['required', 'string', 'max:25'],
-            'currentJob' => ['required', 'string', 'max:255'],
+            'currentJob' => ['nullable', 'string', 'max:255'],
+            'currentStatus' => ['required', 'string', 'max:60'],
             'tahunMasuk' => ['required', 'integer'],
             'tahunLulus' => ['required', 'integer']
         ], [
@@ -38,6 +39,7 @@ class RegisterController extends Controller
             'trainingProgram.max' => 'The training program may not be greater than :max characters!',
             'batch.max' => 'The batch may not be greater than :max characters.',
             'currentJob.max' => 'The current job may not be greater than :max characters.',
+            'currentStatus.max' => 'The current status may not be greater than :max characters.',
             'tahunMasuk.required' => 'The tahun masuk field is required!',
             'tahunMasuk.integer' => 'The tahun masuk must be an integer!',
             'tahunLulus.required' => 'The tahun lulus field is required!',
@@ -52,9 +54,10 @@ class RegisterController extends Controller
         }
 
         $user = User::create([
-            'username'  => $request->username,
-            'email'     => $request->email,
-            'password'  => bcrypt('ipac2023')
+            'username'          => $request->username,
+            'email'             => $request->email,
+            'password'          => bcrypt('ipac2023'),
+            'current_status'    => strtoupper($request->currentStatus)
         ]);
 
         Userprofiles::create([
@@ -66,8 +69,7 @@ class RegisterController extends Controller
             'current_job'       => $request->currentJob,
             'tahun_masuk'       => $request->tahunMasuk,
             'tahun_lulus'       => $request->tahunLulus,
-            'nomor_anggota'     => $this->generateNomorAnggota($request->tahun_lulus)
-
+            'nomor_anggota'     => $this->generateNomorAnggota($request->tahunLulus)
         ]);
 
         $token = $user->createToken('myAppToken');
