@@ -82,6 +82,13 @@ Route::get('mscurrentjob', [MscurrentjobController::class, 'index']);
 // Table ms_visi_misi
 Route::get('visimisi', [MsvisimisiController::class, 'visimisi']);
 Route::get('about', [MsvisimisiController::class, 'about']);
+
+// Template import users
+Route::get('/download-template', function () {
+    $templatePath = public_path('templates/user_import_template.xlsx');
+
+    return response()->download($templatePath, 'user_import_template.xlsx');
+});
  
 // Protected Routes
 Route::group(['middleware' => ['auth:sanctum']], function() {
@@ -102,6 +109,7 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
         // Table User
         Route::get('alluserdata', [UserController::class, 'index']);
         Route::get('export-users', [UserController::class, 'exportFilteredUsersWithProfiles']);
+        Route::post('import-users', [UserController::class, 'importUsers']);
         Route::post('createuser', [UserController::class, 'store']);
         Route::put('updateuser/{id}', [UserController::class, 'update']);
 
