@@ -39,6 +39,7 @@ class UserProfileRequest extends FormRequest
             'phone_number' => 'nullable|string|max:15',
             'phone_number_code' => 'nullable|string|max:4',
             'gender' => 'required|string|max:12',
+            'current_status' => 'required|string|max:60'
         ];
     }
 
@@ -74,6 +75,8 @@ class UserProfileRequest extends FormRequest
             'phone_number_code.max' => 'The phone number code may not be greater than :max characters.',
             'gender.required' => 'The gender field is required!',
             'gender.max' => 'The gender may not be greater than :max characters.',
+            'current_status.required' => 'Current status is required!',
+            'current_status.max' => 'Current status may not be greater than :max characters.'
         ];
     }
 }
