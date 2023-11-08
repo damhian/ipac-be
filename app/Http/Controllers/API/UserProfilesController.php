@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserprofileRequest;
 use App\Models\Idcard;
+use App\Models\User;
 use App\Traits\HttpResponses;
 use App\Models\Userprofiles;
 use App\Models\Usergallery;
@@ -27,6 +28,7 @@ class UserprofilesController extends Controller
     {
         try {
             
+            $userData = User::find(Auth::id());
             $userProfiles = Userprofiles::where('alumni_id', Auth::id())->first();
             // Check user profiles
             if ($userProfiles) {
@@ -50,6 +52,11 @@ class UserprofilesController extends Controller
                 $userProfiles->phone_number      = $request->phone_number;
                 $userProfiles->phone_number_code = $request->phone_number_code;
                 $userProfiles->gender            = $request->gender;
+
+                if (($request->has('current_status')) && ($request->filled('current_status'))) {
+                    $userData->current_status        = strtoupper($request->current_status);
+                    $userData->save();
+                }
 
                 $userGallery = $userProfiles->userGallery ?? new Usergallery();
 
@@ -119,7 +126,11 @@ class UserprofilesController extends Controller
                     'address'           => $request->address,
                     'phone_number'      => $request->phone_number,
                     'phone_number_code' => $request->phone_number_code,
-                    'gender'            => $request->gender
+                    'gender'            => $request->gender,
+                ]);
+
+                $userData               = User::create([
+                    'current_status'    => strtoupper($request->current_status)
                 ]);
 
                 // Create User Gallery
@@ -142,6 +153,8 @@ class UserprofilesController extends Controller
                 ]);
 
                 $userProfileData->save();
+
+                $userData->save();
                 
                 $userGallery->save();
                 
@@ -207,6 +220,7 @@ class UserprofilesController extends Controller
     {  
        try {
         //Find user profile by alumni_id as user id
+        $userData = User::find($id);
         $userProfiles = Userprofiles::with('userGallery', 'userIdcards')->where('alumni_id', $id)->first();
 
         if(!$userProfiles)
@@ -240,6 +254,11 @@ class UserprofilesController extends Controller
         $userProfiles->phone_number      = $request->phone_number;
         $userProfiles->phone_number_code = $request->phone_number_code;
         $userProfiles->gender            = $request->gender;
+        
+        if (($request->has('current_status')) && ($request->filled('current_status'))) {
+            $userData->current_status        = strtoupper($request->current_status);
+            $userData->save();
+        }
 
         $path = null;
         
@@ -268,40 +287,52 @@ class UserprofilesController extends Controller
         $userIdcards = Idcard::where('alumni_id' ,$id)->first();
 
         if (!$userIdcards) {
-            Idcard::create([
-                'alumni_id'         => $userProfiles->alumni_id,
-                'nomor_anggota'     => $userProfiles->nomor_anggota,
-                'first_name'        => $userProfiles->first_name,
-                'last_name'         => $userProfiles->last_name,
-                'image_url'         => $userGallery->image_url,
-            ]);
+            if ($request->hasFile('image')) {
+                Idcard::create([
+                    'alumni_id'         => $userProfiles->alumni_id,
+                    'nomor_anggota'     => $userProfiles->nomor_anggota,
+                    'first_name'        => $userProfiles->first_name,
+                    'last_name'         => $userProfiles->last_name == null ? '' : $userProfiles->last_name,
+                    'image_url'         => $userGallery->image_url  == null ? '' : $userGallery->image_url,
+                ]);
+            } else {
+                Idcard::create([
+                    'alumni_id'         => $userProfiles->alumni_id,
+                    'nomor_anggota'     => $userProfiles->nomor_anggota,
+                    'first_name'        => $userProfiles->first_name,
+                    'last_name'         => $userProfiles->last_name == null ? '' : $userProfiles->last_name,
+                    'image_url'         => null,
+                ]);
+            }
         } else {
             $userIdcards->alumni_id     = $userProfiles->alumni_id;
             $userIdcards->nomor_anggota = $userProfiles->nomor_anggota;
             $userIdcards->first_name    = $userProfiles->first_name;
-            $userIdcards->last_name     = $userProfiles->last_name;
+            $userIdcards->last_name     = $userProfiles->last_name == null ? '' : $userProfiles->last_name;
             $userIdcards->image_url     = $userProfiles->userGallery;
             if ($request->hasFile('image')) {
                 $userIdcards->image_url = $userProfiles->userGallery; // Assign the new image URL
             }
+
+            $userIdcards->save();
         }
-    
-        $userIdcards->save();
-
-        $userProfiles->save();
-
+        
+        $userProfiles->save();        
+        
         DB::commit();
-
+        
+        // dd($userProfiles);
         return response()->json([
             'message' => 'User profile successfully updated'
         ], 200);
 
-       } catch (\Throwable $th) {
+       } catch (\Throwable $e) {
         DB::rollBack();
-         // return json response
+
+        // return json response
          return response()->json([
             'message' => 'something went wrong!',
-            'error message' => $th
+            'error message' => $e
         ], 500);
        }
     }
