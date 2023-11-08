@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\UsersExport;
+use App\Imports\UserProfilesImport;
 
 class UserController extends Controller
 {
@@ -87,78 +88,78 @@ class UserController extends Controller
         }
         
         // Apply filters
-        if ($request->has('email')) {
+        if (($request->has('email')) && ($request->email != '') ) {
             $query->where('email', 'like', '%' . $request->input('email') . '%');
         }
 
-        if ($request->has('username')) {
+        if (($request->has('username')) && ($request->username != 'null')) {
             $query->where('username', 'like', '%' . $request->input('username') . '%');
         }
 
-        if ($request->has('first_name')) {
+        if (($request->has('first_name')) && ($request->first_name != '')) {
             $query->whereHas('userProfiles', function ($subquery) use ($request) {
                 $subquery->where('first_name', 'like', '%' . $request->input('first_name') . '%');
             });
         }
 
-        if ($request->has('last_name')) {
+        if (($request->has('last_name')) && ($request->last_name != '')) {
             $query->whereHas('userProfiles', function ($subquery) use ($request) {
                 $subquery->where('last_name', 'like', '%' . $request->input('last_name') . '%');
             });
         }
 
-        if ($request->has('tahun_masuk')) {
+        if (($request->has('tahun_masuk')) && ($request->tahun_masuk != '')) {
             $query->whereHas('userProfiles', function ($subquery) use ($request) {
                 $subquery->where('tahun_masuk', 'like', '%' . $request->input('tahun_masuk') . '%');
             });
         }
 
-        if ($request->has('tahun_lulus')) {
+        if (($request->has('tahun_lulus')) && ($request->tahun_lulus != '')) {
             $query->whereHas('userProfiles', function ($subquery) use ($request) {
                 $subquery->where('tahun_lulus', 'like', '%' . $request->input('tahun_lulus') . '%');
             });
         }
 
-        if ($request->has('batch')) {
+        if (($request->has('batch')) && ($request->batch != '')) {
             $query->whereHas('userProfiles', function ($subquery) use ($request) {
                 $subquery->where('batch', 'like', '%' . $request->input('batch') . '%');
             });
         }
 
-        if ($request->has('training_program')) {
+        if (($request->has('training_program')) && ($request->training_program != '')) {
             $query->whereHas('userProfiles', function ($subquery) use ($request) {
                 $subquery->where('training_program', 'like', '%' . $request->input('training_program') . '%');
             });
         }
 
-        if ($request->has('current_job')) {
+        if (($request->has('current_job')) && ($request->current_job != '')) {
             $query->whereHas('userProfiles', function ($subquery) use ($request) {
                 $subquery->where('current_job', 'like', '%' . $request->input('current_job') . '%');
             });
         }
 
-        if ($request->has('current_workplace')) {
+        if (($request->has('current_workplace')) && ($request->current_workplace != '')) {
             $query->whereHas('userProfiles', function ($subquery) use ($request) {
                 $subquery->where('current_workplace', 'like', '%' . $request->input('current_workplace') . '%');
             });
         }
 
-        if ($request->has('gender')) {
+        if (($request->has('gender')) && ($request->gender != '')) {
             $query->whereHas('userProfiles', function ($subquery) use ($request) {
                 $subquery->where('gender', 'like', '%' . $request->input('gender') . '%');
             });
         }
 
-        if ($request->has('status')) {
+        if (($request->has('status')) && ($request->status != '')) {
             $query->where('status', 'like', '%'. $request->input('status'). '%');
         }
 
-        if ($request->has('current_status')) {
+        if (($request->has('current_status')) && ($request->current_status != '')) {
             $query->where('current_status', 'like', '%' . $request->input('current_status') . '%');
         }
 
          // Apply sorting
-        if ($request->has('sortBy')) {
+        if (($request->has('sortBy')) && ($request->sortBy != '')) {
 
             $sortDirection = $request->input('sortDir', 'asc');
             $sortBy = $request->input('sortBy');
@@ -294,73 +295,73 @@ class UserController extends Controller
             }
 
             // Apply filters
-            if ($request->has('email')) {
+            if (($request->has('email')) && ($request->email != '') ) {
                 $query->where('email', 'like', '%' . $request->input('email') . '%');
             }
-    
-            if ($request->has('username')) {
+
+            if (($request->has('username')) && ($request->username != 'null')) {
                 $query->where('username', 'like', '%' . $request->input('username') . '%');
             }
-            
-            if ($request->has('first_name')) {
+
+            if (($request->has('first_name')) && ($request->first_name != '')) {
                 $query->whereHas('userProfiles', function ($subquery) use ($request) {
                     $subquery->where('first_name', 'like', '%' . $request->input('first_name') . '%');
                 });
             }
 
-            if ($request->has('last_name')) {
+            if (($request->has('last_name')) && ($request->last_name != '')) {
                 $query->whereHas('userProfiles', function ($subquery) use ($request) {
                     $subquery->where('last_name', 'like', '%' . $request->input('last_name') . '%');
                 });
             }
 
-            if ($request->has('tahun_masuk')) {
+            if (($request->has('tahun_masuk')) && ($request->tahun_masuk != '')) {
                 $query->whereHas('userProfiles', function ($subquery) use ($request) {
                     $subquery->where('tahun_masuk', 'like', '%' . $request->input('tahun_masuk') . '%');
                 });
             }
-            
-            if ($request->has('tahun_lulus')) {
+
+            if (($request->has('tahun_lulus')) && ($request->tahun_lulus != '')) {
                 $query->whereHas('userProfiles', function ($subquery) use ($request) {
                     $subquery->where('tahun_lulus', 'like', '%' . $request->input('tahun_lulus') . '%');
                 });
             }
 
-            if ($request->has('batch')) {
+            if (($request->has('batch')) && ($request->batch != '')) {
                 $query->whereHas('userProfiles', function ($subquery) use ($request) {
                     $subquery->where('batch', 'like', '%' . $request->input('batch') . '%');
                 });
             }
 
-            if ($request->has('training_program')) {
+            if (($request->has('training_program')) && ($request->training_program != '')) {
                 $query->whereHas('userProfiles', function ($subquery) use ($request) {
                     $subquery->where('training_program', 'like', '%' . $request->input('training_program') . '%');
                 });
             }
 
-            if ($request->has('current_job')) {
+            if (($request->has('current_job')) && ($request->current_job != '')) {
                 $query->whereHas('userProfiles', function ($subquery) use ($request) {
                     $subquery->where('current_job', 'like', '%' . $request->input('current_job') . '%');
                 });
             }
 
-            if ($request->has('current_workplace')) {
+            if (($request->has('current_workplace')) && ($request->current_workplace != '')) {
                 $query->whereHas('userProfiles', function ($subquery) use ($request) {
                     $subquery->where('current_workplace', 'like', '%' . $request->input('current_workplace') . '%');
                 });
             }
 
-            if ($request->has('gender')) {
+            if (($request->has('gender')) && ($request->gender != '')) {
                 $query->whereHas('userProfiles', function ($subquery) use ($request) {
                     $subquery->where('gender', 'like', '%' . $request->input('gender') . '%');
                 });
             }
 
-            if ($request->has('status')) {
-                $query->where('status', 'like', '%' . $request->input('status') . '%');
+            if (($request->has('status')) && ($request->status != '')) {
+                $query->where('status', 'like', '%'. $request->input('status'). '%');
             }
 
-            if ($request->has('current_status')) {
+            if (($request->has('current_status')) && ($request->current_status != '')) {
                 $query->where('current_status', 'like', '%' . $request->input('current_status') . '%');
             }
 
@@ -439,7 +440,6 @@ class UserController extends Controller
             
             $format = $request->input('format') == 'csv' ? \Maatwebsite\Excel\Excel::CSV : \Maatwebsite\Excel\Excel::XLSX;
 
-            // dd($format);
             if ($format == 'Xlsx') {
                 $fileName = 'user_export_' . date('Y-m-d_H-i-s') . '.xlsx';
             } else {
@@ -454,6 +454,40 @@ class UserController extends Controller
             return response()->json([
                 'message' => 'Failed to export data',
                 'error' => $th->getMessage()
+            ], 500);
+        }
+    }
+
+    public function importUsers(Request $request)
+    {
+        try {
+            $this->validate($request, [
+                'file' => 'required|mimes:csv,txt,xlsx', // Allow CSV and XLSX files
+            ]);
+
+            $file = $request->file('file');
+            $fileExtension = $file->getClientOriginalExtension();
+
+            if ($fileExtension === 'xlsx') {
+                $import = new UserProfilesImport();
+                Excel::import($import, $file);
+            } elseif ($fileExtension === 'csv') {
+                $import = new UserProfilesImport();
+                Excel::import($import, $file);
+            } else {
+                // Unsupported file format
+                return response()->json(['message' => 'Unsupported file format'], 400);
+            }
+
+            // Return a success response
+            return response()->json([
+                'message' => 'Users imported successfully',
+            ], 200);
+        } catch (\Throwable $th) {
+            // Handle any errors that occur during the import
+            return response()->json([
+                'message' => 'Failed to import users',
+                'error' => $th->getMessage(),
             ], 500);
         }
     }
@@ -555,9 +589,9 @@ class UserController extends Controller
         }
 
         // Exclude users with null 'tahun_lulus'
-        $query->whereHas('userProfiles', function ($query) {
-            $query->whereNotNull('tahun_lulus');
-        });
+        // $query->whereHas('userProfiles', function ($query) {
+        //     $query->whereNotNull('tahun_lulus');
+        // });
 
         return $query->count();
     }
@@ -593,31 +627,25 @@ class UserController extends Controller
                     'email',
                     Rule::unique('users')->ignore($id),
                 ],
-                'password' => 'sometimes|min:6',
-                'role' => 'in:admin,alumni',
-                'current_status' => 'in:HIDUP,ALMARHUM,GUGUR DALAM TUGAS'
+                'password'           => 'sometimes|min:6',
+                'role'               => 'in:admin,alumni',
+                'current_status'     => 'string|max:60',
+                'first_name'         => 'sometimes|max:50',
+                'last_name'          => 'sometimes|max:50',
+                'tahun_masuk'        => 'sometimes|max:4',
+                'tahun_lulus'        => 'sometimes|max:4',
+                'training_program'   => 'sometimes|max:80',
+                'batch'              => 'sometimes|max:25'
             ]);
-
-                
-            // if ($request->has('current_status')) {
-            //     if (!in_array($currentStatus, ['HIDUP', 'ALMARHUM', 'GUGUR DALAM TUGAS'])) {
-            //         return response()->json([
-            //             'message' => 'Invalid current_status value.'
-            //         ], 400);
-            //     }
-
-            //     User::where('id', $id)->update(['current_status' => $currentStatus]);
-            // }
     
             // Find the user by ID
-            $user = User::find($id);
-    
-            if (!$user) {
+            $user = User::query()->with('userProfiles')->find($id);
+
+            if (!$user) 
                 return response()->json([
                     'message' => 'User not found'
                 ], 404);
-            }
-
+            
             // Get the ID of the currently authenticated user
             $currentUserId = Auth::id();
 
@@ -642,15 +670,51 @@ class UserController extends Controller
             }
     
             // Update the password if provided
-            if ($request->has('password')) {
+            if (($request->has('password')) && ($request->filled('password'))) {
                 $user->password = bcrypt($request->password);
             }
-    
+
+            if (($request->has('first_name')) && ($request->filled('first_name'))) {
+                $user->userProfiles->update([
+                    'first_name' => $request->input('first_name', $user->userProfiles->first_name),
+                ]);
+            }
+
+            if (($request->has('last_name')) && ($request->filled('last_name'))) {
+                $user->userProfiles->update([
+                    'last_name' => $request->input('last_name', $user->userProfiles->last_name),
+                ]);
+            }
+            
+            if (($request->has('tahun_masuk')) && ($request->filled('tahun_masuk'))) {
+                $user->userProfiles->update([
+                    'tahun_masuk' => $request->input('tahun_masuk', $user->userProfiles->tahun_masuk),
+                ]);
+            }
+
+            if (($request->has('tahun_lulus')) && ($request->filled('tahun_lulus'))) {
+                $user->userProfiles->update([
+                    'tahun_lulus' => $request->input('tahun_lulus', $user->userProfiles->tahun_lulus),
+                ]);
+            }
+
+            if (($request->has('training_program')) && ($request->filled('training_program'))) {
+                $user->userProfiles->update([
+                    'training_program' => $request->input('training_program', $user->userProfiles->training_program),
+                ]);
+            }
+
+            if (($request->has('batch')) && ($request->filled('batch'))) {
+                $user->userProfiles->update([
+                    'batch' => $request->input('batch', $user->userProfiles->batch),
+                ]);
+            }
+
             // Save the changes
             $user->save();
     
             return response()->json([
-                'message' => 'User updated successfully',
+                'message' => 'User data updated successfully',
                 'user' => $user
             ], 200);
     
