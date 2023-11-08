@@ -12,10 +12,12 @@ class UserRejectedNotification extends Notification
     use Queueable;
 
     public $user;
+    public $customMessage;
 
-    public function __construct($user)
+    public function __construct($user, $customMessage)
     {
         $this->user = $user;
+        $this->customMessage = $customMessage;
     }
 
     /**
@@ -34,8 +36,13 @@ class UserRejectedNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Registration Rejected')
-            ->view('emails.user_rejected', ['user' => $this->user]);
+            ->subject('Your Account has been Rejected')
+            ->view(
+                'emails.user_rejected', 
+                [
+                    'user' => $this->user,
+                    'customMessage' => $this->customMessage, // Pass the custom message to the view
+                ]);
     }
 
     /**
