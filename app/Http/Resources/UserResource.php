@@ -16,10 +16,11 @@ class UserResource extends JsonResource
     {
 
         $userData = [
-            'id'            => $this->id,
-            'username'      => $this->username,
-            'email'         => $this->email,
-            'role'          => $this->role
+            'id'                => $this->id,
+            'username'          => $this->username,
+            'email'             => $this->email,
+            'role'              => $this->role,
+            'current_status'    => $this->current_status
         ];
 
         // Include userProfiles if it's available
@@ -27,14 +28,16 @@ class UserResource extends JsonResource
 
         if ($userProfiles !== null) {
             $userData['userProfiles'] = [
-                'alumni_id' => $userProfiles->alumni_id,
-                'first_name' => $userProfiles->first_name,
-                'last_name' => $userProfiles->last_name,
-                'training_program' => $userProfiles->training_program,
-                'batch' => $userProfiles->batch,
-                'tahun_masuk' => $userProfiles->tahun_masuk,
-                'tahun_lulus' => $userProfiles->tahun_lulus,
-                'nomor_anggota' => $userProfiles->nomor_anggota,
+                'alumni_id'         => $userProfiles->alumni_id,
+                'first_name'        => $userProfiles->first_name,
+                'last_name'         => $userProfiles->last_name,
+                'training_program'  => $userProfiles->training_program,
+                'batch'             => $userProfiles->batch,
+                'tahun_masuk'       => $userProfiles->tahun_masuk,
+                'tahun_lulus'       => $userProfiles->tahun_lulus,
+                'nomor_anggota'     => $userProfiles->nomor_anggota,
+                // 'current_job'       => $userProfiles->current_job == null ? '-' : $userProfiles->current_job
+                'current_job'       => $userProfiles->current_job
             ];
         }
         
