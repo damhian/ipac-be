@@ -27,7 +27,15 @@
         <br />
         <div>
           <p>Hi Alumnus dengan username: {{ $user->username }},</p>
-          <p>Mohon maaf saat ini proses verifikasi akun anda ditolak.</p>
+          <p>Mohon maaf saat ini proses verifikasi akun anda ditolak.</p> 
+          <br/>
+
+          <p>Berikut alasan akun anda ditolak oleh Admin:</p>
+          <strong>
+            <p>{{$customMessage}}</p>
+          </strong> 
+          <br/>
+
           <p>Anda bisa mendaftarkan kembali dan melakukan proses verifikasi ulang.</p>
           <p>Harap kontak admin jika membutuhkan informasi lebih lanjut.</p>
           
