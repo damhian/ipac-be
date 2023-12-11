@@ -40,10 +40,17 @@ class UserProfilesImport implements ToCollection, WithHeadingRow
             $lastThreeDigit = str_pad($lastThreeDigit, 3, '0', STR_PAD_LEFT);
             $nomorAnggota = $row['tahun_lulus'] . $lastThreeDigit;
 
+            // Check for duplicate usernames
+            $username = $row['username'];
+            if (UserProfiles::where('alumni_id', '<>', null)->where('nomor_anggota', $nomorAnggota)->exists()) {
+                // If duplicates found, update username with nomorAnggota
+                $username = $nomorAnggota;
+            }
+
             // Create user data array
             $userData = [
                 'email' => $row['email'],
-                'username' => $row['username'],
+                'username' => $username,
                 'password'  => bcrypt('ipac2023'),
                 'role' => $role,
                 'status' => $status,
