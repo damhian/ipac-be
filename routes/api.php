@@ -6,6 +6,7 @@ use App\Http\Controllers\API\Auth\RegisterController;
 use App\Http\Controllers\API\AdminController;
 use App\Http\Controllers\API\Auth\ForgotpasswordController;
 use App\Http\Controllers\API\BannerController;
+use App\Http\Controllers\API\ClearUsernameDuplicate as APIClearUsernameDuplicate;
 use App\Http\Controllers\API\CompaniesController;
 use App\Http\Controllers\API\EventsController;
 use App\Http\Controllers\API\ImageuploaderController;
@@ -21,6 +22,7 @@ use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\UserexperiencesController;
 use App\Http\Controllers\API\UserprofilesController;
 use App\Http\Controllers\API\UserstoryController;
+use App\Http\Controllers\API\ClearUsernameDuplicate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -82,6 +84,9 @@ Route::get('mscurrentjob', [MscurrentjobController::class, 'index']);
 // Table ms_visi_misi
 Route::get('visimisi', [MsvisimisiController::class, 'visimisi']);
 Route::get('about', [MsvisimisiController::class, 'about']);
+
+Route::get('duplicates', [ClearUsernameDuplicate::class, 'show']);
+Route::post('update-usernames', [ClearUsernameDuplicate::class, 'updateDuplicateUsername']);
 
 // Template import users
 Route::get('/download-template', function () {
