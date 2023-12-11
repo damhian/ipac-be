@@ -14,10 +14,19 @@ class UserProfilesImport implements ToCollection, WithHeadingRow
 {
     public function collection(Collection $rows)
     {   
+
+        // Check if the number of rows exceeds 300
+        $rowCount = $rows->count();
+        if ($rowCount > 300) {
+            // Log an error and stop the import
+            Log::error('Import aborted. Number of rows exceeds the limit (300).');
+            return response()->json([
+                'Error' => 'Cannot import more than 300 user at the same time'
+            ], 400);
+        }
+
         // Prepare the data for insertion
         foreach ($rows as $row) {
-            // dd($rows);
-
             // Validate that email and username are not empty
             if (empty($row['email']) || empty($row['username'])) {
                 // Skip this row and log a message (you can log to Laravel's log system)
