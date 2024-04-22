@@ -4,7 +4,7 @@ namespace App\Rules;
 
 use App\Models\User;
 use Closure;
-use Illuminate\Validation\Rule;
+use Illuminate\Contracts\Validation\Rule;
 
 class UniqueSuperadmin implements Rule
 {

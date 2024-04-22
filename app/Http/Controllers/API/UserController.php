@@ -502,8 +502,7 @@ class UserController extends Controller
                 'username' => 'required|unique:users',
                 'email' => 'required|email|unique:users',
                 'password' => 'required|min:6',
-                'role' => 'in:superadmin,admin,alumni', 
-                new UniqueSuperadmin, // Apply the custom rule for UniqueSuperadmin
+                'role' => ['in:superadmin,admin,alumni', new UniqueSuperadmin], // Apply the custom rule for UniqueSuperadmin
             ]);
     
             // Create the new user
