@@ -6,7 +6,6 @@ use App\Http\Controllers\API\Auth\RegisterController;
 use App\Http\Controllers\API\AdminController;
 use App\Http\Controllers\API\Auth\ForgotpasswordController;
 use App\Http\Controllers\API\BannerController;
-use App\Http\Controllers\API\ClearUsernameDuplicate as APIClearUsernameDuplicate;
 use App\Http\Controllers\API\CompaniesController;
 use App\Http\Controllers\API\EventsController;
 use App\Http\Controllers\API\ImageuploaderController;

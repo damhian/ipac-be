@@ -2,7 +2,7 @@
 
 namespace App\Imports;
 
-use App\Models\UserProfiles;
+use App\Models\Userprofiles;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
@@ -45,13 +45,13 @@ class UserProfilesImport implements ToCollection, WithHeadingRow
             $address = $row['address'] ? $row['address'] : null;
 
             // Generate nomorAnggota
-            $lastThreeDigit = UserProfiles::where('tahun_lulus', $row['tahun_lulus'])->count() + 1;
+            $lastThreeDigit = Userprofiles::where('tahun_lulus', $row['tahun_lulus'])->count() + 1;
             $lastThreeDigit = str_pad($lastThreeDigit, 3, '0', STR_PAD_LEFT);
             $nomorAnggota = $row['tahun_lulus'] . $lastThreeDigit;
 
             // Check for duplicate usernames
             $username = $row['username'];
-            if (UserProfiles::where('alumni_id', '<>', null)->where('nomor_anggota', $nomorAnggota)->exists()) {
+            if (Userprofiles::where('alumni_id', '<>', null)->where('nomor_anggota', $nomorAnggota)->exists()) {
                 // If duplicates found, update username with nomorAnggota
                 $username = $nomorAnggota;
             }
