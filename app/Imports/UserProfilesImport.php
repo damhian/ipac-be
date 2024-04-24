@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Models\User;
 use App\Models\Userprofiles;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
@@ -33,6 +34,22 @@ class UserProfilesImport implements ToCollection, WithHeadingRow
                 Log::error('Skipped a row due to missing email or username: ' . json_encode($row));
                 continue; // Skip this row and move to the next one
             }
+
+            // Check if the user already exists
+            if (User::where('email', $row['email'])->exists()) {
+                Log::error('Skipped a row because a user with email ' . $row['email'] . ' already exists.');
+                continue; // Skip this row and move to the next one
+            }
+
+            // Check for duplicate user profiles based on first_name and last_name
+            if (Userprofiles::where('first_name', $row['first_name'])
+                            ->where('last_name', $row['last_name'])
+                            ->exists()) {
+                // If duplicates found, skip this row
+                Log::warning('Skipped a row due to duplicate user profile: ' . json_encode($row));
+                continue;
+            }
+            
             // Determine the role, status, currentStatus, and other variables with default values
             $role = $row['role'] ? $row['role'] : 'alumni';
             $status = 'approved';
