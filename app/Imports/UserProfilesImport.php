@@ -41,14 +41,14 @@ class UserProfilesImport implements ToCollection, WithHeadingRow
                 continue; // Skip this row and move to the next one
             }
 
-            // Check for duplicate user profiles based on first_name and last_name
-            if (Userprofiles::where('first_name', $row['first_name'])
-                            ->where('last_name', $row['last_name'])
-                            ->exists()) {
-                // If duplicates found, skip this row
-                Log::warning('Skipped a row due to duplicate user profile: ' . json_encode($row));
-                continue;
-            }
+            // // Check for duplicate user profiles based on first_name and last_name
+            // if (Userprofiles::where('first_name', $row['first_name'])
+            //                 ->where('last_name', $row['last_name'])
+            //                 ->exists()) {
+            //     // If duplicates found, skip this row
+            //     Log::warning('Skipped a row due to duplicate user profile: ' . json_encode($row));
+            //     continue;
+            // }
             
             // Determine the role, status, currentStatus, and other variables with default values
             $role = $row['role'] ? $row['role'] : 'alumni';
