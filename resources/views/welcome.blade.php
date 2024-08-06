@@ -16,7 +16,7 @@
         </style>
     </head>
 
-    <img src="{{ asset('/images/LogoIPAC-c60f8341-removebg-preview.png') }}" width="155px" height="48px" class="logo" alt="">
+    <img src="{{ asset('storage/banner/fZl4RB98n6zWnKhmtA0XS5hF3l05WJcKAakev2sH.jpg') }}" width="155px" height="48px" class="logo" alt="">
     <!-- <img src="data:image/svg;base64,{{ base64_encode(file_get_contents(public_path('/images/LogoIPAC-c60f8341.svg'))) }}" class="logo" alt=""> -->
 
     <strong>Database Connected: </strong>
