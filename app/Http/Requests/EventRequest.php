@@ -15,6 +15,14 @@ class EventRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation()
+    {
+        // Adjust the fields if necessary, like trimming strings or formatting.
+        $this->merge([
+            'location_name' => $this->input('type') === 'news' ? null : $this->input('location_name'),
+        ]);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -22,8 +30,7 @@ class EventRequest extends FormRequest
      */
     public function rules(): array
     {
-
-        $rules = [
+        return [
             "title" => "required|string|max:50",
             "content" => "required|string",
             "image" => "nullable|image|mimes:jpeg,png,jpg,svg|max:2048",
@@ -32,47 +39,25 @@ class EventRequest extends FormRequest
             "location_lon" => "nullable|numeric",
             "location_lat" => "nullable|numeric",
             "type" => "required|in:event,news",
-            "start_at" => "nullable|date", 
-            "end_at" => "nullable|date|after_or_equal:start_at",
-        ];
-
-        if ($this->input('type') !== 'news') {
-            $rules['start_at'] .= '|required';
-            $rules['end_at'] .= '|required';
-        }
-
-        return $rules;
-        
+            "start_at" => $this->input('type') === 'event' ? 'required|date' : 'nullable|date',
+            "end_at" => $this->input('type') === 'event' ? 'required|date|after_or_equal:start_at' : 'nullable|date|after_or_equal:start_at',
+        ];        
     }
 
     public function messages()
     {
-        if (request()->isMethod('post')) {
-            return [
-                "title" => "title is required!",
-                "content" => "content is required!",
-                "image.mimes" => "the images must be in these format: jpeg,png,jpg,svg",
-                "image.max" => "the maximum capacity of the image can upload is 2MB",
-                "short_description" => "short description is required!",
-                "location_name" => "location name is required!",
-                "location_lon.numeric" => "the format must be in number!",
-                "location_lat.numeric" => "the format must be in number!",
-                "start_at" => "start datetime is required!",
-                "end_at.after_or_equal" => "the end date must be greater than or equal to the start date!",
-            ];
-        } else {
-            return [
-                "title" => "title is required!",
-                "content" => "content is required!",
-                "image" => "image is required!",
-                'image.mimes' => 'the images must be in these format: jpeg,png,jpg,svg',
-                'image.max' => 'the maximum capacity of the image can upload is 2MB',
-                "short_description" => "short description is required!",
-                "location_name" => "location name is required!",
-                "location_lon.numeric" => "the format must be in number!",
-                "location_lat.numeric" => "the format must be in number!",
-                "end_at.after_or_equal" => "the end date must be greater than or equal to the start date!",
-            ];
-        }
+        return [
+            "title" => "title is required!",
+            "content" => "content is required!",
+            "image.mimes" => "the images must be in these format: jpeg,png,jpg,svg",
+            "image.max" => "the maximum capacity of the image can upload is 2MB",
+            "short_description" => "short description is required!",
+            "location_name" => "location name is required!",
+            "location_lon.numeric" => "the format must be in number!",
+            "location_lat.numeric" => "the format must be in number!",
+            "start_at.required" => "The start date is required for events!",
+            "end_at.required" => "The end date is required for events!",
+            "end_at.after_or_equal" => "The end date must be on or after the start date!",
+        ];
     }
 }

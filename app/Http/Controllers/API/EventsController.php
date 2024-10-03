@@ -219,7 +219,11 @@ class EventsController extends Controller
                 return response()->json([
                     'message' => 'Event not found!'
                 ]);
-            
+
+            // If start_at or end_at is undefined, set them to null
+            $startAt = $request->start_at === 'undefined' ? null : $request->start_at;
+            $endAt = $request->end_at === 'undefined' ? null : $request->end_at;
+
             if($request->hasFile('image')){
                 if($event->image)
                     Storage::disk('public')->delete($event->image);
@@ -229,17 +233,14 @@ class EventsController extends Controller
                 $event->image = $path;
             }
 
-            // Format the event_time if needed
-            $eventTime = $this->formatEventTime($request->input('event_time'));
-            
             $event->title = $request->title;
             $event->content = $request->content;
             $event->short_description = $request->short_description;
             $event->location_name = $request->location_name;
             $event->location_lon = $request->location_lon;
             $event->location_lat = $request->location_lat;
-            $event->start_at = $request->start_at;
-            $event->end_at = $request->end_at;
+            $event->start_at = $startAt;
+            $event->end_at = $endAt;
             $event->type = $request->type;
 
             $event->save();
