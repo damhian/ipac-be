@@ -17,10 +17,14 @@ class EventRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        // Adjust the fields if necessary, like trimming strings or formatting.
         $this->merge([
-            'location_name' => $this->input('type') === 'news' ? null : $this->input('location_name'),
+            'start_at' => $this->input('start_at') === 'undefined' ? null : $this->input('start_at'),
+            'end_at' => $this->input('end_at') === 'undefined' ? null : $this->input('end_at'),
         ]);
+
+        if ($this->input('type') === 'news' && !$this->filled('location_name')) {
+            $this->merge(['location_name' => null]);
+        }
     }
 
     /**
