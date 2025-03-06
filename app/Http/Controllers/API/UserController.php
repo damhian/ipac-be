@@ -262,8 +262,15 @@ class UserController extends Controller
             if (in_array($sortDirection, $validSortDirections)) {
                 if (in_array($sortBy, $validSortColumns)) {
                     // Ensure table join before sorting on user_profiles fields
-                    $query->join('user_profiles', 'user_profiles.alumni_id', '=', 'users.id')
-                        ->orderBy("user_profiles.$sortBy", $sortDirection);
+                    $query->join('user_profiles', 'user_profiles.alumni_id', '=', 'users.id');
+                        
+                    if ($sortBy === 'batch') {
+                        // Cast batch as integer before sorting
+                        $query->orderByRaw("CAST(user_profiles.batch AS UNSIGNED) $sortDirection");
+                    } else {
+                        $query->orderBy("user_profiles.$sortBy", $sortDirection);
+                    }
+
                 } else {
                     $query->orderBy("users.$sortBy", $sortDirection);
                 }
