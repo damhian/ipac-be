@@ -18,170 +18,266 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+    // This is the old method as backup
+    // public function index(Request $request)
+    // {   
+    //     $currentUserId = Auth::id();
+
+    //     // Set the number of items per page, you can adjust this as needed
+    //     // this feature are still not needed
+    //     $perPage = $request->input('per_page', 10);
+        
+    //     $searchTerm = $request->input('search');
+
+    //     // Fetch all users with their related data
+    //     $query = User::query()
+    //     ->with('userExperience', 'userProfiles', 'userGallery')
+    //     ->select('id', 'email', 'username', 'role', 'status', 'current_status')
+    //     ->addSelect(['first_name' => Userprofiles::select('first_name')
+    //         ->whereColumn('alumni_id', 'users.id')
+    //         ->limit(1)
+    //     ])
+    //     ->addSelect(['last_name' => Userprofiles::select('last_name')
+    //         ->whereColumn('alumni_id', 'users.id')
+    //         ->limit(1)
+    //     ])
+    //     ->addSelect(['tahun_masuk' => Userprofiles::select('tahun_masuk')
+    //         ->whereColumn('alumni_id', 'users.id')
+    //         ->limit(1)
+    //     ])
+    //     ->addSelect(['tahun_lulus' => Userprofiles::select('tahun_lulus')
+    //         ->whereColumn('alumni_id', 'users.id')
+    //         ->limit(1)
+    //     ])
+    //     ->addSelect(['training_program' => Userprofiles::select('training_program')
+    //         ->whereColumn('alumni_id', 'users.id')
+    //         ->limit(1)
+    //     ])
+    //     ->addSelect(['batch' => Userprofiles::select('batch')
+    //         ->whereColumn('alumni_id', 'users.id')
+    //         ->limit(1)
+    //     ])
+    //     ->addSelect(['current_job' => Userprofiles::select('current_job')
+    //         ->whereColumn('alumni_id', 'users.id')
+    //         ->limit(1)
+    //     ])
+    //     ->addSelect(['current_workplace' => Userprofiles::select('current_workplace')
+    //         ->whereColumn('alumni_id', 'users.id')
+    //         ->limit(1)
+    //     ])
+    //     ->addSelect(['gender' => Userprofiles::select('gender')
+    //         ->whereColumn('alumni_id', 'users.id')
+    //         ->limit(1)
+    //     ]);
+
+    //     // If a search term is provided, apply the search filter
+    //     if (!empty($searchTerm)) {
+    //         $query->where(function ($subquery) use ($searchTerm) {
+    //             $subquery->where('username', 'like', '%' . $searchTerm . '%')
+    //                 ->orWhere('email', 'like', '%' . $searchTerm . '%')
+    //                 ->orWhereHas('userProfiles', function ($subquery) use ($searchTerm) {
+    //                     $subquery->where('first_name', 'like', '%' . $searchTerm . '%')
+    //                         ->orWhere('last_name', 'like', '%' . $searchTerm . '%');
+    //                 })
+    //                 ->orWhereHas('userProfiles', function ($subquery) use ($searchTerm) {
+    //                     $subquery->where('batch', 'like', '%' . $searchTerm . '%')
+    //                         ->orWhere('training_program', 'like', '%' . $searchTerm . '%')
+    //                         ->orWhere('current_job', 'like', '%' . $searchTerm . '%')
+    //                         ->orWhere('current_workplace', 'like', '%' . $searchTerm . '%');
+    //                 });
+    //         });
+    //     }
+        
+    //     // Apply filters
+    //     if (($request->has('email')) && ($request->email != '') ) {
+    //         $query->where('email', 'like', '%' . $request->input('email') . '%');
+    //     }
+
+    //     if (($request->has('username')) && ($request->username != 'null')) {
+    //         $query->where('username', 'like', '%' . $request->input('username') . '%');
+    //     }
+
+    //     if (($request->has('first_name')) && ($request->first_name != '')) {
+    //         $query->whereHas('userProfiles', function ($subquery) use ($request) {
+    //             $subquery->where('first_name', 'like', '%' . $request->input('first_name') . '%');
+    //         });
+    //     }
+
+    //     if (($request->has('last_name')) && ($request->last_name != '')) {
+    //         $query->whereHas('userProfiles', function ($subquery) use ($request) {
+    //             $subquery->where('last_name', 'like', '%' . $request->input('last_name') . '%');
+    //         });
+    //     }
+
+    //     if (($request->has('tahun_masuk')) && ($request->tahun_masuk != '')) {
+    //         $query->whereHas('userProfiles', function ($subquery) use ($request) {
+    //             $subquery->where('tahun_masuk', 'like', '%' . $request->input('tahun_masuk') . '%');
+    //         });
+    //     }
+
+    //     if (($request->has('tahun_lulus')) && ($request->tahun_lulus != '')) {
+    //         $query->whereHas('userProfiles', function ($subquery) use ($request) {
+    //             $subquery->where('tahun_lulus', 'like', '%' . $request->input('tahun_lulus') . '%');
+    //         });
+    //     }
+
+    //     if (($request->has('batch')) && ($request->batch != '')) {
+    //         $query->whereHas('userProfiles', function ($subquery) use ($request) {
+    //             $subquery->where('batch', 'like', '%' . $request->input('batch') . '%');
+    //         });
+    //     }
+
+    //     if (($request->has('training_program')) && ($request->training_program != '')) {
+    //         $query->whereHas('userProfiles', function ($subquery) use ($request) {
+    //             $subquery->where('training_program', 'like', '%' . $request->input('training_program') . '%');
+    //         });
+    //     }
+
+    //     if (($request->has('current_job')) && ($request->current_job != '')) {
+    //         $query->whereHas('userProfiles', function ($subquery) use ($request) {
+    //             $subquery->where('current_job', 'like', '%' . $request->input('current_job') . '%');
+    //         });
+    //     }
+
+    //     if (($request->has('current_workplace')) && ($request->current_workplace != '')) {
+    //         $query->whereHas('userProfiles', function ($subquery) use ($request) {
+    //             $subquery->where('current_workplace', 'like', '%' . $request->input('current_workplace') . '%');
+    //         });
+    //     }
+
+    //     if (($request->has('gender')) && ($request->gender != '')) {
+    //         $query->whereHas('userProfiles', function ($subquery) use ($request) {
+    //             $subquery->where('gender', 'like', '%' . $request->input('gender') . '%');
+    //         });
+    //     }
+
+    //     if (($request->has('status')) && ($request->status != '')) {
+    //         $query->where('status', 'like', '%'. $request->input('status'). '%');
+    //     }
+
+    //     if (($request->has('current_status')) && ($request->current_status != '')) {
+    //         $query->where('current_status', 'like', '%' . $request->input('current_status') . '%');
+    //     }
+
+    //      // Apply sorting
+    //     if (($request->has('sortBy')) && ($request->sortBy != '')) {
+
+    //         $sortDirection = $request->input('sortDir', 'asc');
+    //         $sortBy = $request->input('sortBy');
+
+    //         // Validate the sort direction to prevent SQL injection
+    //         $validSortDirections = ['asc', 'desc'];
+
+    //         if (in_array($sortDirection, $validSortDirections) && in_array($sortBy, ['first_name', 'last_name', 'tahun_masuk', 'tahun_lulus', 'batch'])) {
+    //             // Specify the table alias in orderBy
+    //             $query->join('user_profiles', 'user_profiles.alumni_id', '=', 'users.id')
+    //                 ->orderBy("user_profiles.$sortBy", $sortDirection);
+    //         } else {
+    //             $query->orderBy("users.$sortBy", $sortDirection);
+    //         }
+    //     }
+        
+    //     $users = $query->paginate($perPage);
+        
+    //     return response()->json([
+    //         'users' => $users
+    //     ], 200);
+    // }
+
     public function index(Request $request)
     {   
         $currentUserId = Auth::id();
 
-        // Set the number of items per page, you can adjust this as needed
-        // this feature are still not needed
+        // Number of items per page (default: 10)
         $perPage = $request->input('per_page', 10);
         
+        // Search term
         $searchTerm = $request->input('search');
 
-        // Fetch all users with their related data
+        // Base query with relationships
         $query = User::query()
-        ->with('userExperience', 'userProfiles', 'userGallery')
-        ->select('id', 'email', 'username', 'role', 'status', 'current_status')
-        ->addSelect(['first_name' => Userprofiles::select('first_name')
-            ->whereColumn('alumni_id', 'users.id')
-            ->limit(1)
-        ])
-        ->addSelect(['last_name' => Userprofiles::select('last_name')
-            ->whereColumn('alumni_id', 'users.id')
-            ->limit(1)
-        ])
-        ->addSelect(['tahun_masuk' => Userprofiles::select('tahun_masuk')
-            ->whereColumn('alumni_id', 'users.id')
-            ->limit(1)
-        ])
-        ->addSelect(['tahun_lulus' => Userprofiles::select('tahun_lulus')
-            ->whereColumn('alumni_id', 'users.id')
-            ->limit(1)
-        ])
-        ->addSelect(['training_program' => Userprofiles::select('training_program')
-            ->whereColumn('alumni_id', 'users.id')
-            ->limit(1)
-        ])
-        ->addSelect(['batch' => Userprofiles::select('batch')
-            ->whereColumn('alumni_id', 'users.id')
-            ->limit(1)
-        ])
-        ->addSelect(['current_job' => Userprofiles::select('current_job')
-            ->whereColumn('alumni_id', 'users.id')
-            ->limit(1)
-        ])
-        ->addSelect(['current_workplace' => Userprofiles::select('current_workplace')
-            ->whereColumn('alumni_id', 'users.id')
-            ->limit(1)
-        ])
-        ->addSelect(['gender' => Userprofiles::select('gender')
-            ->whereColumn('alumni_id', 'users.id')
-            ->limit(1)
-        ]);
+            ->with('userExperience', 'userProfiles', 'userGallery')
+            ->select('users.id', 'users.email', 'users.username', 'users.role', 'users.status', 'users.current_status')
+            ->addSelect([
+                'first_name' => userProfiles::select('first_name')
+                    ->whereColumn('alumni_id', 'users.id')->limit(1),
+                'last_name' => userProfiles::select('last_name')
+                    ->whereColumn('alumni_id', 'users.id')->limit(1),
+                'tahun_masuk' => userProfiles::select('tahun_masuk')
+                    ->whereColumn('alumni_id', 'users.id')->limit(1),
+                'tahun_lulus' => userProfiles::select('tahun_lulus')
+                    ->whereColumn('alumni_id', 'users.id')->limit(1),
+                'training_program' => userProfiles::select('training_program')
+                    ->whereColumn('alumni_id', 'users.id')->limit(1),
+                'batch' => userProfiles::select('batch')
+                    ->whereColumn('alumni_id', 'users.id')->limit(1),
+                'current_job' => userProfiles::select('current_job')
+                    ->whereColumn('alumni_id', 'users.id')->limit(1),
+                'current_workplace' => userProfiles::select('current_workplace')
+                    ->whereColumn('alumni_id', 'users.id')->limit(1),
+                'gender' => userProfiles::select('gender')
+                    ->whereColumn('alumni_id', 'users.id')->limit(1)
+            ]);
 
-        // If a search term is provided, apply the search filter
+        // Apply search filter
         if (!empty($searchTerm)) {
             $query->where(function ($subquery) use ($searchTerm) {
-                $subquery->where('username', 'like', '%' . $searchTerm . '%')
-                    ->orWhere('email', 'like', '%' . $searchTerm . '%')
-                    ->orWhereHas('userProfiles', function ($subquery) use ($searchTerm) {
-                        $subquery->where('first_name', 'like', '%' . $searchTerm . '%')
-                            ->orWhere('last_name', 'like', '%' . $searchTerm . '%');
-                    })
-                    ->orWhereHas('userProfiles', function ($subquery) use ($searchTerm) {
-                        $subquery->where('batch', 'like', '%' . $searchTerm . '%')
-                            ->orWhere('training_program', 'like', '%' . $searchTerm . '%')
-                            ->orWhere('current_job', 'like', '%' . $searchTerm . '%')
-                            ->orWhere('current_workplace', 'like', '%' . $searchTerm . '%');
+                $subquery->where('users.username', 'like', "%$searchTerm%")
+                    ->orWhere('users.email', 'like', "%$searchTerm%")
+                    ->orWhereHas('userProfiles', function ($sub) use ($searchTerm) {
+                        $sub->where('first_name', 'like', "%$searchTerm%")
+                            ->orWhere('last_name', 'like', "%$searchTerm%")
+                            ->orWhere('batch', 'like', "%$searchTerm%")
+                            ->orWhere('training_program', 'like', "%$searchTerm%")
+                            ->orWhere('current_job', 'like', "%$searchTerm%")
+                            ->orWhere('current_workplace', 'like', "%$searchTerm%");
                     });
             });
         }
-        
-        // Apply filters
-        if (($request->has('email')) && ($request->email != '') ) {
-            $query->where('email', 'like', '%' . $request->input('email') . '%');
-        }
 
-        if (($request->has('username')) && ($request->username != 'null')) {
-            $query->where('username', 'like', '%' . $request->input('username') . '%');
-        }
+        // Apply dynamic filters
+        $filters = ['email', 'username', 'first_name', 'last_name', 'tahun_masuk', 'tahun_lulus', 'batch', 'training_program', 'current_job', 'current_workplace', 'gender', 'status', 'current_status'];
 
-        if (($request->has('first_name')) && ($request->first_name != '')) {
-            $query->whereHas('userProfiles', function ($subquery) use ($request) {
-                $subquery->where('first_name', 'like', '%' . $request->input('first_name') . '%');
-            });
-        }
-
-        if (($request->has('last_name')) && ($request->last_name != '')) {
-            $query->whereHas('userProfiles', function ($subquery) use ($request) {
-                $subquery->where('last_name', 'like', '%' . $request->input('last_name') . '%');
-            });
-        }
-
-        if (($request->has('tahun_masuk')) && ($request->tahun_masuk != '')) {
-            $query->whereHas('userProfiles', function ($subquery) use ($request) {
-                $subquery->where('tahun_masuk', 'like', '%' . $request->input('tahun_masuk') . '%');
-            });
-        }
-
-        if (($request->has('tahun_lulus')) && ($request->tahun_lulus != '')) {
-            $query->whereHas('userProfiles', function ($subquery) use ($request) {
-                $subquery->where('tahun_lulus', 'like', '%' . $request->input('tahun_lulus') . '%');
-            });
-        }
-
-        if (($request->has('batch')) && ($request->batch != '')) {
-            $query->whereHas('userProfiles', function ($subquery) use ($request) {
-                $subquery->where('batch', 'like', '%' . $request->input('batch') . '%');
-            });
-        }
-
-        if (($request->has('training_program')) && ($request->training_program != '')) {
-            $query->whereHas('userProfiles', function ($subquery) use ($request) {
-                $subquery->where('training_program', 'like', '%' . $request->input('training_program') . '%');
-            });
-        }
-
-        if (($request->has('current_job')) && ($request->current_job != '')) {
-            $query->whereHas('userProfiles', function ($subquery) use ($request) {
-                $subquery->where('current_job', 'like', '%' . $request->input('current_job') . '%');
-            });
-        }
-
-        if (($request->has('current_workplace')) && ($request->current_workplace != '')) {
-            $query->whereHas('userProfiles', function ($subquery) use ($request) {
-                $subquery->where('current_workplace', 'like', '%' . $request->input('current_workplace') . '%');
-            });
-        }
-
-        if (($request->has('gender')) && ($request->gender != '')) {
-            $query->whereHas('userProfiles', function ($subquery) use ($request) {
-                $subquery->where('gender', 'like', '%' . $request->input('gender') . '%');
-            });
-        }
-
-        if (($request->has('status')) && ($request->status != '')) {
-            $query->where('status', 'like', '%'. $request->input('status'). '%');
-        }
-
-        if (($request->has('current_status')) && ($request->current_status != '')) {
-            $query->where('current_status', 'like', '%' . $request->input('current_status') . '%');
-        }
-
-         // Apply sorting
-        if (($request->has('sortBy')) && ($request->sortBy != '')) {
-
-            $sortDirection = $request->input('sortDir', 'asc');
-            $sortBy = $request->input('sortBy');
-
-            // Validate the sort direction to prevent SQL injection
-            $validSortDirections = ['asc', 'desc'];
-
-            if (in_array($sortDirection, $validSortDirections) && in_array($sortBy, ['first_name', 'last_name', 'tahun_masuk', 'tahun_lulus', 'batch'])) {
-                // Specify the table alias in orderBy
-                $query->join('user_profiles', 'user_profiles.alumni_id', '=', 'users.id')
-                    ->orderBy($sortBy, $sortDirection);
-            } else {
-                $query->orderBy($sortBy, $sortDirection);
+        foreach ($filters as $filter) {
+            if ($request->filled($filter)) {
+                if (in_array($filter, ['first_name', 'last_name', 'tahun_masuk', 'tahun_lulus', 'batch', 'training_program', 'current_job', 'current_workplace', 'gender'])) {
+                    $query->whereHas('userProfiles', function ($sub) use ($filter, $request) {
+                        $sub->where($filter, 'like', "%" . $request->input($filter) . "%");
+                    });
+                } else {
+                    $query->where("users.$filter", 'like', "%" . $request->input($filter) . "%");
+                }
             }
         }
-        
+
+        // Apply sorting
+        if ($request->filled('sortBy')) {
+            $sortBy = $request->input('sortBy');
+            $sortDirection = $request->input('sortDir', 'asc');
+
+            $validSortColumns = ['first_name', 'last_name', 'tahun_masuk', 'tahun_lulus', 'batch'];
+            $validSortDirections = ['asc', 'desc'];
+
+            if (in_array($sortDirection, $validSortDirections)) {
+                if (in_array($sortBy, $validSortColumns)) {
+                    // Ensure table join before sorting on user_profiles fields
+                    $query->join('user_profiles', 'user_profiles.alumni_id', '=', 'users.id')
+                        ->orderBy("user_profiles.$sortBy", $sortDirection);
+                } else {
+                    $query->orderBy("users.$sortBy", $sortDirection);
+                }
+            }
+        }
+
+        // Paginate results
         $users = $query->paginate($perPage);
         
         return response()->json([
             'users' => $users
         ], 200);
     }
+
 
     public function exportFilteredUsersWithProfiles(Request $request)
     {

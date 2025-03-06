@@ -20,7 +20,7 @@ class UserProfilesImport implements ToCollection, WithHeadingRow
         $rowCount = $rows->count();
         if ($rowCount > 300) {
             // Log an error and stop the import
-            Log::error('Import aborted. Number of rows exceeds the limit (300).');
+            Log::error('Import aborted. Number of rows exceeds the limit (300).'. json_encode($rowCount));
             return response()->json([
                 'Error' => 'Cannot import more than 300 user at the same time'
             ], 400);
